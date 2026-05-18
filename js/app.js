@@ -1894,6 +1894,8 @@ function onLiuTimeChange() {
 
   if (_liuTimeMode === 'benming') {
     renderOverlayMode(currentChart, currentBazi, '本命盘', null, null);
+  } else if (_liuTimeMode === 'daxian') {
+    renderOverlayMode(currentChart, currentBazi, '大限', null, null);
   } else if (_liuTimeMode === 'liunian') {
     renderOverlayMode(currentChart, currentBazi, '流年 ' + data.liuNian.yearGanZhi, data.liuNian, null);
   } else if (_liuTimeMode === 'liuyue') {
@@ -1907,7 +1909,8 @@ function onLiuTimeChange() {
 
   var infoEl = document.getElementById('liuTimeInfo');
   if (infoEl) {
-    infoEl.textContent = _liuTimeMode === 'benming' ? '当前：本命盘' : '叠宫模式';
+    var labels = { benming: '当前：本命盘', daxian: '当前：大限盘', liunian: '叠宫模式', liuyue: '叠宫模式', liuri: '叠宫模式', liushi: '叠宫模式' };
+    infoEl.textContent = labels[_liuTimeMode] || '叠宫模式';
   }
 }
 
