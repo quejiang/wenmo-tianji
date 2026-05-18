@@ -73,6 +73,118 @@ var TarotDice = (function() {
     return { spreadType: spreadType, cards: result };
   }
 
+  /**
+   * 塔罗牌阵综合解读
+   */
+  function interpretSpread(spreadResult) {
+    var type = spreadResult.spreadType;
+    var cards = spreadResult.cards;
+
+    // 牌阵描述
+    var spreadDescriptions = {
+      single: { name:'单张指引', desc:'单张牌直接给出当下最核心的指引信息，简单明了。' },
+      three: { name:'三张牌阵', desc:'过去→现在→未来的时间之箭牌阵，揭示事情的演变脉络。' },
+      celtic: { name:'凯尔特十字', desc:'最经典的塔罗牌阵之一，从十个维度全方位揭示问题的深层真相。' },
+      relationship: { name:'感情牌阵', desc:'专门针对情感关系的牌阵，从双方角度审视关系的动态。' },
+      career: { name:'事业牌阵', desc:'专注于事业发展的牌阵，揭示当前状态、助力与挑战。' }
+    };
+
+    // 每张牌的解读指引
+    function cardMeaningGuide(card, pos) {
+      var c = card.card;
+      var rev = card.reversed;
+      var guide = c.name + '（' + (rev ? '逆位' : '正位') + '）';
+
+      // 根据位置给出不同的解读方向
+      var posGuide = '';
+      switch(pos) {
+        case '过去': posGuide = '代表过去的影响因素或已发生的事件'; break;
+        case '现在': posGuide = '代表当下的状态、心态或正在发生的事'; break;
+        case '未来': posGuide = '代表未来的趋势、可能的结果或发展方向'; break;
+        case '现状': posGuide = '代表当前所处的核心处境'; break;
+        case '挑战': posGuide = '代表当前面临的主要挑战或阻力'; break;
+        case '目标': posGuide = '代表理想的目标或希望达到的状态'; break;
+        case '近未来': posGuide = '代表近期可能发生的事件或转变'; break;
+        case '态度': posGuide = '代表你现在的心态或他人对你的看法'; break;
+        case '环境': posGuide = '代表周围环境的影响因素'; break;
+        case '希望': posGuide = '代表你内心的期盼或担忧'; break;
+        case '结果': posGuide = '代表最终可能的结果或综合评判'; break;
+        case '核心指引': posGuide = '当前你最需要理解和接纳的核心信息'; break;
+        case '你': posGuide = '代表你在关系中的状态和感受'; break;
+        case '对方': posGuide = '代表对方在关系中的状态和感受'; break;
+        case '关系现状': posGuide = '代表你们当前关系的本质状态'; break;
+        case '当前状态': posGuide = '代表你事业发展的当前情况'; break;
+        case '阻碍': posGuide = '代表事业发展中的主要困难'; break;
+        case '助力': posGuide = '代表可借助的资源和力量'; break;
+        case '建议': posGuide = '给你的关键行动建议'; break;
+        default: posGuide = '牌位解读指引'; break;
+      }
+
+      return { guide: guide, posGuide: posGuide };
+    }
+
+    // 综合解读生成
+    function generateOverallReading(cards, type) {
+      var reading = '';
+      var majorCount = 0, reversedCount = 0;
+      cards.forEach(function(item) {
+        if (item.card.card.id <= 21) majorCount++;
+        if (item.card.reversed) reversedCount++;
+      });
+
+      if (type === 'single') {
+        var c = cards[0].card.card;
+        var rev = cards[0].card.reversed;
+        reading = '这张牌是你当下最核心的指引。' + c.name + '（' + (rev ? '逆位' : '正位') + '）的能量正在你的生命中显现。';
+        if (rev) {
+          reading += '逆位提示你需要注意该牌面能量的内在阻塞或过度表达，建议向内审视。';
+        } else {
+          reading += '请相信这份能量，它将引导你走向正确的方向。';
+        }
+      } else if (type === 'three') {
+        reading = '过去→现在→未来的时间轴线为你揭示了事情的演变过程。';
+        if (reversedCount === 0) reading += '三张牌均为正位，能量流动顺畅，事情的发展趋势总体良好。';
+        else if (reversedCount === 3) reading += '三张牌均为逆位，提示当前可能处于转折期，需要耐心和内在反思。';
+        else reading += '牌面中既有顺境也有挑战，这正是生命成长的常态。';
+        reading += '请将三张牌串联起来理解：过去的经历塑造了现在的你，而现在的选择将决定未来的方向。';
+      } else if (type === 'relationship') {
+        reading = '感情牌阵揭示了你与对方之间关系的深层动力。';
+        if (reversedCount >= 3) reading += '多张逆位牌提示关系中存在需要正视的问题，沟通是化解矛盾的关键。';
+        else if (reversedCount === 0) reading += '全部正位显示关系的基础良好，双方能量较为协调。';
+        else reading += '关系中既有甜蜜也有考验，任何深厚的感情都需要经历磨合。';
+      } else if (type === 'career') {
+        reading = '事业牌阵为你梳理了职业发展的关键要素。';
+        if (reversedCount >= 3) reading += '多张逆位牌提示当前事业可能遇到瓶颈，建议调整策略后再出发。';
+        else if (reversedCount === 0) reading += '全正位格局显示事业发展势头良好，宜把握时机推进。';
+        else reading += '事业之路有起有伏，关键在于持续积累和适时突破。';
+      } else if (type === 'celtic') {
+        reading = '凯尔特十字牌阵从十个维度全面审视了你的问题。这是一个非常深厚的牌阵，每一张牌都对应一个独特的视角。';
+        reading += '建议从「现状」牌入手理解核心问题，再结合「挑战」牌看到阻力所在，最后以「结果」牌作为综合指引。';
+        if (reversedCount >= 4) reading += '多张逆位牌提示当前处于重要的生命转折点，深度反思将带来突破。';
+      }
+
+      return reading;
+    }
+
+    // 解读每张牌
+    var cardReadings = [];
+    cards.forEach(function(item) {
+      cardReadings.push(cardMeaningGuide(item.card, item.position));
+    });
+
+    var overallReading = generateOverallReading(cards, type);
+
+    return {
+      spreadInfo: spreadDescriptions[type] || spreadDescriptions.three,
+      cardReadings: cardReadings,
+      overallReading: overallReading,
+      stats: {
+        totalCards: cards.length,
+        reversedCount: cards.filter(function(c) { return c.card.reversed; }).length
+      }
+    };
+  }
+
   // ==================== 占星骰子 ====================
 
   var DICE_PLANETS = [
@@ -151,6 +263,7 @@ var TarotDice = (function() {
     MAJOR_ARCANA: MAJOR_ARCANA,
     drawTarot: drawTarot,
     drawTarotSpread: drawTarotSpread,
+    interpretSpread: interpretSpread,
     rollDice: rollDice,
     rollDiceMulti: rollDiceMulti,
     DICE_PLANETS: DICE_PLANETS,

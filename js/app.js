@@ -2218,20 +2218,45 @@ function selectTarotSpread(type) {
 
 function drawTarotCards() {
   var spread = TarotDice.drawTarotSpread(_tarotSpreadType);
-  var html = '<div class="tarot-cards-row">';
-  spread.cards.forEach(function(item) {
+  var interp = TarotDice.interpretSpread(spread);
+
+  var html = '';
+
+  // 牌阵标题与说明
+  html += '<div class="tarot-spread-header">';
+  html += '<h4>📖 ' + interp.spreadInfo.name + ' · 综合解读</h4>';
+  html += '<p class="tarot-spread-desc">' + interp.spreadInfo.desc + '</p>';
+  html += '</div>';
+
+  // 每张牌
+  html += '<div class="tarot-cards-row">';
+  spread.cards.forEach(function(item, idx) {
     var c = item.card.card;
     var rev = item.card.reversed;
+    var cr = interp.cardReadings[idx];
     html += '<div class="tarot-card-item' + (rev ? ' reversed' : '') + '">';
     html += '<div class="tarot-card-pos">' + item.position + '</div>';
     html += '<div class="tarot-card-name">' + item.card.displayName + '</div>';
     html += '<div class="tarot-card-id">' + (c.id < 10 ? '0' : '') + c.id + ' · ' + c.en + '</div>';
     html += '<div class="tarot-card-desc">' + item.card.desc + '</div>';
+    html += '<div class="tarot-card-pos-guide">📍 ' + cr.posGuide + '</div>';
     html += '<div class="tarot-card-kw">';
     c.keywords.forEach(function(k) { html += '<span class="tarot-kw-tag">' + k + '</span>'; });
     html += '</div></div>';
   });
   html += '</div>';
+
+  // 综合解读
+  html += '<div class="tarot-overall-reading">';
+  html += '<h5>🔮 牌阵综合解读</h5>';
+  html += '<p>' + interp.overallReading + '</p>';
+  html += '<div class="tarot-stats">';
+  html += '<span>总牌数：<b>' + interp.stats.totalCards + '</b> 张</span>';
+  html += '<span>逆位牌：<b>' + interp.stats.reversedCount + '</b> 张</span>';
+  html += '</div>';
+  html += '<p class="tarot-disclaimer">以上解读由塔罗规则引擎生成，仅供参考，请以理性态度看待占卜结果。</p>';
+  html += '</div>';
+
   document.getElementById('tarotResult').innerHTML = html;
 }
 
@@ -2243,6 +2268,21 @@ function rollAstroDice() {
   html += '<div class="dice-item"><span class="dice-glyph house">🏠</span><span class="dice-label">' + result.house.name + '</span></div>';
   html += '</div>';
   html += '<div class="dice-interp">' + result.interpretation + '</div>';
+
+  // 增强解读
+  html += '<div class="dice-enhanced-interp">';
+  html += '<h5>🔮 骰子详解</h5>';
+  html += '<p><b>' + result.planet.name + '</b>：' + result.planet.meaning + '</p>';
+  html += '<p><b>' + result.sign.name + '（' + result.sign.element + '象）</b>：' + result.sign.meaning + '</p>';
+  html += '<p><b>' + result.house.name + '</b>：' + result.house.meaning + '</p>';
+  html += '<div>';
+  html += '<span class="dice-tag">' + result.planet.name + '</span>';
+  html += '<span class="dice-tag">' + result.sign.name + '</span>';
+  html += '<span class="dice-tag">' + result.house.name + '</span>';
+  html += '</div>';
+  html += '<p style="font-size:0.65em;color:#5a5c40;margin-top:6px;text-align:center;font-style:italic;">以上解读由占星骰子规则引擎生成，仅供参考。</p>';
+  html += '</div>';
+
   document.getElementById('diceResult').innerHTML = html;
 }
 
@@ -2254,8 +2294,13 @@ function rollAstroDiceMulti(n) {
     html += '<span class="dice-glyph planet" style="color:' + r.planet.color + '">' + r.planet.glyph + '</span> ';
     html += '<span class="dice-glyph sign">' + r.sign.symbol + '</span> 🏠';
     html += '<span class="dice-label">' + r.planet.name + ' · ' + r.sign.name + ' · ' + r.house.name + '</span>';
-    html += '<div class="dice-interp">' + r.interpretation + '</div></div>';
+    html += '<div class="dice-interp">' + r.interpretation + '</div>';
+    html += '<div class="dice-enhanced-interp" style="margin-top:6px;">';
+    html += '<p style="font-size:0.72em;"><b>' + r.planet.name + '</b>：' + r.planet.meaning + ' | <b>' + r.sign.name + '</b>：' + r.sign.meaning + ' | <b>' + r.house.name + '</b>：' + r.house.meaning + '</p>';
+    html += '</div>';
+    html += '</div>';
   });
+  html += '<p style="font-size:0.65em;color:#5a5c40;margin-top:6px;text-align:center;font-style:italic;">以上解读由占星骰子规则引擎生成，仅供参考。</p>';
   document.getElementById('diceResult').innerHTML = html;
 }
 
@@ -2801,6 +2846,7 @@ function doMeiHuaFromNumbers() {
 function renderMeiHuaResult(result) {
   var r = result;
   var html = '<div class="mh-result-card">';
+
   // 本卦
   html += '<div class="mh-gua-display"><span class="mh-gua-label">本卦</span>';
   html += '<span class="mh-gua-sym">' + r.benGua.upper.symbol + '</span>';
@@ -2808,8 +2854,40 @@ function renderMeiHuaResult(result) {
   html += '<span class="mh-gua-sym">' + r.benGua.lower.symbol + '</span>';
   html += '<span class="mh-gua-name">' + r.benGua.lower.name + '下</span>';
   html += '</div>';
+
+  // 本卦释义
+  var benGuaNum = BuShuExtra.getGuaNumByTrigrams(
+    BAGUA_ORDER.indexOf(r.benGua.upper.name),
+    BAGUA_ORDER.indexOf(r.benGua.lower.name)
+  );
+  var benInterp = BuShuExtra.getGuaInterpretation(benGuaNum);
+  html += '<div class="mh-gua-interp">';
+  html += '<h5>📖 ' + benInterp.name + ' · 卦辞释义</h5>';
+  html += '<p>' + benInterp.overall + '</p>';
+  html += '</div>';
+
+  // 互卦
+  if (r.huGua) {
+    html += '<div class="mh-gua-display mh-hu"><span class="mh-gua-label">互卦</span>';
+    html += '<span class="mh-gua-sym">' + r.huGua.upper.symbol + '</span>';
+    html += '<span class="mh-gua-name">' + r.huGua.upper.name + '上</span>';
+    html += '<span class="mh-gua-sym">' + r.huGua.lower.symbol + '</span>';
+    html += '<span class="mh-gua-name">' + r.huGua.lower.name + '下</span></div>';
+
+    var huGuaNum = BuShuExtra.getGuaNumByTrigrams(
+      BAGUA_ORDER.indexOf(r.huGua.upper.name),
+      BAGUA_ORDER.indexOf(r.huGua.lower.name)
+    );
+    var huInterp = BuShuExtra.getGuaInterpretation(huGuaNum);
+    html += '<div class="mh-gua-interp">';
+    html += '<h5>🔄 ' + huInterp.name + ' · 互卦释义</h5>';
+    html += '<p>' + huInterp.overall + '</p>';
+    html += '</div>';
+  }
+
   // 动爻
   html += '<div class="mh-dongyao">动爻：第<b>' + (r.dongYao + 1) + '</b>爻</div>';
+
   // 变卦
   if (r.bianGua) {
     html += '<div class="mh-gua-display mh-bian"><span class="mh-gua-label">变卦</span>';
@@ -2817,17 +2895,42 @@ function renderMeiHuaResult(result) {
     html += '<span class="mh-gua-name">' + r.bianGua.upper.name + '上</span>';
     html += '<span class="mh-gua-sym">' + r.bianGua.lower.symbol + '</span>';
     html += '<span class="mh-gua-name">' + r.bianGua.lower.name + '下</span></div>';
+
+    var bianGuaNum = BuShuExtra.getGuaNumByTrigrams(
+      BAGUA_ORDER.indexOf(r.bianGua.upper.name),
+      BAGUA_ORDER.indexOf(r.bianGua.lower.name)
+    );
+    var bianInterp = BuShuExtra.getGuaInterpretation(bianGuaNum);
+    html += '<div class="mh-gua-interp">';
+    html += '<h5>🔀 ' + bianInterp.name + ' · 变卦释义</h5>';
+    html += '<p>' + bianInterp.overall + '</p>';
+    html += '</div>';
   }
+
   // 体用生克
   html += '<div class="mh-tiyong" style="border-left:4px solid ' + r.relationColor + '">';
   html += '<span class="mh-relation" style="color:' + r.relationColor + '">' + r.relation + '</span>';
   html += '<span class="mh-ty-desc">' + r.relationDesc + '</span>';
   html += '</div>';
+
+  // 分项解读
+  if (benInterp.career) {
+    html += '<div class="mh-sections">';
+    html += '<div class="mh-sec"><h5>💼 事业</h5><p>' + benInterp.career + '</p></div>';
+    html += '<div class="mh-sec"><h5>💕 感情</h5><p>' + benInterp.love + '</p></div>';
+    html += '<div class="mh-sec"><h5>💰 财运</h5><p>' + benInterp.wealth + '</p></div>';
+    html += '</div>';
+  }
+
   // 公式
   html += '<div class="mh-formula">' + r.formula + '</div>';
+  html += '<p class="mh-disclaimer">以上解读由梅花易数规则引擎生成，仅供参考。</p>';
   html += '</div>';
   document.getElementById('mhResult').innerHTML = html;
 }
+
+// 八卦顺序映射（用于64卦序号计算）
+var BAGUA_ORDER = ['乾','兑','离','震','巽','坎','艮','坤'];
 
 // ==================== 六爻起卦 ====================
 
@@ -2914,15 +3017,23 @@ function doLiuYaoToss() {
 function renderLiuYaoResult(result) {
   var benGua = _liuYaoGuaDict[result.benGuaNum + 1] || { name:'未知卦', symbol:'?', nature:'?' };
   var bianGua = _liuYaoGuaDict[result.bianGuaNum + 1] || { name:'未知卦', symbol:'?', nature:'?' };
+  var benInterp = BuShuExtra.getGuaInterpretation(result.benGuaNum + 1);
+  var bianInterp = BuShuExtra.getGuaInterpretation(result.bianGuaNum + 1);
 
   var html = '<div class="ly-result-card">';
   // 本卦
-  html += '<div class="ly-gua"><span class="ly-gua-label">本卦</span><span class="ly-gua-sym">' + benGua.symbol + '</span><span class="ly-gua-name">' + benGua.name + '</span></div>';
+  html += '<div class="ly-gua"><span class="ly-gua-label">本卦</span><span class="ly-gua-sym">' + benGua.symbol + '</span><span class="ly-gua-name">' + benGua.name + '</span><span class="ly-gua-nature">' + benGua.nature + '</span></div>';
+
+  // 本卦释义
+  html += '<div class="ly-gua-interp">';
+  html += '<h5>📖 ' + benInterp.name + ' · 卦辞释义</h5>';
+  html += '<p>' + benInterp.overall + '</p>';
+  html += '</div>';
 
   // 六爻显示
   html += '<div class="ly-yao-lines">';
   result.yaoLines.forEach(function(l, i) {
-    html += '<div class="ly-yao-row">';
+    html += '<div class="ly-yao-row' + (l.isChanging ? ' changing' : '') + '">';
     html += '<span class="ly-yao-pos">' + l.posName + '</span>';
     html += '<span class="ly-yao-sym">' + l.type.symbol + '</span>';
     html += '<span class="ly-yao-type">' + l.type.type + '</span>';
@@ -2933,11 +3044,25 @@ function renderLiuYaoResult(result) {
 
   // 变卦
   if (result.benGuaNum !== result.bianGuaNum) {
-    html += '<div class="ly-gua ly-bian"><span class="ly-gua-label">变卦</span><span class="ly-gua-sym">' + bianGua.symbol + '</span><span class="ly-gua-name">' + bianGua.name + '</span></div>';
+    html += '<div class="ly-gua ly-bian"><span class="ly-gua-label">变卦</span><span class="ly-gua-sym">' + bianGua.symbol + '</span><span class="ly-gua-name">' + bianGua.name + '</span><span class="ly-gua-nature">' + bianGua.nature + '</span></div>';
+
+    // 变卦释义
+    html += '<div class="ly-gua-interp">';
+    html += '<h5>🔀 ' + bianInterp.name + ' · 变卦释义</h5>';
+    html += '<p>' + bianInterp.overall + '</p>';
+    html += '</div>';
   }
+
+  // 分项解读
+  html += '<div class="ly-sections">';
+  html += '<div class="ly-sec"><h5>💼 事业</h5><p>' + benInterp.career + '</p></div>';
+  html += '<div class="ly-sec"><h5>💕 感情</h5><p>' + benInterp.love + '</p></div>';
+  html += '<div class="ly-sec"><h5>💰 财运</h5><p>' + benInterp.wealth + '</p></div>';
+  html += '</div>';
 
   // 提示
   html += '<div class="ly-tip">本卦为当前状态，变卦为发展方向。老阳(○)老阴(×)为动爻。</div>';
+  html += '<p class="ly-disclaimer">以上解读由六爻规则引擎生成，仅供参考。</p>';
   html += '</div>';
   document.getElementById('lyResult').innerHTML = html;
 }
