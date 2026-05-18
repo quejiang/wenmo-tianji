@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>文墨天机 · 山医命相卜</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="文墨天机">
+  <meta name="theme-color" content="#1a1a2e">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="stylesheet" href="css/style.css?v=16">
+</head>
+<body>
+  <div class="container">
+
+    <!-- 头部 -->
+    <div class="header">
+      <h1>文墨天机</h1>
+      <div class="subtitle">山 · 医 · 命 · 相 · 卜 — 五术玄学</div>
+      <button class="btn-features" onclick="openFeatureOverview()" title="功能全览">📋 功能全览</button>
+    </div>
+
+    <!-- 五术主标签栏 -->
+    <div class="wushu-tab-bar" id="wushuTabBar">
+      <button class="wushu-tab active" data-wushu="shan" onclick="switchWushu('shan')">⛰ 山</button>
+      <button class="wushu-tab" data-wushu="yi" onclick="switchWushu('yi')">💊 医</button>
+      <button class="wushu-tab" data-wushu="ming" onclick="switchWushu('ming')">⭐ 命</button>
+      <button class="wushu-tab" data-wushu="xiang" onclick="switchWushu('xiang')">🔮 相</button>
+      <button class="wushu-tab" data-wushu="bu" onclick="switchWushu('bu')">🃏 卜</button>
+    </div>
+
+    <!-- ==================== 山 SHAN ==================== -->
+    <div class="wushu-panel active" id="wushuShan">
+      <div class="wushu-sub-tabs">
+        <button class="ws-tab active" data-subtab="shan-zhiwu" onclick="switchShanTab('zhiwu')">🌿 子午流注</button>
+        <button class="ws-tab" data-subtab="shan-wuxing" onclick="switchShanTab('wuxing')">☯ 五行养生</button>
+        <button class="ws-tab" data-subtab="shan-meditation" onclick="switchShanTab('meditation')">🧘 打坐冥想</button>
+        <button class="ws-tab" data-subtab="shan-detox" onclick="switchShanTab('detox')">🕐 五脏排毒</button>
+      </div>
+
+      <!-- 子午流注 -->
+      <div class="ws-content active" id="shanZhiwu">
+        <div class="shan-now-card" id="shanNowCard"></div>
+        <div class="shan-meridian-table" id="shanMeridianTable"></div>
+      </div>
+
+      <!-- 五行养生 -->
+      <div class="ws-content" id="shanWuxing">
+        <div class="shan-wuxing-picker" id="shanWuxingPicker"></div>
+        <div class="shan-wuxing-detail" id="shanWuxingDetail"></div>
+      </div>
+
+      <!-- 打坐冥想 -->
+      <div class="ws-content" id="shanMeditation">
+        <div class="shan-meditation-list" id="shanMeditationList"></div>
+      </div>
+
+      <!-- 五脏排毒 -->
+      <div class="ws-content" id="shanDetox">
+        <div class="shan-detox-table" id="shanDetoxTable"></div>
+      </div>
+    </div>
+
+    <!-- ==================== 医 YI ==================== -->
+    <div class="wushu-panel" id="wushuYi">
+      <div class="wushu-sub-tabs">
+        <button class="ws-tab active" data-subtab="yi-constitution" onclick="switchYiTab('constitution')">👤 体质辨识</button>
+        <button class="ws-tab" data-subtab="yi-zangfu" onclick="switchYiTab('zangfu')">🫁 五行脏腑</button>
+        <button class="ws-tab" data-subtab="yi-jieqi" onclick="switchYiTab('jieqi')">🌾 节气养生</button>
+      </div>
+
+      <!-- 体质辨识 -->
+      <div class="ws-content active" id="yiConstitution">
+        <div class="yi-const-intro" id="yiConstIntro"></div>
+        <div class="yi-const-list" id="yiConstList"></div>
+      </div>
+
+      <!-- 五行脏腑 -->
+      <div class="ws-content" id="yiZangfu">
+        <div class="yi-zangfu-grid" id="yiZangfuGrid"></div>
+      </div>
+
+      <!-- 节气养生 -->
+      <div class="ws-content" id="yiJieqi">
+        <div class="yi-jieqi-current" id="yiJieqiCurrent"></div>
+        <div class="yi-jieqi-all" id="yiJieqiAll"></div>
+      </div>
+    </div>
+
+    <!-- ==================== 命 MING ==================== -->
+    <div class="wushu-panel" id="wushuMing">
+      <div class="wushu-sub-tabs">
+        <button class="ws-tab active" data-subtab="ming-ziwei" onclick="switchMingTab('ziwei')">🏮 紫微斗数</button>
+        <button class="ws-tab" data-subtab="ming-bazi" onclick="switchMingTab('bazi')">📜 八字解读</button>
+        <button class="ws-tab" data-subtab="ming-astro" onclick="switchMingTab('astro')">🌟 西洋星盘</button>
+      </div>
+
+      <!-- 紫微斗数 -->
+      <div class="ws-content active" id="mingZiwei">
+        <!-- 输入面板 -->
+        <div class="input-panel">
+          <h3>请输入出生信息</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="birthDate">出生日期 (公历)</label>
+              <input type="date" id="birthDate" value="1990-06-15">
+            </div>
+            <div class="form-group">
+              <label for="birthHour">出生时间 (精确到分钟)</label>
+              <div class="time-input-row">
+                <input type="number" id="birthHour" value="12" min="0" max="23" placeholder="时" class="time-num" onchange="onTimeChange()">
+                <span class="time-sep">:</span>
+                <input type="number" id="birthMinute" value="0" min="0" max="59" placeholder="分" class="time-num" onchange="onTimeChange()">
+                <span class="derived-shichen" id="derivedShichen"></span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="gender">性别</label>
+              <select id="gender">
+                <option value="male">男</option>
+                <option value="female">女</option>
+              </select>
+            </div>
+            <div class="form-group form-group-check">
+              <label><input type="checkbox" id="useTrueSolar" onchange="onTrueSolarToggle()">使用真太阳时</label>
+            </div>
+            <button class="btn btn-primary" onclick="generateChart()">开始排盘</button>
+            <button class="btn" onclick="useCurrentTime()">当前时间</button>
+            <button class="btn btn-save" id="saveCaseBtn" onclick="saveCurrentCase()">保存命例</button>
+          </div>
+          <div class="form-row form-row-second" id="trueSolarRow" style="display:none;">
+            <div class="form-group"><label for="provinceSelect">省份</label><select id="provinceSelect" onchange="onProvinceChange()"><option value="">-- 选择省份 --</option></select></div>
+            <div class="form-group"><label for="citySelect">城市</label><select id="citySelect" onchange="onCityChange()"><option value="">-- 先选省份 --</option></select></div>
+            <div class="form-group"><label for="districtSelect">区县</label><select id="districtSelect" onchange="onDistrictChange()"><option value="">-- 先选城市 --</option></select></div>
+            <div class="form-group"><label for="longitude">出生地经度 (°E)</label><input type="number" id="longitude" value="120" step="0.01" min="70" max="135" placeholder="120.00"></div>
+          </div>
+        </div>
+        <!-- 盘面模式 -->
+        <div class="ziwei-mode-bar" id="ziweiModeBar" style="display:none;">
+          <button class="zm-btn active" data-mode="sanhe" onclick="switchZiweiMode('sanhe')">🔺 三合盘</button>
+          <button class="zm-btn" data-mode="feixing" onclick="switchZiweiMode('feixing')">🔄 飞星盘</button>
+          <button class="zm-btn" data-mode="sihua" onclick="switchZiweiMode('sihua')">✨ 四化盘</button>
+        </div>
+        <!-- 流年/流月/流日/流时 -->
+        <div class="liu-time-bar" id="liuTimeBar" style="display:none;">
+          <span class="liu-label">⏳ 时间层级</span>
+          <button class="liu-btn active" data-liu="benming" onclick="switchLiuTime('benming')">本命盘</button>
+          <button class="liu-btn" data-liu="daxian" onclick="switchLiuTime('daxian')">大限</button>
+          <button class="liu-btn" data-liu="liunian" onclick="switchLiuTime('liunian')">流年</button>
+          <button class="liu-btn" data-liu="liuyue" onclick="switchLiuTime('liuyue')">流月</button>
+          <button class="liu-btn" data-liu="liuri" onclick="switchLiuTime('liuri')">流日</button>
+          <button class="liu-btn" data-liu="liushi" onclick="switchLiuTime('liushi')">流时</button>
+          <span class="liu-info">|</span>
+          <input type="number" id="liuYear" value="2025" min="1900" max="2100" class="liu-num" onchange="onLiuTimeChange()">
+          <span class="liu-sep">年</span><input type="number" id="liuMonth" value="6" min="1" max="12" class="liu-num liu-num-sm" onchange="onLiuTimeChange()">
+          <span class="liu-sep">月</span><input type="number" id="liuDay" value="15" min="1" max="31" class="liu-num liu-num-sm" onchange="onLiuTimeChange()">
+          <span class="liu-sep">日</span>
+          <select id="liuShichen" class="liu-sel" onchange="onLiuTimeChange()">
+            <option value="0">子时</option><option value="1">丑时</option><option value="2">寅时</option><option value="3">卯时</option><option value="4">辰时</option><option value="5">巳时</option>
+            <option value="6" selected>午时</option><option value="7">未时</option><option value="8">申时</option><option value="9">酉时</option><option value="10">戌时</option><option value="11">亥时</option>
+          </select>
+          <span class="liu-info" id="liuTimeInfo"></span>
+          <button class="liu-btn liu-reset" onclick="resetLiuTime()">↻ 重置</button>
+          <div class="liu-xiao-xian" id="liuXiaoXianDisplay"></div>
+        </div>
+        <!-- 八字条 -->
+        <div class="bazi-bar" id="baziBar" style="display:none;">
+          <div class="bazi-item"><div class="label">年柱</div><div class="value" id="baziYear"></div></div>
+          <div class="bazi-item"><div class="label">月柱</div><div class="value" id="baziMonth"></div></div>
+          <div class="bazi-item"><div class="label">日柱</div><div class="value" id="baziDay"></div></div>
+          <div class="bazi-item"><div class="label">时柱</div><div class="value" id="baziHour"></div></div>
+          <div class="bazi-item"><div class="label">农历</div><div class="value" id="baziLunar"></div></div>
+          <div class="bazi-item"><div class="label">生肖</div><div class="value" id="baziAnimal"></div></div>
+        </div>
+        <!-- 命盘 -->
+        <div class="chart-container"><div class="chart-grid" id="chartGrid"></div></div>
+        <div class="legend">
+          <span class="legend-item"><span class="legend-dot main"></span> 主星</span>
+          <span class="legend-item"><span class="legend-dot aux"></span> 辅星</span>
+          <span class="legend-item"><span class="legend-dot ming"></span> 命宫</span>
+          <span class="legend-item"><span class="legend-dot shen"></span> 身宫</span>
+          <span class="legend-item" style="color:#aaa;">🟢禄 🟠权 🔵科 🟣忌 = 四化</span>
+        </div>
+        <div class="detail-panel" id="detailPanel" style="display:none;">
+          <h3>命盘概要</h3>
+          <div class="detail-grid" id="detailGrid"></div>
+          <div class="detail-actions"><button class="btn btn-ai" id="btnAiAnalyze" onclick="toggleAiAnalysis()">🤖 AI 命盘解读</button></div>
+          <div class="ai-analysis-container" id="aiAnalysisContainer" style="display:none;">
+            <div class="ai-header"><h3>个人命盘 AI 解读</h3><span class="ai-badge">基于规则引擎</span></div>
+            <div class="ai-content" id="aiContent"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 八字解读 -->
+      <div class="ws-content" id="mingBazi">
+        <div class="bazi-reading-container" id="baziReadingContainer">
+          <div class="br-placeholder">请先在"紫微斗数"面板中输入出生信息并点击"开始排盘"，再查看八字详细解读</div>
+        </div>
+        <div class="hehun-panel" id="hehunPanel" style="display:none;">
+          <div class="hehun-header"><h3>💕 八字合婚</h3><span class="hehun-desc">选择命例库中的另一命例进行合婚分析</span></div>
+          <div class="hehun-body"><div class="hehun-select"><label>选择对方命例</label><select id="hehunSelect" onchange="onHeHunSelect()"><option value="">-- 从命例库选择 --</option></select></div><div class="hehun-result" id="hehunResult"></div></div>
+        </div>
+      </div>
+
+      <!-- 西洋星盘 -->
+      <div class="ws-content" id="mingAstro">
+        <div class="astro-layout">
+          <div class="astro-left">
+            <div class="astro-wheel-container" id="astroWheel"></div>
+            <div class="astro-legend-text">
+              <span class="al-item">AC = 上升</span><span class="al-item">DES = 下降</span><span class="al-item">MC = 中天</span><span class="al-item">IC = 天底</span><span class="al-item">—— = 合 · 三合 · 刑 · 冲</span>
+            </div>
+          </div>
+          <div class="astro-right">
+            <div class="astro-card"><h4>行星位置 & 落座解读</h4><div class="planet-list" id="planetList"></div></div>
+            <div class="astro-card"><h4>相位表 & 解读</h4><div class="aspect-list" id="aspectList"></div></div>
+            <div class="astro-card"><h4>宫位含星</h4><div class="house-list" id="houseList"></div></div>
+            <div class="astro-card"><h4>星盘格局</h4><div class="pattern-list" id="patternList"></div></div>
+            <div class="astro-card"><h4>元素分布</h4><div class="element-dist" id="elementDist"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== 相 XIANG ==================== -->
+    <div class="wushu-panel" id="wushuXiang">
+      <div class="wushu-sub-tabs">
+        <button class="ws-tab active" data-subtab="xiang-palm" onclick="switchXiangTab('palm')">🖐 手相分析</button>
+        <button class="ws-tab" data-subtab="xiang-face" onclick="switchXiangTab('face')">👤 面相十二宫</button>
+        <button class="ws-tab" data-subtab="xiang-fengshui" onclick="switchXiangTab('fengshui')">🏠 风水九宫</button>
+      </div>
+
+      <!-- 手相 -->
+      <div class="ws-content active" id="xiangPalm">
+        <div class="xiang-palm-lines" id="xiangPalmLines"></div>
+        <div class="xiang-palm-hills" id="xiangPalmHills"></div>
+      </div>
+
+      <!-- 面相 -->
+      <div class="ws-content" id="xiangFace">
+        <div class="xiang-face-grid" id="xiangFaceGrid"></div>
+      </div>
+
+      <!-- 风水 -->
+      <div class="ws-content" id="xiangFengshui">
+        <div class="xiang-fs-control"><label>年份：</label><input type="number" id="xiangFsYear" value="2025" onchange="renderFengShuiStars()"><button class="btn btn-sm" onclick="renderFengShuiStars()">查看飞星</button></div>
+        <div class="xiang-fs-grid" id="xiangFsGrid"></div>
+      </div>
+    </div>
+
+    <!-- ==================== 卜 BU ==================== -->
+    <div class="wushu-panel" id="wushuBu">
+      <div class="wushu-sub-tabs">
+        <button class="ws-tab active" data-subtab="bu-tarot" onclick="switchBuTab('tarot')">🃏 塔罗牌</button>
+        <button class="ws-tab" data-subtab="bu-dice" onclick="switchBuTab('dice')">🎲 占星骰子</button>
+        <button class="ws-tab" data-subtab="bu-xiaoliuren" onclick="switchBuTab('xiaoliuren')">🖐 小六壬</button>
+        <button class="ws-tab" data-subtab="bu-meihua" onclick="switchBuTab('meihua')">🌸 梅花易数</button>
+        <button class="ws-tab" data-subtab="bu-liuyao" onclick="switchBuTab('liuyao')">☰ 六爻起卦</button>
+        <button class="ws-tab" data-subtab="bu-horoscope" onclick="switchBuTab('horoscope')">📅 每日运势</button>
+      </div>
+
+      <!-- 塔罗牌 -->
+      <div class="ws-content active" id="buTarot">
+        <div class="tarot-card-panel">
+          <h3>🃏 塔罗牌占卜</h3>
+          <div class="tarot-spread-select">
+            <button class="tarot-spread-btn active" data-spread="three" onclick="selectTarotSpread('three')">三张牌阵</button>
+            <button class="tarot-spread-btn" data-spread="single" onclick="selectTarotSpread('single')">单张指引</button>
+            <button class="tarot-spread-btn" data-spread="relationship" onclick="selectTarotSpread('relationship')">感情牌阵</button>
+            <button class="tarot-spread-btn" data-spread="career" onclick="selectTarotSpread('career')">事业牌阵</button>
+            <button class="tarot-spread-btn" data-spread="celtic" onclick="selectTarotSpread('celtic')">凯尔特十字</button>
+          </div>
+          <button class="btn btn-primary" onclick="drawTarotCards()" style="margin:12px auto;display:block;">🎴 抽牌</button>
+          <div class="tarot-result" id="tarotResult"></div>
+        </div>
+      </div>
+
+      <!-- 占星骰子 -->
+      <div class="ws-content" id="buDice">
+        <div class="dice-panel">
+          <h3>🎲 占星骰子</h3>
+          <p class="dice-desc">行星 + 星座 + 宫位 = 占星骰子占卜</p>
+          <button class="btn btn-primary" onclick="rollAstroDice()" style="margin:8px auto;display:block;">🎲 掷一枚骰子</button>
+          <div class="dice-result" id="diceResult"></div>
+          <button class="btn btn-sm" onclick="rollAstroDiceMulti(3)" style="margin:4px auto;display:block;">掷三枚骰子</button>
+        </div>
+      </div>
+
+      <!-- 小六壬 -->
+      <div class="ws-content" id="buXiaoliuren">
+        <div class="xiao-liuren-panel">
+          <h3>🖐 小六壬掌诀</h3>
+          <p class="xlr-desc">月上起日 · 日上起时 · 时上查掌诀</p>
+          <div class="xlr-inputs">
+            <div class="xlr-input-group"><label>农历月</label><input type="number" id="xlrMonth" value="1" min="1" max="12" class="xlr-num" onchange="onXlrChange()"></div>
+            <div class="xlr-input-group"><label>农历日</label><input type="number" id="xlrDay" value="1" min="1" max="30" class="xlr-num" onchange="onXlrChange()"></div>
+            <div class="xlr-input-group"><label>时辰</label>
+              <select id="xlrShichen" class="xlr-sel" onchange="onXlrChange()">
+                <option value="0">子时 (23-1)</option><option value="1">丑时 (1-3)</option><option value="2">寅时 (3-5)</option><option value="3">卯时 (5-7)</option><option value="4">辰时 (7-9)</option><option value="5">巳时 (9-11)</option><option value="6" selected>午时 (11-13)</option><option value="7">未时 (13-15)</option><option value="8">申时 (15-17)</option><option value="9">酉时 (17-19)</option><option value="10">戌时 (19-21)</option><option value="11">亥时 (21-23)</option>
+              </select></div>
+            <button class="btn btn-primary btn-sm" onclick="doXiaoLiuRen()">🔮 推算</button><button class="btn btn-sm" onclick="onXlrNow()">🕐 当前时间</button>
+          </div>
+          <div class="xlr-digits">
+            <span class="xlr-digits-label">或输入三数：</span>
+            <input type="number" id="xlrNum1" value="1" min="1" class="xlr-num xlr-num-sm" onchange="doXiaoLiuRenFromNumbers()">
+            <input type="number" id="xlrNum2" value="1" min="1" class="xlr-num xlr-num-sm" onchange="doXiaoLiuRenFromNumbers()">
+            <input type="number" id="xlrNum3" value="1" min="1" class="xlr-num xlr-num-sm" onchange="doXiaoLiuRenFromNumbers()">
+            <button class="btn btn-sm" onclick="doXiaoLiuRenFromNumbers()">三数占</button>
+          </div>
+          <div class="xlr-result" id="xlrResult"></div>
+        </div>
+      </div>
+
+      <!-- 梅花易数 -->
+      <div class="ws-content" id="buMeihua">
+        <div class="meihua-panel">
+          <h3>🌸 梅花易数</h3>
+          <p class="mh-desc">以年月日时起卦 · 三数起卦 · 体用生克</p>
+          <div class="mh-inputs">
+            <div class="mh-input-group"><label>年</label><input type="number" id="mhYear" value="2025" class="mh-num"></div>
+            <div class="mh-input-group"><label>月</label><input type="number" id="mhMonth" value="6" class="mh-num mh-num-sm"></div>
+            <div class="mh-input-group"><label>日</label><input type="number" id="mhDay" value="15" class="mh-num mh-num-sm"></div>
+            <div class="mh-input-group"><label>时辰</label>
+              <select id="mhShichen" class="mh-sel"><option value="0">子时</option><option value="1">丑时</option><option value="2">寅时</option><option value="3">卯时</option><option value="4">辰时</option><option value="5">巳时</option><option value="6" selected>午时</option><option value="7">未时</option><option value="8">申时</option><option value="9">酉时</option><option value="10">戌时</option><option value="11">亥时</option></select></div>
+            <button class="btn btn-primary btn-sm" onclick="doMeiHuaQiGua()">起卦</button>
+          </div>
+          <div class="mh-digits">
+            <span class="mh-digits-label">或三数起卦：</span>
+            <input type="number" id="mhNum1" value="1" min="1" class="mh-num mh-num-sm"><input type="number" id="mhNum2" value="1" min="1" class="mh-num mh-num-sm"><input type="number" id="mhNum3" value="1" min="1" class="mh-num mh-num-sm">
+            <button class="btn btn-sm" onclick="doMeiHuaFromNumbers()">三数起卦</button>
+          </div>
+          <div class="mh-result" id="mhResult"></div>
+        </div>
+      </div>
+
+      <!-- 六爻起卦 -->
+      <div class="ws-content" id="buLiuyao">
+        <div class="liuyao-panel">
+          <h3>☰ 六爻起卦（金钱卦）</h3>
+          <p class="ly-desc">三枚铜钱 · 六次摇卦 · 本卦变卦</p>
+          <button class="btn btn-primary" onclick="doLiuYaoToss()" style="margin:8px auto;display:block;">🪙 摇卦</button>
+          <div class="ly-result" id="lyResult"></div>
+        </div>
+      </div>
+
+      <!-- 每日运势 -->
+      <div class="ws-content" id="buHoroscope">
+        <div class="horo-container">
+          <div class="horo-top"><div class="horo-zodiac-select"><h3>📅 星座运势 & 万年历</h3><div class="zodiac-picker" id="zodiacPicker"></div></div></div>
+          <div class="horo-body" id="horoBody"></div>
+          <div class="horo-calendar-section" id="horoCalendar"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 命例库面板 -->
+    <div class="cases-panel" id="casesPanel" style="display:none;">
+      <div class="cases-header"><h3>命例库</h3><span class="cases-count" id="casesCount"></span><button class="btn btn-sm" onclick="toggleCasesPanel()">✕</button></div>
+      <div class="cases-list" id="casesList"></div>
+      <div class="cases-tags-bar" id="casesTagsBar" style="display:none;"></div>
+    </div>
+
+    <!-- 保存命例对话框 -->
+    <div class="modal-overlay" id="saveDialog" style="display:none;" onclick="if(event.target===this)closeSaveDialog()">
+      <div class="modal-box"><h3>保存命例</h3><div class="modal-field"><label for="caseNameInput">名称（可选）</label><input type="text" id="caseNameInput" placeholder="如：本人、张三"></div><div class="modal-field"><label>分类标签</label><div class="tag-presets" id="tagPresets"></div><input type="text" id="caseTagsInput" placeholder="如：家人, 朋友"></div><div class="modal-actions"><button class="btn btn-primary" onclick="doSaveCase()">保存</button><button class="btn" onclick="closeSaveDialog()">取消</button></div></div>
+    </div>
+
+    <button class="btn-float-cases" id="btnFloatCases" onclick="toggleCasesPanel()" title="命例库">📋</button>
+
+    <!-- 功能全览面板 -->
+    <div class="feature-overlay" id="featureOverlay" style="display:none;" onclick="if(event.target===this)closeFeatureOverview()">
+      <div class="feature-panel">
+        <div class="feature-header">
+          <h3>📋 功能全览</h3>
+          <span class="feature-subtitle">山医命相卜 · 五术玄学 — 完整功能目录</span>
+          <button class="feature-close" onclick="closeFeatureOverview()">✕</button>
+        </div>
+        <div class="feature-body" id="featureBody"></div>
+      </div>
+    </div>
+
+    <!-- 星曜百科弹窗 -->
+    <div class="star-popup" id="starPopup" style="display:none;">
+      <div class="star-popup-header"><span class="star-popup-name" id="popupStarName"></span><button class="star-popup-close" onclick="closeStarPopup()">✕</button></div>
+      <div class="star-popup-body" id="popupStarBody"></div>
+    </div>
+
+    <!-- 星盘点击弹窗 -->
+    <div class="astro-info-popup" id="astroInfoPopup" style="display:none;" onclick="event.stopPropagation()">
+      <div class="aip-header"><span class="aip-icon" id="aipIcon"></span><span class="aip-title" id="aipTitle"></span><button class="aip-close" onclick="closeAstroPopup()">✕</button></div>
+      <div class="aip-body" id="aipBody"></div><div class="aip-footer" id="aipFooter"></div>
+    </div>
+
+  </div>
+
+  <script src="js/lunar.js?v=16"></script>
+  <script src="js/ziwei.js?v=16"></script>
+  <script src="js/ziwei-flow.js?v=16"></script>
+  <script src="js/encyclopedia.js?v=16"></script>
+  <script src="js/ai-analysis.js?v=16"></script>
+  <script src="js/astrology.js?v=16"></script>
+  <script src="js/astrology-pro.js?v=16"></script>
+  <script src="js/bazi-reading.js?v=16"></script>
+  <script src="js/cases.js?v=16"></script>
+  <script src="js/tarot-dice.js?v=16"></script>
+  <script src="js/xiao-liuren.js?v=16"></script>
+  <script src="js/daily-horoscope.js?v=16"></script>
+  <script src="js/shan-shu.js?v=16"></script>
+  <script src="js/yi-shu.js?v=16"></script>
+  <script src="js/xiang-shu.js?v=16"></script>
+  <script src="js/bu-shu-extra.js?v=16"></script>
+  <script src="js/app.js?v=16"></script>
+  <script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js');}</script>
+</body>
+</html>
