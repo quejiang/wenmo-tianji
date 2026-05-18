@@ -1,4 +1,4 @@
-const CACHE = 'wenmo-v1';
+const CACHE = 'wenmo-v2';
 const FILES = [
   './index.html',
   './css/style.css',
@@ -19,7 +19,9 @@ const FILES = [
   './js/xiang-shu.js',
   './js/bu-shu-extra.js',
   './js/app.js',
-  './manifest.json'
+  './manifest.json',
+  './icon-192.png',
+  './icon-512.png'
 ];
 
 self.addEventListener('install', e => {
