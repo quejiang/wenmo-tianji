@@ -1,4 +1,4 @@
-const CACHE = 'wenmo-v3';
+const CACHE = 'wenmo-v4';
 const FILES = [
   './index.html',
   './css/style.css',
@@ -18,6 +18,7 @@ const FILES = [
   './js/yi-shu.js',
   './js/xiang-shu.js',
   './js/bu-shu-extra.js',
+  './js/tutorial.js',
   './js/app.js',
   './manifest.json',
   './icon-192.png',

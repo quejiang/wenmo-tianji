@@ -867,6 +867,59 @@ function switchSubTab(prefix, sub) {
   });
 }
 
+// ==================== 各模块懒初始化 ====================
+
+function initShanTab() {
+  var activeSub = document.querySelector('#wushuShan .ws-tab.active');
+  var sub = activeSub ? (activeSub.getAttribute('data-subtab') || 'shan-zhiwu').replace('shan-', '') : 'zhiwu';
+  switchShanTab(sub);
+}
+
+function initYiTab() {
+  var activeSub = document.querySelector('#wushuYi .ws-tab.active');
+  var sub = activeSub ? (activeSub.getAttribute('data-subtab') || 'yi-constitution').replace('yi-', '') : 'constitution';
+  switchYiTab(sub);
+}
+
+function initMingTab() {
+  var activeSub = document.querySelector('#wushuMing .ws-tab.active');
+  var sub = activeSub ? (activeSub.getAttribute('data-subtab') || 'ming-ziwei').replace('ming-', '') : 'ziwei';
+  switchMingTab(sub);
+}
+
+function initXiangTab() {
+  var activeSub = document.querySelector('#wushuXiang .ws-tab.active');
+  var sub = activeSub ? (activeSub.getAttribute('data-subtab') || 'xiang-palm').replace('xiang-', '') : 'palm';
+  switchXiangTab(sub);
+}
+
+function initBuTab() {
+  var activeSub = document.querySelector('#wushuBu .ws-tab.active');
+  var sub = activeSub ? (activeSub.getAttribute('data-subtab') || 'bu-tarot').replace('bu-', '') : 'tarot';
+  switchBuTab(sub);
+}
+
+function ensureTarotLoaded() {
+  // TarotDice 在 tarot-dice.js 中已同步加载，无需额外处理
+  if (typeof TarotDice === 'undefined') {
+    console.warn('塔罗牌模块未加载，请刷新页面');
+    return;
+  }
+}
+
+function ensureHoroscopeLoaded() {
+  // DailyHoroscope 在 daily-horoscope.js 中已同步加载，无需额外处理
+  if (typeof DailyHoroscope === 'undefined') {
+    console.warn('运势模块未加载，请刷新页面');
+    return;
+  }
+  // 首次进入时渲染星座选择器
+  var picker = document.getElementById('zodiacPicker');
+  if (picker && !picker.innerHTML.trim()) {
+    renderZodiacPicker();
+  }
+}
+
 // 保持旧 switchTab 兼容
 function switchTab(tab) {
   var map = { ziwei: 'ming', astrology: 'ming', bazi: 'ming', tarot: 'bu', horoscope: 'bu' };

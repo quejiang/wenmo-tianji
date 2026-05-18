@@ -3057,3 +3057,263 @@ body {
   .bazi-item .value { font-size: 0.85em; }
   .center-info .center-name { font-size: 1em; }
 }
+
+/* ==================== 新手教程 ==================== */
+
+.btn-tutorial {
+  padding: 10px 28px;
+  border-radius: 22px;
+  border: 1px solid rgba(160, 220, 140, 0.5);
+  background: linear-gradient(135deg, rgba(100, 200, 120, 0.15), rgba(80, 160, 100, 0.05));
+  color: #8fd8a0;
+  font-size: 0.95em;
+  font-family: inherit;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-left: 12px;
+  white-space: nowrap;
+}
+
+.btn-tutorial:hover {
+  background: rgba(100, 200, 120, 0.25);
+  box-shadow: 0 0 18px rgba(100, 200, 120, 0.25);
+  border-color: rgba(160, 220, 140, 0.7);
+  transform: translateY(-1px);
+}
+
+.tutorial-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.75);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+  animation: tutorialFadeIn 0.25s ease;
+  backdrop-filter: blur(4px);
+}
+
+@keyframes tutorialFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.tutorial-dialog {
+  background: linear-gradient(160deg, #1e2a3a 0%, #1a2535 50%, #162030 100%);
+  border: 1px solid rgba(160, 220, 140, 0.3);
+  border-radius: 20px;
+  width: 90vw;
+  max-width: 620px;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(100, 200, 120, 0.08);
+  animation: tutorialSlideUp 0.3s ease;
+}
+
+@keyframes tutorialSlideUp {
+  from { opacity: 0; transform: translateY(30px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.tutorial-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.tutorial-step-indicator {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.tutorial-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.tutorial-dot.active {
+  background: #6fd88a;
+  box-shadow: 0 0 10px rgba(111, 216, 138, 0.5);
+  transform: scale(1.3);
+}
+
+.tutorial-dot.done {
+  background: rgba(111, 216, 138, 0.4);
+}
+
+.tutorial-close {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.05);
+  color: #999;
+  font-size: 1.1em;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tutorial-close:hover {
+  background: rgba(255, 100, 100, 0.15);
+  border-color: rgba(255, 100, 100, 0.4);
+  color: #ff8888;
+}
+
+.tutorial-body {
+  padding: 20px 28px 24px;
+  text-align: center;
+}
+
+.tutorial-emoji {
+  font-size: 3em;
+  margin-bottom: 10px;
+}
+
+.tutorial-title {
+  font-size: 1.3em;
+  color: #8fd8a0;
+  margin-bottom: 20px;
+  letter-spacing: 1px;
+  font-weight: bold;
+}
+
+.tutorial-content {
+  text-align: left;
+  font-size: 0.9em;
+  color: #c8c8d0;
+  line-height: 2;
+}
+
+.tutorial-content p {
+  margin-bottom: 10px;
+}
+
+.tutorial-content strong {
+  color: #f0d78c;
+}
+
+.tutorial-content em {
+  color: #a0c8e0;
+  font-style: normal;
+}
+
+.tutorial-content mark {
+  background: rgba(240, 215, 140, 0.15);
+  color: #f0d78c;
+  padding: 1px 6px;
+  border-radius: 3px;
+}
+
+.tutorial-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 12px 24px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.tutorial-progress {
+  font-size: 0.8em;
+  color: #7a8c6a;
+  letter-spacing: 1px;
+  min-width: 50px;
+  text-align: center;
+}
+
+.tutorial-btn {
+  padding: 10px 20px;
+  border-radius: 20px;
+  border: 1px solid rgba(160, 220, 140, 0.3);
+  background: rgba(100, 200, 120, 0.1);
+  color: #a0d8b0;
+  font-size: 0.88em;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.25s;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+
+.tutorial-btn:hover {
+  background: rgba(100, 200, 120, 0.2);
+  border-color: rgba(160, 220, 140, 0.55);
+}
+
+.tutorial-btn-next {
+  background: linear-gradient(135deg, rgba(100, 200, 120, 0.25), rgba(80, 160, 100, 0.12));
+  border-color: rgba(140, 210, 130, 0.45);
+  color: #a0f0b8;
+  font-weight: bold;
+}
+
+.tutorial-btn-next:hover {
+  background: linear-gradient(135deg, rgba(120, 220, 140, 0.35), rgba(100, 180, 120, 0.18));
+  box-shadow: 0 0 18px rgba(100, 200, 120, 0.2);
+}
+
+.tutorial-btn-finish {
+  background: linear-gradient(135deg, rgba(240, 200, 80, 0.3), rgba(200, 160, 50, 0.15));
+  border-color: rgba(240, 200, 80, 0.5);
+  color: #f0d060;
+  font-weight: bold;
+  font-size: 0.95em;
+}
+
+.tutorial-btn-finish:hover {
+  background: linear-gradient(135deg, rgba(250, 210, 90, 0.4), rgba(210, 170, 60, 0.2));
+  box-shadow: 0 0 22px rgba(240, 200, 80, 0.25);
+}
+
+.tutorial-highlight {
+  position: relative;
+  z-index: 10000 !important;
+  outline: 3px solid rgba(111, 216, 138, 0.6) !important;
+  outline-offset: 4px;
+  border-radius: 8px;
+  box-shadow: 0 0 30px rgba(111, 216, 138, 0.25) !important;
+  animation: tutorialPulse 2s ease-in-out infinite;
+}
+
+@keyframes tutorialPulse {
+  0%, 100% { outline-color: rgba(111, 216, 138, 0.4); }
+  50% { outline-color: rgba(111, 216, 138, 0.8); }
+}
+
+@media (max-width: 768px) {
+  .tutorial-dialog {
+    width: 95vw;
+    max-height: 90vh;
+    border-radius: 16px;
+  }
+  .tutorial-body { padding: 16px 18px 20px; }
+  .tutorial-title { font-size: 1.1em; }
+  .tutorial-content { font-size: 0.82em; line-height: 1.85; }
+  .tutorial-footer { gap: 8px; padding: 10px 16px 16px; }
+  .tutorial-btn { padding: 8px 16px; font-size: 0.8em; }
+  .btn-tutorial { padding: 8px 16px; font-size: 0.82em; margin-left: 6px; }
+}
+
+@media (max-width: 400px) {
+  .tutorial-dialog { width: 98vw; border-radius: 12px; }
+  .tutorial-header { padding: 14px 16px 10px; }
+  .tutorial-body { padding: 12px 14px 16px; }
+  .tutorial-title { font-size: 1em; }
+  .tutorial-content { font-size: 0.76em; }
+  .tutorial-btn { padding: 7px 12px; font-size: 0.75em; }
+  .btn-tutorial { padding: 7px 12px; font-size: 0.75em; }
+}
