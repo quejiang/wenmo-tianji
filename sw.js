@@ -1,4 +1,4 @@
-const CACHE = 'wenmo-v16';
+const CACHE = 'wenmo-v17';
 const FILES = [
   './',
   './index.html',
@@ -23,7 +23,11 @@ const FILES = [
   './js/bu-shu-extra.js',
   './js/tutorial.js',
   './js/lang.js',
-  './js/app.js'
+  './js/app.js',
+  './js/qimen.js',
+  './js/zeri.js',
+  './js/luopan.js',
+  './js/user-mode.js',
 ];
 
 // 安装完成后立即激活，不等待旧 SW 释放
