@@ -219,11 +219,89 @@ var BuShuExtra = (function() {
   };
 
   /**
-   * 获取卦象解释
+   * 获取卦象解释（含自动生成的扩展解读）
    * @param {number} guaNum - 卦序号 (1-64)
    */
   function getGuaInterpretation(guaNum) {
-    return GUA64_INTERP[guaNum] || { name:'未知卦', overall:'暂无该卦的解释数据。', career:'暂无。', love:'暂无。', wealth:'暂无。' };
+    var base = GUA64_INTERP[guaNum];
+    if (!base) return { name:'未知卦', overall:'暂无该卦的解释数据。', career:'暂无。', love:'暂无。', wealth:'暂无。', health:'暂无。', travel:'暂无。' };
+
+    // 根据卦名和overall自动生成扩展解读
+    var name = base.name || '未知卦';
+    var overall = base.overall || '';
+
+    // 健康（从卦象元素推导）
+    var health = autoHealth(name, overall);
+    // 旅途（从卦象名称推导）
+    var travel = autoTravel(name, overall);
+    // 寻物
+    var lost = autoLost(name, overall);
+
+    return {
+      name: base.name,
+      overall: base.overall,
+      career: base.career,
+      love: base.love,
+      wealth: base.wealth,
+      health: base.health || health,
+      travel: base.travel || travel,
+      lost: base.lost || lost
+    };
+  }
+
+  // 根据卦名和overall自动生成健康解读
+  function autoHealth(name, overall) {
+    if (overall.indexOf('大吉') !== -1 || overall.indexOf('上上') !== -1) return '健康运势良好，身心和谐。规律作息和适当运动即可保持最佳状态。';
+    if (overall.indexOf('不吉') !== -1 || overall.indexOf('凶') !== -1 || overall.indexOf('险') !== -1) return '健康方面需要多加注意。压力大的时期容易免疫力下降，注意劳逸结合。定期体检不宜疏忽，小病早治。';
+    if (overall.indexOf('水') !== -1 || name.indexOf('坎') !== -1) return '肾和泌尿系统需要关注。多喝水，注意腰部保暖。情绪方面容易焦虑，建议适当冥想或散步来放松心情。';
+    if (overall.indexOf('火') !== -1 || name.indexOf('离') !== -1) return '心火偏旺，注意血压和心血管保养。避免过度激动和劳累。饮食清淡，少辛辣。夏季尤其要注意防暑。';
+    if (overall.indexOf('山') !== -1 || name.indexOf('艮') !== -1) return '脾胃是重点养护对象。消化系统容易出小问题——注意饮食规律，不要暴饮暴食。适当运动促进消化。';
+    if (overall.indexOf('风') !== -1 || name.indexOf('巽') !== -1) return '注意呼吸系统和过敏反应。换季时容易感冒，适当增减衣物。精神上压力适中，保持心情舒畅即可。';
+    if (overall.indexOf('雷') !== -1 || name.indexOf('震') !== -1) return '神经系统容易紧张，注意头痛和失眠问题。避免咖啡因过量，睡前做些放松练习。肝气旺盛时多到户外走走。';
+    if (overall.indexOf('泽') !== -1 || name.indexOf('兑') !== -1) return '口腔和咽喉健康需留意。多喝水保持黏膜湿润。情绪方面偏于愉悦，这对健康本身就是一剂良药。';
+    if (overall.indexOf('地') !== -1 || name.indexOf('坤') !== -1 || overall.indexOf('土') !== -1) return '体质总体稳健，但需注意脾胃的调理。养成良好的饮食习惯，避免生冷食物。适度锻炼能大幅提升身体状态。';
+    return '健康运势平稳，此时适合做一次常规体检。规律作息、均衡饮食是基础。保持乐观的心态是最好的良药。';
+  }
+
+  // 根据卦名和overall自动生成出行解读
+  function autoTravel(name, overall) {
+    if (overall.indexOf('大吉') !== -1 || name.indexOf('泰') !== -1) return '出行大利！旅途顺利，适合远行和旅游。途中可能有意外的惊喜和贵人相助。';
+    if (overall.indexOf('不吉') !== -1 || overall.indexOf('凶') !== -1) return '出行需特别谨慎。行程容易遇到变数——航班延误、交通堵塞等。重要行程提前做好两手准备。';
+    if (name.indexOf('旅') !== -1) return '此卦与旅行息息相关。旅途本身即是修行的道场。在外奔波中注意保管好财物，入乡随俗灵活应变。';
+    if (overall.indexOf('退') !== -1 || overall.indexOf('守') !== -1 || name.indexOf('遁') !== -1) return '当前不宜远行，宜暂时退守家中。若必须出行，宜选择近处短途，勿去陌生偏远之地。';
+    if (overall.indexOf('等') !== -1 || overall.indexOf('待') !== -1 || name.indexOf('需') !== -1) return '出行计划可能需要等待一段时间。时机尚未成熟就别急着出发——等一等天气会更好。';
+    if (overall.indexOf('前') !== -1 || overall.indexOf('进') !== -1 || overall.indexOf('晋') !== -1) return '出行运势良好，有前进和上升之兆。适合为了事业或学业而出行——带着目标出发的旅途最有收获。';
+    if (overall.indexOf('困') !== -1 || overall.indexOf('蹇') !== -1 || overall.indexOf('难') !== -1) return '出行容易遭遇障碍。提前做好攻略，备好应急方案。最困难的路往往通向最美的风景。';
+    return '出行运势中等。出行前做好规划和准备即可。旅途中的小插曲不必太在意——随遇而安是旅行最好的心态。';
+  }
+
+  // 根据卦名和overall自动生成寻物解读
+  function autoLost(name, overall) {
+    if (overall.indexOf('大吉') !== -1 || overall.indexOf('上上') !== -1) return '失物有望找回。仔细想想最后放置的位置，多半就在附近。问问身边的人是否看到过。';
+    if (overall.indexOf('不吉') !== -1 || overall.indexOf('凶') !== -1 || overall.indexOf('空') !== -1) return '失物找回难度较大。可能已被转移或不在原地。如果重要物品，建议调取监控或询问管理人员。';
+    if (overall.indexOf('等') !== -1 || overall.indexOf('迟') !== -1) return '失物找回需要一些时间和耐心。不要着急，它可能在不经意间自己出现。';
+    if (overall.indexOf('前') !== -1 || overall.indexOf('晋') !== -1 || name.indexOf('升') !== -1) return '失物可能在上方或高处——检查书架顶层、衣柜上方等。可能在移动中被放到了较高的位置。';
+    if (overall.indexOf('水') !== -1 || name.indexOf('坎') !== -1) return '失物可能与水源或低处有关。检查洗手间、厨房水槽附近、地下室等湿度较高的地方。';
+    if (overall.indexOf('火') !== -1 || name.indexOf('离') !== -1) return '失物可能在光线明亮的地方或靠近电源处。检查窗台、灯具附近、电器旁边。午时寻找最有利。';
+    return '失物有寻回的可能。先冷静回忆最后一次看到的经过，按顺序逐步排查。不要慌乱，清楚比速度更重要。';
+  }
+
+  // ==================== 六爻爻位参考表 ====================
+
+  var YAO_POSITION_GUIDE = [
+    { pos:'初爻', level:'最底层', meaning:'初爻代表事情的起始和开端。它像一颗种子——虽然埋在地下看不见，但已经决定了这棵树将来会长成什么样。问事：这件事的根基是什么？谁是推动它开始的人？宜：打好基础，不急求成。忌：好高骛远，轻视细节。' },
+    { pos:'二爻', level:'下层', meaning:'二爻进入内部的运转层。它代表你在这个局势中的实际位置和你能掌控的资源。问事：我在这个局面中处于什么位置？手上有哪些资源可用？宜：踏实做事，展现能力。忌：越位揽权，锋芒太露。' },
+    { pos:'三爻', level:'中层·过渡', meaning:'三爻是最不安分的爻位——它处于下卦之顶，即将跨入上卦却还未到达。这是一个"不上不下"的过渡期。问事：什么在阻碍我？如何突破？宜：灵活应变，寻找突破口。忌：急躁冒进，自乱阵脚。' },
+    { pos:'四爻', level:'上层·近君', meaning:'四爻进入了决策层——它靠近五爻的"君位"，是决策圈中的一员。问事：上面的领导怎么看我？我得到了足够的支持吗？宜：与上级保持良好沟通，做好辅助工作。忌：功高震主，越位代庖。' },
+    { pos:'五爻', level:'至尊位', meaning:'五爻是君王之位——卦象的精神核心。它代表事情的最高决策者或最理想的状态。问事：这件事的最佳结果是什么？谁是关键决策者？宜：胸怀全局，果断决策。忌：优柔寡断，纵容偏私。' },
+    { pos:'上爻', level:'最终·终结', meaning:'上爻代表事情的最后走向和结局。但它也常常走向反面——盛极必衰，物极必反。问事：这件事最后会怎样收场？我需要为结局做什么准备？宜：居安思危，善始善终。忌：得意忘形，不留后路。' }
+  ];
+
+  /**
+   * 获取动爻的解释
+   */
+  function getYaoPositionInterpretation(yaoPos) {
+    return YAO_POSITION_GUIDE[yaoPos] || { pos:'爻位', meaning:'暂无该爻位的解释。' };
   }
 
   /**
@@ -296,6 +374,8 @@ var BuShuExtra = (function() {
     meiHuaFromNumbers: meiHuaFromNumbers,
     liuYaoCoinToss: liuYaoCoinToss,
     getGuaInterpretation: getGuaInterpretation,
-    getGuaNumByTrigrams: getGuaNumByTrigrams
+    getGuaNumByTrigrams: getGuaNumByTrigrams,
+    getYaoPositionInterpretation: getYaoPositionInterpretation,
+    YAO_POSITION_GUIDE: YAO_POSITION_GUIDE
   };
 })();

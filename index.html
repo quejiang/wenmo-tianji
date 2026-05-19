@@ -10,7 +10,7 @@
   <meta name="apple-mobile-web-app-title" content="文墨天机">
   <meta name="theme-color" content="#1a1a2e">
   <link rel="apple-touch-icon" href="icon-192.png">
-  <link rel="stylesheet" href="css/style.css?v=20">
+  <link rel="stylesheet" href="css/style.css?v=22">
 </head>
 <body>
   <div class="container">
@@ -140,19 +140,19 @@
         </div>
         <!-- 盘面模式 -->
         <div class="ziwei-mode-bar" id="ziweiModeBar" style="display:none;">
-          <button class="zm-btn active" data-mode="sanhe" onclick="switchZiweiMode('sanhe')">🔺 三合盘</button>
-          <button class="zm-btn" data-mode="feixing" onclick="switchZiweiMode('feixing')">🔄 飞星盘</button>
-          <button class="zm-btn" data-mode="sihua" onclick="switchZiweiMode('sihua')">✨ 四化盘</button>
+          <button class="zm-btn active" data-mode="sanhe" onclick="switchZiweiMode('sanhe')" data-tooltip="最传统的紫微斗数盘面，以三方四正的关系看各宫位互动，信息最全面，适合初学者">🔺 三合盘</button>
+          <button class="zm-btn" data-mode="feixing" onclick="switchZiweiMode('feixing')" data-tooltip="展示宫位之间的飞化关系（如命宫化禄入夫妻宫），告诉你能量往哪里流动，适合进阶分析">🔄 飞星盘</button>
+          <button class="zm-btn" data-mode="sihua" onclick="switchZiweiMode('sihua')" data-tooltip="聚焦禄权科忌四化的分布，快速定位人生中好运和需要注意的领域">✨ 四化盘</button>
         </div>
         <!-- 流年/流月/流日/流时 -->
         <div class="liu-time-bar" id="liuTimeBar" style="display:none;">
           <span class="liu-label">⏳ 时间层级</span>
-          <button class="liu-btn active" data-liu="benming" onclick="switchLiuTime('benming')">本命盘</button>
-          <button class="liu-btn" data-liu="daxian" onclick="switchLiuTime('daxian')">大限</button>
-          <button class="liu-btn" data-liu="liunian" onclick="switchLiuTime('liunian')">流年</button>
-          <button class="liu-btn" data-liu="liuyue" onclick="switchLiuTime('liuyue')">流月</button>
-          <button class="liu-btn" data-liu="liuri" onclick="switchLiuTime('liuri')">流日</button>
-          <button class="liu-btn" data-liu="liushi" onclick="switchLiuTime('liushi')">流时</button>
+          <button class="liu-btn active" data-liu="benming" onclick="switchLiuTime('benming')" data-tooltip="你出生那一刻的原始命盘，一生的'出厂设置'，所有分析的基础">本命盘</button>
+          <button class="liu-btn" data-liu="daxian" onclick="switchLiuTime('daxian')" data-tooltip="每十年为一个周期，告诉你这十年的人生重心在哪个领域，自动跟随当前年龄定位">大限</button>
+          <button class="liu-btn" data-liu="liunian" onclick="switchLiuTime('liunian')" data-tooltip="当年的运势盘，可通过年份输入框切换年份，适合做年度规划">流年</button>
+          <button class="liu-btn" data-liu="liuyue" onclick="switchLiuTime('liuyue')" data-tooltip="当月的运势，配合年月日输入框可精确到某个月份">流月</button>
+          <button class="liu-btn" data-liu="liuri" onclick="switchLiuTime('liuri')" data-tooltip="当日的运势，适合看近期具体日子的吉凶">流日</button>
+          <button class="liu-btn" data-liu="liushi" onclick="switchLiuTime('liushi')" data-tooltip="当前时辰（每两小时）的运势波动，最精细的时间颗粒">流时</button>
           <span class="liu-info">|</span>
           <input type="number" id="liuYear" value="2025" min="1900" max="2100" class="liu-num" onchange="onLiuTimeChange()">
           <span class="liu-sep">年</span><input type="number" id="liuMonth" value="6" min="1" max="12" class="liu-num liu-num-sm" onchange="onLiuTimeChange()">
@@ -397,24 +397,24 @@
 
   </div>
 
-  <script src="js/lunar.js?v=20"></script>
-  <script src="js/ziwei.js?v=20"></script>
-  <script src="js/ziwei-flow.js?v=20"></script>
-  <script src="js/encyclopedia.js?v=20"></script>
-  <script src="js/ai-analysis.js?v=20"></script>
-  <script src="js/astrology.js?v=20"></script>
-  <script src="js/astrology-pro.js?v=20"></script>
-  <script src="js/bazi-reading.js?v=20"></script>
-  <script src="js/cases.js?v=20"></script>
-  <script src="js/tarot-dice.js?v=20"></script>
-  <script src="js/xiao-liuren.js?v=20"></script>
-  <script src="js/daily-horoscope.js?v=20"></script>
-  <script src="js/shan-shu.js?v=20"></script>
-  <script src="js/yi-shu.js?v=20"></script>
-  <script src="js/xiang-shu.js?v=20"></script>
-  <script src="js/bu-shu-extra.js?v=20"></script>
-  <script src="js/tutorial.js?v=20"></script>
-  <script src="js/app.js?v=20"></script>
+  <script src="js/lunar.js?v=22"></script>
+  <script src="js/ziwei.js?v=22"></script>
+  <script src="js/ziwei-flow.js?v=22"></script>
+  <script src="js/encyclopedia.js?v=22"></script>
+  <script src="js/ai-analysis.js?v=22"></script>
+  <script src="js/astrology.js?v=22"></script>
+  <script src="js/astrology-pro.js?v=22"></script>
+  <script src="js/bazi-reading.js?v=22"></script>
+  <script src="js/cases.js?v=22"></script>
+  <script src="js/tarot-dice.js?v=22"></script>
+  <script src="js/xiao-liuren.js?v=22"></script>
+  <script src="js/daily-horoscope.js?v=22"></script>
+  <script src="js/shan-shu.js?v=22"></script>
+  <script src="js/yi-shu.js?v=22"></script>
+  <script src="js/xiang-shu.js?v=22"></script>
+  <script src="js/bu-shu-extra.js?v=22"></script>
+  <script src="js/tutorial.js?v=22"></script>
+  <script src="js/app.js?v=22"></script>
   <script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js');}</script>
 </body>
 </html>

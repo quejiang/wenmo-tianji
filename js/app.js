@@ -382,8 +382,10 @@ function getSihuaCss(type) {
 
 // 星曜百科弹窗
 function showStarPopup(starName, event) {
+  // 教程打开时禁止弹出百科，避免拦截教程按钮点击
+  if (typeof Tutorial !== 'undefined' && Tutorial.isOpen && Tutorial.isOpen()) return;
+
   var info = STAR_ENCYCLOPEDIA[starName];
-  if (!info) return;
 
   var popup = document.getElementById('starPopup');
   document.getElementById('popupStarName').textContent = starName;
@@ -391,27 +393,33 @@ function showStarPopup(starName, event) {
   var body = document.getElementById('popupStarBody');
   var html = '';
 
-  // 属性行
-  var props = [];
-  if (info.category) props.push('<span class="sp-category">' + info.category + '</span>');
-  if (info.yinYang) props.push('阴阳: <b>' + info.yinYang + '</b>');
-  if (info.wuXing) props.push('五行: <b>' + info.wuXing + '</b>');
-  if (info.huaQi) props.push('四化: <b>' + info.huaQi + '</b>');
-  if (info.trait) props.push('<span class="sp-trait">' + info.trait + '</span>');
-  html += '<div class="sp-props">' + props.join(' · ') + '</div>';
+  if (!info) {
+    // 未知星曜：显示通用提示
+    html += '<div class="sp-props"><span class="sp-category">紫微斗数星曜</span></div>';
+    html += '<div class="sp-detail">「'+ starName + '」是紫微斗数中的一颗星曜，目前百科中暂无该星的详细解读。可参阅相关古籍资料以获取更多信息。</div>';
+  } else {
+    // 属性行
+    var props = [];
+    if (info.category) props.push('<span class="sp-category">' + info.category + '</span>');
+    if (info.yinYang) props.push('阴阳: <b>' + info.yinYang + '</b>');
+    if (info.wuXing) props.push('五行: <b>' + info.wuXing + '</b>');
+    if (info.huaQi) props.push('四化: <b>' + info.huaQi + '</b>');
+    if (info.trait) props.push('<span class="sp-trait">' + info.trait + '</span>');
+    html += '<div class="sp-props">' + props.join(' · ') + '</div>';
 
-  // 详解
-  if (info.detail) {
-    html += '<div class="sp-detail">' + info.detail + '</div>';
-  }
+    // 详解
+    if (info.detail) {
+      html += '<div class="sp-detail">' + info.detail + '</div>';
+    }
 
-  // 关键词
-  if (info.keywords && info.keywords.length > 0) {
-    html += '<div class="sp-keywords">';
-    info.keywords.forEach(function(kw) {
-      html += '<span class="sp-kw-tag">' + kw + '</span>';
-    });
-    html += '</div>';
+    // 关键词
+    if (info.keywords && info.keywords.length > 0) {
+      html += '<div class="sp-keywords">';
+      info.keywords.forEach(function(kw) {
+        html += '<span class="sp-kw-tag">' + kw + '</span>';
+      });
+      html += '</div>';
+    }
   }
 
   body.innerHTML = html;
@@ -443,6 +451,8 @@ function closeStarPopup() {
 // ==================== 星盘点击弹窗 ====================
 
 function showAstroPopup(type, idOrIdx, event) {
+  // 教程打开时禁止弹出
+  if (typeof Tutorial !== 'undefined' && Tutorial.isOpen && Tutorial.isOpen()) return;
   event.stopPropagation();
   var chart = window._astroChart;
   if (!chart) return;
@@ -576,33 +586,42 @@ function closeAstroPopup() {
 
 // 宫位百科弹窗
 function showPalacePopup(palaceName, event) {
+  // 教程打开时禁止弹出百科，避免拦截教程按钮点击
+  if (typeof Tutorial !== 'undefined' && Tutorial.isOpen && Tutorial.isOpen()) return;
+
   var info = PALACE_ENCYCLOPEDIA[palaceName];
-  if (!info) return;
+  // palaceName 如 '命宫'（已含宫字）或 '兄弟'（需补宫字）
+  var displayName = palaceName.indexOf('宫') !== -1 ? palaceName : palaceName + '宫';
 
   var popup = document.getElementById('starPopup');
-  document.getElementById('popupStarName').textContent = palaceName + '宫';
+  document.getElementById('popupStarName').textContent = displayName;
 
   var body = document.getElementById('popupStarBody');
   var html = '';
 
-  // 属性行
-  var props = [];
-  if (info.category) props.push('<span class="sp-category">' + info.category + '</span>');
-  if (info.trait) props.push('<span class="sp-trait">' + info.trait + '</span>');
-  html += '<div class="sp-props">' + props.join(' · ') + '</div>';
+  if (!info) {
+    html += '<div class="sp-props"><span class="sp-category">紫微斗数宫位</span></div>';
+    html += '<div class="sp-detail">「'+ displayName + '」是紫微斗数命盘中的宫位，目前百科中暂无该宫位的详细解读。</div>';
+  } else {
+    // 属性行
+    var props = [];
+    if (info.category) props.push('<span class="sp-category">' + info.category + '</span>');
+    if (info.trait) props.push('<span class="sp-trait">' + info.trait + '</span>');
+    html += '<div class="sp-props">' + props.join(' · ') + '</div>';
 
-  // 详解
-  if (info.detail) {
-    html += '<div class="sp-detail">' + info.detail + '</div>';
-  }
+    // 详解
+    if (info.detail) {
+      html += '<div class="sp-detail">' + info.detail + '</div>';
+    }
 
-  // 关键词
-  if (info.keywords && info.keywords.length > 0) {
-    html += '<div class="sp-keywords">';
-    info.keywords.forEach(function(kw) {
-      html += '<span class="sp-kw-tag">' + kw + '</span>';
-    });
-    html += '</div>';
+    // 关键词
+    if (info.keywords && info.keywords.length > 0) {
+      html += '<div class="sp-keywords">';
+      info.keywords.forEach(function(kw) {
+        html += '<span class="sp-kw-tag">' + kw + '</span>';
+      });
+      html += '</div>';
+    }
   }
 
   body.innerHTML = html;
@@ -985,6 +1004,8 @@ function generateChart() {
   renderDetailPanel(chart, bazi);
   var liuBar = document.getElementById('liuTimeBar');
   if (liuBar) liuBar.style.display = 'flex';
+  var modeBar = document.getElementById('ziweiModeBar');
+  if (modeBar) modeBar.style.display = 'flex';
   _liuTimeMode = 'benming';
   document.querySelectorAll('#mingZiwei .liu-btn').forEach(function(b) {
     b.classList.toggle('active', b.getAttribute('data-liu') === 'benming');
@@ -995,6 +1016,14 @@ function generateChart() {
 
   // 更新时辰显示
   onTimeChange();
+
+  // 如果新手教程正停在"输入出生信息"步骤，排盘完成后自动前进到"看懂命盘"步骤
+  if (typeof Tutorial !== 'undefined' && Tutorial.isOpen && Tutorial.isOpen()) {
+    var stepIdx = Tutorial.getCurrentStep ? Tutorial.getCurrentStep() : -1;
+    if (stepIdx === 1 && Tutorial.steps[1] && Tutorial.steps[1].id === 'input') {
+      Tutorial.goTo(2);
+    }
+  }
 }
 
 // ==================== 星盘渲染 ====================
@@ -1242,9 +1271,84 @@ function useCurrentTime() {
   generateChart();
 }
 
+// ==================== 悬停提示 Tooltip 系统 ====================
+
+var _tooltipEl = null;
+var _tooltipTimer = null;
+var _tooltipTarget = null;
+
+function initTooltips() {
+  // 创建全局 tooltip 元素（单例）
+  _tooltipEl = document.createElement('div');
+  _tooltipEl.className = 'tooltip-popup';
+  _tooltipEl.id = 'globalTooltip';
+  document.body.appendChild(_tooltipEl);
+
+  // 扫描所有带 data-tooltip 属性的元素
+  var els = document.querySelectorAll('[data-tooltip]');
+  els.forEach(function(el) {
+    el.addEventListener('mouseenter', function(e) {
+      var text = el.getAttribute('data-tooltip');
+      if (!text) return;
+      _tooltipTarget = el;
+      clearTimeout(_tooltipTimer);
+      _tooltipTimer = setTimeout(function() {
+        showTooltip(e, text);
+      }, 400);
+    });
+    el.addEventListener('mouseleave', function() {
+      _tooltipTarget = null;
+      clearTimeout(_tooltipTimer);
+      hideTooltip();
+    });
+  });
+}
+
+function showTooltip(e, text) {
+  if (!_tooltipEl) return;
+  _tooltipEl.textContent = text;
+  _tooltipEl.classList.add('visible');
+
+  // 定位：默认在目标元素上方
+  var rect = _tooltipTarget ? _tooltipTarget.getBoundingClientRect() : null;
+  var x, y;
+  if (rect) {
+    // 默认显示在元素上方居中
+    x = rect.left + rect.width / 2;
+    y = rect.top - 10;
+  } else {
+    x = (e.clientX || 0) + 10;
+    y = (e.clientY || 0) - 10;
+  }
+
+  var tw = _tooltipEl.offsetWidth;
+  var th = _tooltipEl.offsetHeight;
+
+  // 水平居中偏左
+  x = Math.max(10, Math.min(x - tw / 2, window.innerWidth - tw - 10));
+  // 垂直方向：优先放上方，空间不够放下方
+  if (y - th < 10) {
+    y = rect ? rect.bottom + 10 : (e.clientY || 0) + 20;
+  } else {
+    y = y - th;
+  }
+  y = Math.max(10, Math.min(y, window.innerHeight - th - 10));
+
+  _tooltipEl.style.left = x + 'px';
+  _tooltipEl.style.top = y + 'px';
+}
+
+function hideTooltip() {
+  if (_tooltipEl) {
+    _tooltipEl.classList.remove('visible');
+  }
+}
+
 // ==================== 页面初始化 ====================
 
 window.addEventListener('DOMContentLoaded', () => {
+  // 初始化悬停提示
+  initTooltips();
   // 初始化城市选择器
   initCitySelect();
   // 显示初始时辰
@@ -2237,7 +2341,7 @@ function drawTarotCards() {
     html += '<div class="tarot-card-item' + (rev ? ' reversed' : '') + '">';
     html += '<div class="tarot-card-pos">' + item.position + '</div>';
     html += '<div class="tarot-card-name">' + item.card.displayName + '</div>';
-    html += '<div class="tarot-card-id">' + (c.id < 10 ? '0' : '') + c.id + ' · ' + c.en + '</div>';
+    html += '<div class="tarot-card-id">' + (c.rank ? (c.suit + ' · ' + c.suitEn) : ((c.id < 10 ? '0' : '') + c.id + ' · ' + c.en)) + '</div>';
     html += '<div class="tarot-card-desc">' + item.card.desc + '</div>';
     html += '<div class="tarot-card-pos-guide">📍 ' + cr.posGuide + '</div>';
     html += '<div class="tarot-card-kw">';
@@ -2919,6 +3023,9 @@ function renderMeiHuaResult(result) {
     html += '<div class="mh-sec"><h5>💼 事业</h5><p>' + benInterp.career + '</p></div>';
     html += '<div class="mh-sec"><h5>💕 感情</h5><p>' + benInterp.love + '</p></div>';
     html += '<div class="mh-sec"><h5>💰 财运</h5><p>' + benInterp.wealth + '</p></div>';
+    html += '<div class="mh-sec"><h5>🏥 健康</h5><p>' + (benInterp.health || '暂无。') + '</p></div>';
+    html += '<div class="mh-sec"><h5>✈️ 出行</h5><p>' + (benInterp.travel || '暂无。') + '</p></div>';
+    html += '<div class="mh-sec"><h5>🔍 寻物</h5><p>' + (benInterp.lost || '暂无。') + '</p></div>';
     html += '</div>';
   }
 
@@ -3058,7 +3165,29 @@ function renderLiuYaoResult(result) {
   html += '<div class="ly-sec"><h5>💼 事业</h5><p>' + benInterp.career + '</p></div>';
   html += '<div class="ly-sec"><h5>💕 感情</h5><p>' + benInterp.love + '</p></div>';
   html += '<div class="ly-sec"><h5>💰 财运</h5><p>' + benInterp.wealth + '</p></div>';
+  html += '<div class="ly-sec"><h5>🏥 健康</h5><p>' + (benInterp.health || '暂无。') + '</p></div>';
+  html += '<div class="ly-sec"><h5>✈️ 出行</h5><p>' + (benInterp.travel || '暂无。') + '</p></div>';
+  html += '<div class="ly-sec"><h5>🔍 寻物</h5><p>' + (benInterp.lost || '暂无。') + '</p></div>';
   html += '</div>';
+
+  // 动爻爻位解读
+  var changingLines = result.yaoLines.filter(function(l) { return l.isChanging; });
+  if (changingLines.length > 0) {
+    html += '<div class="ly-yao-guide">';
+    html += '<h5>📐 动爻爻位含义</h5>';
+    changingLines.forEach(function(l) {
+      var yaoIdx = l.position - 1;
+      var guide = (typeof BuShuExtra !== 'undefined' && BuShuExtra.getYaoPositionInterpretation) ? BuShuExtra.getYaoPositionInterpretation(yaoIdx) : null;
+      if (guide) {
+        html += '<div class="ly-yao-guide-item">';
+        html += '<span class="ly-yao-pos-badge">' + l.posName + '</span>';
+        html += '<span class="ly-yao-pos-level">' + guide.level + '</span>';
+        html += '<p>' + guide.meaning + '</p>';
+        html += '</div>';
+      }
+    });
+    html += '</div>';
+  }
 
   // 提示
   html += '<div class="ly-tip">本卦为当前状态，变卦为发展方向。老阳(○)老阴(×)为动爻。</div>';

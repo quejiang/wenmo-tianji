@@ -105,6 +105,37 @@ var Tutorial = (function() {
       ]
     },
     {
+      id: 'pan-modes',
+      title: '盘面模式：三合盘 vs 飞星盘 vs 四化盘 🔄',
+      emoji: '🎛️',
+      highlight: '#ziweiModeBar',
+      content: [
+        '排盘完成后，命盘上方会出现<strong>三种盘面模式</strong>切换按钮：',
+        '<strong>🔺 三合盘（默认）</strong>：最传统的紫微斗数盘面。以<mark>三方四正</mark>的关系来看各宫位的互动。适合初学者，展示的信息最全面。',
+        '<strong>🔄 飞星盘</strong>：重点展示<mark>宫位之间的飞化关系</mark>（如命宫化禄入夫妻宫等）。适合有一定基础后做深度分析。飞星告诉你"能量往哪里流动"。',
+        '<strong>✨ 四化盘</strong>：聚焦<mark>禄权科忌四化的分布</mark>，单独列出每一颗参与四化的星曜。适合快速定位人生中"好运（禄）"和"需要注意（忌）"的领域。',
+        '💡 <strong>建议</strong>：新手先看三合盘了解全貌，熟练后再切换到飞星盘和四化盘深入研究。',
+        '将鼠标悬停在这些按钮上也会弹出简短的解释哦~'
+      ]
+    },
+    {
+      id: 'liu-time',
+      title: '时间层级：本命盘 → 大限 → 流年... 🕐',
+      emoji: '⏳',
+      highlight: '#liuTimeBar',
+      content: [
+        '命盘下方有<strong>六个时间层级</strong>按钮，让你看到不同时间段的运势变化：',
+        '<strong>🔵 本命盘</strong>：你出生那一刻的原始命盘，是<mark>一生的"出厂设置"</mark>。所有分析的基础。',
+        '<strong>🟢 大限</strong>：每十年为一个"大限"，比如20-29岁走「兄弟宫大限」。告诉你<mark>这十年的人生重心</mark>在哪个领域。',
+        '<strong>🟡 流年</strong>：每年的运势盘。可以通过年份输入框切换不同年份。告诉你<mark>今年会发生什么</mark>，适合做年度规划。',
+        '<strong>🟠 流月</strong>：每个月的运势，可以配合年月日输入框精确到某个月。',
+        '<strong>🔴 流日</strong>：每天的运势，适合看近期具体日子的吉凶。',
+        '<strong>🟣 流时</strong>：每两个小时的运势波动，最精细的时间颗粒。',
+        '💡 <strong>怎么用</strong>：先看本命盘了解自己 → 再看大限知道当前十年重点 → 最后看流年把握今年方向。',
+        '小技巧：点击<mark>"↻ 重置"</mark>可以一键回到当前时间的流年盘哦~'
+      ]
+    },
+    {
       id: 'ai',
       title: 'AI智能解读：让分析更简单 🤖',
       emoji: '📊',
@@ -274,6 +305,14 @@ var Tutorial = (function() {
     else open();
   }
 
+  function isTutorialOpen() {
+    return isOpen;
+  }
+
+  function getCurrentStep() {
+    return currentStep;
+  }
+
   return {
     open: open,
     close: close,
@@ -281,6 +320,8 @@ var Tutorial = (function() {
     prev: prev,
     goTo: goTo,
     toggle: toggle,
-    steps: steps
+    steps: steps,
+    isOpen: isTutorialOpen,
+    getCurrentStep: getCurrentStep
   };
 })();

@@ -3403,3 +3403,49 @@ body {
   .tutorial-btn { padding: 7px 12px; font-size: 0.75em; }
   .btn-tutorial { padding: 7px 12px; font-size: 0.75em; }
 }
+
+/* ==================== 悬停提示 Tooltip ==================== */
+
+.tooltip-popup {
+  position: fixed;
+  z-index: 10001;
+  max-width: 280px;
+  padding: 10px 14px;
+  background: linear-gradient(135deg, #1e2a3a, #1a2535);
+  border: 1px solid rgba(160, 220, 140, 0.4);
+  border-radius: 10px;
+  color: #c8c8d0;
+  font-size: 0.78em;
+  line-height: 1.6;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.55), 0 0 18px rgba(100, 200, 120, 0.08);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.tooltip-popup.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.tooltip-popup::after {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: 20px;
+  width: 10px;
+  height: 10px;
+  background: #1e2a3a;
+  border-left: 1px solid rgba(160, 220, 140, 0.4);
+  border-top: 1px solid rgba(160, 220, 140, 0.4);
+  transform: rotate(45deg);
+}
+
+@media (max-width: 768px) {
+  .tooltip-popup {
+    max-width: 220px;
+    font-size: 0.72em;
+    padding: 8px 12px;
+  }
+}
