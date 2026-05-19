@@ -282,17 +282,110 @@
 
       <!-- 手相 -->
       <div class="ws-content active" id="xiangPalm">
+        <details class="xiang-guide">
+          <summary>📖 手相怎么看？点击展开说明</summary>
+          <div class="xiang-guide-body">
+            <p><strong>看手相分两步：先看三大主线，再看七大掌丘。</strong></p>
+            <div class="xiang-guide-row">
+              <div class="xiang-guide-card">
+                <h5>🖐 三大主线</h5>
+                <pre>══════════════════════════
+║    食指           ║
+║  ╱  生命线(弧)    ║
+║ ╱                ║
+║╱ 智慧线(横)      ║
+║╲                 ║
+║ ╲  感情线(上横)  ║
+║  ╲               ║
+║   小指  拇指     ║
+══════════════════════════</pre>
+                <ul>
+                  <li><b>生命线</b>：环绕拇指根部 → 看体质、精力、寿命</li>
+                  <li><b>智慧线</b>：横穿掌心 → 看思维、判断力、学习能力</li>
+                  <li><b>感情线</b>：小指下方向食指 → 看情感模式、婚姻</li>
+                </ul>
+              </div>
+              <div class="xiang-guide-card">
+                <h5>⛰ 七大掌丘</h5>
+                <pre>      ╔══╦══╦══╗
+      ║木║土║水║ ← 指根处
+      ╠══╬══╬══╣
+      ║ 金星  ║  ║
+      ║  丘   ║月║
+      ║      ║丘║
+      ╠══╤══╬══╣
+      ║火│地║海║
+      ║星│球║王║ ← 掌根
+      ╚══╧══╩══╝</pre>
+                <p>掌丘饱满 = 该方面运势强；扁平 = 较弱</p>
+                <p>木星丘（食指根）= 权力 · 土星丘（中指根）= 责任 · 水星丘（无名指根）= 财运 · 金星丘（拇指根）= 爱情 · 月丘（掌缘）= 直觉 · 火星丘 = 勇气 · 地球丘/海王星丘 = 根基</p>
+              </div>
+            </div>
+          </div>
+        </details>
         <div class="xiang-palm-lines" id="xiangPalmLines"></div>
         <div class="xiang-palm-hills" id="xiangPalmHills"></div>
       </div>
 
       <!-- 面相 -->
       <div class="ws-content" id="xiangFace">
+        <details class="xiang-guide" open>
+          <summary>📖 面相十二宫图解——点击收起</summary>
+          <div class="xiang-guide-body">
+            <p>面相把脸从上到下分为 <strong>12 个宫位</strong>，每个位置对应人生一个方面：</p>
+            <pre>        ┌───────────┐
+        │ ① 命宫   │ ← 印堂（两眉之间）
+        │ ② 财帛宫 │ ← 鼻子
+        │ ③ 兄弟宫 │ ← 眉毛
+        │ ④ 田宅宫 │ ← 上眼皮
+        │ ⑤ 男女宫 │ ← 眼下（泪堂）
+        │ ⑥ 奴仆宫 │ ← 下巴两侧
+        │ ⑦ 妻妾宫 │ ← 眼尾（鱼尾纹）
+        │ ⑧ 疾厄宫 │ ← 鼻梁
+        │ ⑨ 迁移宫 │ ← 额头两侧
+        │ ⑩ 官禄宫 │ ← 额头正中
+        │ ⑪ 福德宫 │ ← 眉尾上方
+        │ ⑫ 相貌宫 │ ← 整体脸型轮廓
+        └───────────┘</pre>
+            <p><b>用法</b>：下方卡片中，✅ 表示该宫位生得好的特征，⚠ 表示不好的特征。结合镜子观察自己的对应部位，多个宫位好 = 该方面运势佳。</p>
+          </div>
+        </details>
         <div class="xiang-face-grid" id="xiangFaceGrid"></div>
       </div>
 
       <!-- 风水 -->
       <div class="ws-content" id="xiangFengshui">
+        <details class="xiang-guide">
+          <summary>📖 九宫飞星怎么看？点击展开说明</summary>
+          <div class="xiang-guide-body">
+            <p>把房屋或房间按九宫格划分，每年九颗飞星飞入不同方位：</p>
+            <div class="xiang-guide-row">
+              <div class="xiang-guide-card">
+                <h5>🏠 九宫方位图</h5>
+                <table class="xfs-demo-table">
+                  <tr><td>东南</td><td>南</td><td>西南</td></tr>
+                  <tr><td>东</td><td>中</td><td>西</td></tr>
+                  <tr><td>东北</td><td>北</td><td>西北</td></tr>
+                </table>
+              </div>
+              <div class="xiang-guide-card">
+                <h5>⭐ 九星含义</h5>
+                <ul>
+                  <li>🟢 <b>一白水</b>：桃花、人缘（吉）</li>
+                  <li>🟤 <b>二黑土</b>：病符、是非（凶）</li>
+                  <li>🔵 <b>三碧木</b>：口舌、争斗（凶）</li>
+                  <li>🟢 <b>四绿木</b>：文昌、学业（吉）</li>
+                  <li>🟡 <b>五黄土</b>：大凶灾星（大凶）</li>
+                  <li>⚪ <b>六白金</b>：权利、偏财（吉）</li>
+                  <li>🔴 <b>七赤金</b>：破财、盗贼（凶）</li>
+                  <li>⚪ <b>八白土</b>：正财、置业（大吉）</li>
+                  <li>🟣 <b>九紫火</b>：喜事、添丁（吉）</li>
+                </ul>
+              </div>
+            </div>
+            <p><b>用法</b>：输入年份 → 查看飞星图 → 吉星方位（绿/白/紫）宜常待、宜开门窗；凶星方位（黄/黑/赤）宜避开或放化煞物（如金属物泄土、水泄火）。</p>
+          </div>
+        </details>
         <div class="xiang-fs-control"><label>年份：</label><input type="number" id="xiangFsYear" value="2025" onchange="renderFengShuiStars()"><button class="btn btn-sm" onclick="renderFengShuiStars()">查看飞星</button></div>
         <div class="xiang-fs-grid" id="xiangFsGrid"></div>
       </div>
@@ -301,7 +394,23 @@
       <div class="ws-content" id="xiangName">
         <div style="padding:16px">
           <h3 style="color:#d4a84c;margin-bottom:12px">📛 姓名学分析（三才五格）</h3>
-          <div style="display:flex;gap:8px;margin-bottom:12px">
+          <details class="xiang-guide">
+            <summary>📖 姓名学怎么看？点击展开说明</summary>
+            <div class="xiang-guide-body">
+              <p>姓名学用<strong>康熙字典笔画</strong>计算五个"格"，每个格对应人生不同阶段：</p>
+              <table class="xfs-demo-table">
+                <tr><th>格</th><th>算法</th><th>代表</th></tr>
+                <tr><td><b>天格</b></td><td>姓笔画 + 1</td><td>祖先、长辈、先天运势</td></tr>
+                <tr><td><b>人格</b></td><td>姓笔画 + 名第一字笔画</td><td>本人、主运（最重要）</td></tr>
+                <tr><td><b>地格</b></td><td>名字两字笔画之和（单名+1）</td><td>子女、晚辈、36岁前运</td></tr>
+                <tr><td><b>外格</b></td><td>总格 - 人格 + 1</td><td>社交、外界评价</td></tr>
+                <tr><td><b>总格</b></td><td>全部笔画之和</td><td>一生总运、36岁后</td></tr>
+              </table>
+              <p>五格数字对应 <strong>81 数理</strong>，每格分为 🟢吉 / 🟡半吉 / 🔴凶。三才（天·人·地）的五行配置影响整体评分。</p>
+              <p><b>用法</b>：输入中文姓名 → 点「分析」→ 看五格数理和三才配置。</p>
+            </div>
+          </details>
+          <div style="display:flex;gap:8px;margin-bottom:12px;margin-top:12px">
             <input type="text" id="nameInput" placeholder="输入中文姓名（如：李白）" style="flex:1;padding:10px;background:#1a1a2e;color:#ccc;border:1px solid #333;border-radius:6px">
             <button class="btn btn-sm" onclick="analyzeName()">分析</button>
           </div>
