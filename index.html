@@ -288,41 +288,97 @@
             <p><strong>看手相分两步：先看三大主线，再看七大掌丘。</strong></p>
             <div class="xiang-guide-row">
               <div class="xiang-guide-card">
-                <h5>🖐 三大主线</h5>
-                <pre>══════════════════════════
-║    食指           ║
-║  ╱  生命线(弧)    ║
-║ ╱                ║
-║╱ 智慧线(横)      ║
-║╲                 ║
-║ ╲  感情线(上横)  ║
-║  ╲               ║
-║   小指  拇指     ║
-══════════════════════════</pre>
+                <h5>🖐 三大主线（右手掌）</h5>
+                <svg viewBox="0 0 260 340" class="xiang-svg" style="width:100%;max-width:260px;display:block;margin:0 auto">
+                  <!-- 手掌轮廓 -->
+                  <ellipse cx="130" cy="200" rx="95" ry="115" fill="#1a1525" stroke="#888" stroke-width="1.5"/>
+                  <!-- 手指 -->
+                  <rect x="185" y="55" width="16" height="60" rx="8" fill="#1a1525" stroke="#888" stroke-width="1.2"/>
+                  <rect x="205" y="40" width="16" height="70" rx="8" fill="#1a1525" stroke="#888" stroke-width="1.2"/>
+                  <rect x="221" y="45" width="16" height="65" rx="8" fill="#1a1525" stroke="#888" stroke-width="1.2"/>
+                  <rect x="239" y="60" width="15" height="50" rx="7" fill="#1a1525" stroke="#888" stroke-width="1.2"/>
+                  <!-- 拇指 -->
+                  <ellipse cx="52" cy="155" rx="22" ry="38" transform="rotate(-25,52,155)" fill="#1a1525" stroke="#888" stroke-width="1.2"/>
+                  <!-- 生命线（红色弧线） -->
+                  <path d="M 80,120 C 60,180 55,240 80,290" stroke="#e06050" stroke-width="2" fill="none" stroke-linecap="round"/>
+                  <!-- 智慧线（蓝色横线） -->
+                  <path d="M 95,170 C 130,165 200,175 240,190" stroke="#5b9bd5" stroke-width="2" fill="none" stroke-linecap="round"/>
+                  <!-- 感情线（绿色上横线） -->
+                  <path d="M 105,130 C 150,125 210,130 242,142" stroke="#6cb86c" stroke-width="2" fill="none" stroke-linecap="round"/>
+                  <!-- 标签 -->
+                  <text x="35" y="215" fill="#e06050" font-size="9">生命</text>
+                  <text x="200" y="212" fill="#5b9bd5" font-size="9">智慧</text>
+                  <text x="200" y="118" fill="#6cb86c" font-size="9">感情</text>
+                </svg>
                 <ul>
-                  <li><b>生命线</b>：环绕拇指根部 → 看体质、精力、寿命</li>
-                  <li><b>智慧线</b>：横穿掌心 → 看思维、判断力、学习能力</li>
-                  <li><b>感情线</b>：小指下方向食指 → 看情感模式、婚姻</li>
+                  <li><b style="color:#e06050">生命线</b>：环绕拇指根部 → 看体质、精力、寿命</li>
+                  <li><b style="color:#5b9bd5">智慧线</b>：横穿掌心 → 看思维、判断力、学习能力</li>
+                  <li><b style="color:#6cb86c">感情线</b>：小指下方向食指 → 看情感模式、婚姻</li>
                 </ul>
               </div>
               <div class="xiang-guide-card">
-                <h5>⛰ 七大掌丘</h5>
-                <pre>      ╔══╦══╦══╗
-      ║木║土║水║ ← 指根处
-      ╠══╬══╬══╣
-      ║ 金星  ║  ║
-      ║  丘   ║月║
-      ║      ║丘║
-      ╠══╤══╬══╣
-      ║火│地║海║
-      ║星│球║王║ ← 掌根
-      ╚══╧══╩══╝</pre>
-                <p>掌丘饱满 = 该方面运势强；扁平 = 较弱</p>
+                <h5>⛰ 七大掌丘位置</h5>
+                <svg viewBox="0 0 260 340" class="xiang-svg" style="width:100%;max-width:260px;display:block;margin:0 auto">
+                  <!-- 手掌轮廓 -->
+                  <ellipse cx="130" cy="195" rx="95" ry="115" fill="#1a1525" stroke="#888" stroke-width="1.5"/>
+                  <!-- 手指 -->
+                  <rect x="185" y="55" width="16" height="55" rx="8" fill="#1a1525" stroke="#777" stroke-width="1"/>
+                  <rect x="205" y="40" width="16" height="65" rx="8" fill="#1a1525" stroke="#777" stroke-width="1"/>
+                  <rect x="221" y="45" width="16" height="60" rx="8" fill="#1a1525" stroke="#777" stroke-width="1"/>
+                  <rect x="239" y="60" width="15" height="45" rx="7" fill="#1a1525" stroke="#777" stroke-width="1"/>
+                  <ellipse cx="52" cy="155" rx="22" ry="35" transform="rotate(-25,52,155)" fill="#1a1525" stroke="#777" stroke-width="1"/>
+                  <!-- 掌丘标注区块 -->
+                  <circle cx="195" cy="95" r="18" fill="rgba(212,168,76,0.1)" stroke="#d4a84c" stroke-dasharray="2"/>
+                  <text x="195" y="98" fill="#d4a84c" font-size="8" text-anchor="middle">木星丘</text>
+                  <circle cx="235" cy="85" r="18" fill="rgba(212,168,76,0.1)" stroke="#d4a84c" stroke-dasharray="2"/>
+                  <text x="235" y="88" fill="#d4a84c" font-size="8" text-anchor="middle">土星丘</text>
+                  <circle cx="218" cy="140" r="18" fill="rgba(212,168,76,0.1)" stroke="#d4a84c" stroke-dasharray="2"/>
+                  <text x="218" y="143" fill="#d4a84c" font-size="8" text-anchor="middle">水星丘</text>
+                  <ellipse cx="110" cy="170" rx="30" ry="28" fill="rgba(212,168,76,0.1)" stroke="#d4a84c" stroke-dasharray="2"/>
+                  <text x="110" y="173" fill="#d4a84c" font-size="9" text-anchor="middle">金星丘</text>
+                  <ellipse cx="55" cy="240" rx="20" ry="30" fill="rgba(212,168,76,0.1)" stroke="#d4a84c" stroke-dasharray="2"/>
+                  <text x="55" y="243" fill="#d4a84c" font-size="9" text-anchor="middle">月丘</text>
+                  <rect x="145" y="215" width="40" height="22" rx="4" fill="rgba(212,168,76,0.1)" stroke="#d4a84c" stroke-dasharray="2"/>
+                  <text x="165" y="230" fill="#d4a84c" font-size="8" text-anchor="middle">火星丘</text>
+                  <ellipse cx="165" cy="285" rx="28" ry="25" fill="rgba(212,168,76,0.1)" stroke="#d4a84c" stroke-dasharray="2"/>
+                  <text x="165" y="288" fill="#d4a84c" font-size="9" text-anchor="middle">地球丘</text>
+                </svg>
+                <p>掌丘<b>饱满</b> = 该方面运势强；<b>扁平</b> = 较弱</p>
                 <p>木星丘（食指根）= 权力 · 土星丘（中指根）= 责任 · 水星丘（无名指根）= 财运 · 金星丘（拇指根）= 爱情 · 月丘（掌缘）= 直觉 · 火星丘 = 勇气 · 地球丘/海王星丘 = 根基</p>
               </div>
             </div>
           </div>
         </details>
+        <div class="xiang-demo-box" style="margin-top:0;margin-bottom:12px;border-top-left-radius:0;border-top-right-radius:0;border-top:none">
+          <h5>✋ 示例手相解读（仿真数据）</h5>
+          <div class="xp-lines" style="margin-top:6px">
+            <div class="xp-line-card" style="border-top:3px solid #88cc88">
+              <h4>🌿 生命线</h4><p class="xp-desc">环绕拇指根部，反映体质、生命力和健康趋势。</p>
+              <div class="xp-readings">
+                <div class="xp-reading-item"><span class="xpr-key">深长</span><span class="xpr-val">生命力强，体质健康，精力充沛。</span></div>
+                <div class="xp-reading-item"><span class="xpr-key">有双线</span><span class="xpr-val">有强大的后备能量，抵抗力超乎常人。</span></div>
+              </div>
+            </div>
+            <div class="xp-line-card" style="border-top:3px solid #ddaa44">
+              <h4>🧠 智慧线</h4><p class="xp-desc">横向延伸，反映思维方式、智力和决策能力。</p>
+              <div class="xp-readings">
+                <div class="xp-reading-item"><span class="xpr-key">深而清晰</span><span class="xpr-val">注意力集中，思维清晰，决策力强。</span></div>
+                <div class="xp-reading-item"><span class="xpr-key">长而斜</span><span class="xpr-val">想象力丰富，直觉敏锐，有艺术天赋。</span></div>
+              </div>
+            </div>
+            <div class="xp-line-card" style="border-top:3px solid #ee7777">
+              <h4>💕 感情线</h4><p class="xp-desc">向食指方向延伸，反映情感模式、人际关系。</p>
+              <div class="xp-readings">
+                <div class="xp-reading-item"><span class="xpr-key">弯曲</span><span class="xpr-val">情感充沛热烈，浪漫主义，愿意为爱付出。</span></div>
+                <div class="xp-reading-item"><span class="xpr-key">深长</span><span class="xpr-val">情感真挚深厚，忠诚专一。</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="xp-hills" style="margin-top:10px">
+            <div class="xp-hill-card"><h5>金星丘</h5><span class="xph-pos">拇指根部</span><span class="xph-meaning">爱情、美感、生命力</span><span class="xph-trait">丰满者热情有活力</span></div>
+            <div class="xp-hill-card"><h5>月丘</h5><span class="xph-pos">手掌外侧下部</span><span class="xph-meaning">想象力、直觉</span><span class="xph-trait">发达者直觉敏锐</span></div>
+          </div>
+        </div>
         <div class="xiang-palm-lines" id="xiangPalmLines"></div>
         <div class="xiang-palm-hills" id="xiangPalmHills"></div>
       </div>
@@ -333,21 +389,63 @@
           <summary>📖 面相十二宫图解——点击收起</summary>
           <div class="xiang-guide-body">
             <p>面相把脸从上到下分为 <strong>12 个宫位</strong>，每个位置对应人生一个方面：</p>
-            <pre>        ┌───────────┐
-        │ ① 命宫   │ ← 印堂（两眉之间）
-        │ ② 财帛宫 │ ← 鼻子
-        │ ③ 兄弟宫 │ ← 眉毛
-        │ ④ 田宅宫 │ ← 上眼皮
-        │ ⑤ 男女宫 │ ← 眼下（泪堂）
-        │ ⑥ 奴仆宫 │ ← 下巴两侧
-        │ ⑦ 妻妾宫 │ ← 眼尾（鱼尾纹）
-        │ ⑧ 疾厄宫 │ ← 鼻梁
-        │ ⑨ 迁移宫 │ ← 额头两侧
-        │ ⑩ 官禄宫 │ ← 额头正中
-        │ ⑪ 福德宫 │ ← 眉尾上方
-        │ ⑫ 相貌宫 │ ← 整体脸型轮廓
-        └───────────┘</pre>
-            <p><b>用法</b>：下方卡片中，✅ 表示该宫位生得好的特征，⚠ 表示不好的特征。结合镜子观察自己的对应部位，多个宫位好 = 该方面运势佳。</p>
+            <svg viewBox="0 0 280 360" class="xiang-svg" style="width:100%;max-width:280px;display:block;margin:8px auto">
+              <!-- 脸型轮廓 -->
+              <ellipse cx="140" cy="175" rx="80" ry="140" fill="#1a1525" stroke="#aaa" stroke-width="1.5"/>
+              <!-- 下巴尖 -->
+              <path d="M76,280 C90,310 120,340 140,345 C160,340 190,310 204,280" fill="#1a1525" stroke="#aaa" stroke-width="1.5"/>
+              <!-- 耳朵 -->
+              <ellipse cx="58" cy="170" rx="10" ry="20" fill="none" stroke="#777" stroke-width="1"/>
+              <ellipse cx="222" cy="170" rx="10" ry="20" fill="none" stroke="#777" stroke-width="1"/>
+              <!-- 眉毛 -->
+              <path d="M85,120 C95,115 115,112 140,115 C165,112 185,115 195,120" stroke="#aaa" stroke-width="2" fill="none"/>
+              <!-- 眼睛 -->
+              <ellipse cx="115" cy="140" rx="14" ry="7" fill="none" stroke="#aaa" stroke-width="1.2"/>
+              <circle cx="115" cy="140" r="3" fill="#aaa"/>
+              <ellipse cx="165" cy="140" rx="14" ry="7" fill="none" stroke="#aaa" stroke-width="1.2"/>
+              <circle cx="165" cy="140" r="3" fill="#aaa"/>
+              <!-- 鼻子 -->
+              <path d="M140,125 L138,185 L145,190 Q150,192 155,190 L162,185 L160,125" fill="none" stroke="#aaa" stroke-width="1.2"/>
+              <!-- 嘴 -->
+              <path d="M105,225 Q140,240 175,225" stroke="#c99" stroke-width="1.5" fill="none"/>
+              <!-- 12宫标记 -->
+              <circle cx="140" cy="108" r="10" fill="rgba(212,168,76,0.15)" stroke="#d4a84c" stroke-width="0.8"/>
+              <text x="140" y="111" fill="#d4a84c" font-size="7" text-anchor="middle">①命宫</text>
+              <circle cx="140" cy="192" r="10" fill="rgba(212,168,76,0.15)" stroke="#d4a84c" stroke-width="0.8"/>
+              <text x="140" y="195" fill="#d4a84c" font-size="7" text-anchor="middle">②财帛</text>
+              <circle cx="100" cy="118" r="10" fill="rgba(212,168,76,0.15)" stroke="#d4a84c" stroke-width="0.8"/>
+              <text x="100" y="121" fill="#d4a84c" font-size="7" text-anchor="middle">③兄弟</text>
+              <circle cx="180" cy="118" r="10" fill="rgba(212,168,76,0.15)" stroke="#d4a84c" stroke-width="0.8"/>
+              <text x="180" y="121" fill="#d4a84c" font-size="7" text-anchor="middle">④田宅</text>
+              <circle cx="115" cy="155" r="10" fill="rgba(212,168,76,0.15)" stroke="#d4a84c" stroke-width="0.8"/>
+              <text x="115" y="158" fill="#d4a84c" font-size="7" text-anchor="middle">⑤男女</text>
+              <circle cx="90" cy="220" r="10" fill="rgba(212,168,76,0.15)" stroke="#d4a84c" stroke-width="0.8"/>
+              <text x="90" y="223" fill="#d4a84c" font-size="7" text-anchor="middle">⑥奴仆</text>
+              <circle cx="175" cy="142" r="10" fill="rgba(212,168,76,0.15)" stroke="#d4a84c" stroke-width="0.8"/>
+              <text x="175" y="145" fill="#d4a84c" font-size="7" text-anchor="middle">⑦妻妾</text>
+              <circle cx="140" cy="178" r="10" fill="rgba(212,168,76,0.15)" stroke="#d4a84c" stroke-width="0.8"/>
+              <text x="140" y="181" fill="#d4a84c" font-size="7" text-anchor="middle">⑧疾厄</text>
+              <circle cx="100" cy="90" r="10" fill="rgba(212,168,76,0.15)" stroke="#d4a84c" stroke-width="0.8"/>
+              <text x="100" y="93" fill="#d4a84c" font-size="7" text-anchor="middle">⑨迁移</text>
+              <circle cx="140" cy="80" r="10" fill="rgba(212,168,76,0.15)" stroke="#d4a84c" stroke-width="0.8"/>
+              <text x="140" y="83" fill="#d4a84c" font-size="7" text-anchor="middle">⑩官禄</text>
+              <circle cx="110" cy="102" r="10" fill="rgba(212,168,76,0.15)" stroke="#d4a84c" stroke-width="0.8"/>
+              <text x="110" y="105" fill="#d4a84c" font-size="7" text-anchor="middle">⑪福德</text>
+              <circle cx="140" cy="260" r="10" fill="rgba(212,168,76,0.15)" stroke="#d4a84c" stroke-width="0.8"/>
+              <text x="140" y="263" fill="#d4a84c" font-size="7" text-anchor="middle">⑫相貌</text>
+            </svg>
+            <p><b>用法</b>：在下方面相卡片中找到对应宫位的 ✅ 好特征和 ⚠ 坏特征，对照镜子观察。</p>
+            <div class="xiang-demo-box">
+              <h5>👤 示例：某男士面相解读</h5>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:0.82em;margin-top:8px">
+                <div style="padding:6px;background:rgba(76,175,80,0.06);border-left:3px solid #4caf50;border-radius:4px">✅ <b>命宫</b> 印堂开阔 → 一生顺遂</div>
+                <div style="padding:6px;background:rgba(244,67,54,0.06);border-left:3px solid #f44336;border-radius:4px">⚠ <b>夫妻宫</b> 眼尾多纹 → 婚姻需沟通</div>
+                <div style="padding:6px;background:rgba(76,175,80,0.06);border-left:3px solid #4caf50;border-radius:4px">✅ <b>财帛宫</b> 鼻梁挺直 → 正财运强</div>
+                <div style="padding:6px;background:rgba(244,67,54,0.06);border-left:3px solid #f44336;border-radius:4px">⚠ <b>子女宫</b> 眼下凹陷 → 需后天教育</div>
+                <div style="padding:6px;background:rgba(76,175,80,0.06);border-left:3px solid #4caf50;border-radius:4px">✅ <b>官禄宫</b> 额头饱满 → 事业顺利</div>
+                <div style="padding:6px;background:rgba(76,175,80,0.06);border-left:3px solid #4caf50;border-radius:4px">✅ <b>福德宫</b> 眉尾上方开阔 → 晚运佳</div>
+              </div>
+            </div>
           </div>
         </details>
         <div class="xiang-face-grid" id="xiangFaceGrid"></div>
@@ -361,12 +459,33 @@
             <p>把房屋或房间按九宫格划分，每年九颗飞星飞入不同方位：</p>
             <div class="xiang-guide-row">
               <div class="xiang-guide-card">
-                <h5>🏠 九宫方位图</h5>
-                <table class="xfs-demo-table">
-                  <tr><td>东南</td><td>南</td><td>西南</td></tr>
-                  <tr><td>东</td><td>中</td><td>西</td></tr>
-                  <tr><td>东北</td><td>北</td><td>西北</td></tr>
-                </table>
+                <h5>🏠 九宫方位图（房屋平面）</h5>
+                <svg viewBox="0 0 200 200" class="xiang-svg" style="width:100%;max-width:200px;display:block;margin:0 auto">
+                  <!-- 上排 -->
+                  <rect x="0" y="0" width="66" height="66" fill="rgba(212,168,76,0.06)" stroke="#555" stroke-width="1"/>
+                  <text x="33" y="36" fill="#d4a84c" font-size="11" text-anchor="middle">东南</text>
+                  <rect x="67" y="0" width="66" height="66" fill="rgba(212,168,76,0.06)" stroke="#555" stroke-width="1"/>
+                  <text x="100" y="36" fill="#d4a84c" font-size="11" text-anchor="middle">南</text>
+                  <rect x="134" y="0" width="66" height="66" fill="rgba(212,168,76,0.06)" stroke="#555" stroke-width="1"/>
+                  <text x="167" y="36" fill="#d4a84c" font-size="11" text-anchor="middle">西南</text>
+                  <!-- 中排 -->
+                  <rect x="0" y="67" width="66" height="66" fill="rgba(212,168,76,0.06)" stroke="#555" stroke-width="1"/>
+                  <text x="33" y="103" fill="#d4a84c" font-size="11" text-anchor="middle">东</text>
+                  <rect x="67" y="67" width="66" height="66" fill="rgba(212,168,76,0.1)" stroke="#d4a84c" stroke-width="1.5"/>
+                  <text x="100" y="103" fill="#d4a84c" font-size="11" text-anchor="middle">中宫</text>
+                  <rect x="134" y="67" width="66" height="66" fill="rgba(212,168,76,0.06)" stroke="#555" stroke-width="1"/>
+                  <text x="167" y="103" fill="#d4a84c" font-size="11" text-anchor="middle">西</text>
+                  <!-- 下排 -->
+                  <rect x="0" y="134" width="66" height="66" fill="rgba(212,168,76,0.06)" stroke="#555" stroke-width="1"/>
+                  <text x="33" y="170" fill="#d4a84c" font-size="11" text-anchor="middle">东北</text>
+                  <rect x="67" y="134" width="66" height="66" fill="rgba(212,168,76,0.06)" stroke="#555" stroke-width="1"/>
+                  <text x="100" y="170" fill="#d4a84c" font-size="11" text-anchor="middle">北</text>
+                  <rect x="134" y="134" width="66" height="66" fill="rgba(212,168,76,0.06)" stroke="#555" stroke-width="1"/>
+                  <text x="167" y="170" fill="#d4a84c" font-size="11" text-anchor="middle">西北</text>
+                  <!-- 方向箭头 -->
+                  <polygon points="100,78 96,85 104,85" fill="#d4a84c"/>
+                  <text x="100" y="75" fill="#d4a84c" font-size="7" text-anchor="middle">↑N</text>
+                </svg>
               </div>
               <div class="xiang-guide-card">
                 <h5>⭐ 九星含义</h5>
@@ -383,7 +502,24 @@
                 </ul>
               </div>
             </div>
-            <p><b>用法</b>：输入年份 → 查看飞星图 → 吉星方位（绿/白/紫）宜常待、宜开门窗；凶星方位（黄/黑/赤）宜避开或放化煞物（如金属物泄土、水泄火）。</p>
+            <p><b>用法</b>：输入年份 → 查看飞星图 → <span style="color:#6cb86c">吉星方位（绿/白/紫）</span>宜常待、宜开门窗；<span style="color:#e06050">凶星方位（黄/黑/赤）</span>宜避开或放化煞物（如金属物泄土、水泄火）。</p>
+            <div class="xiang-demo-box">
+              <h5>🏠 示例：2025年紫白飞星排布</h5>
+              <div class="xfs-grid" style="margin-top:8px;font-size:0.78em">
+                <div class="xfs-cell" style="border-left:3px solid #6699cc"><span class="xfs-star">一白</span><span class="xfs-name">贪狼星</span><span class="xfs-pos">东南</span><span class="xfs-nature" style="color:#6699cc">吉</span><span class="xfs-desc">桃花位，宜放花瓶水景</span></div>
+                <div class="xfs-cell" style="border-left:3px solid #55bb55"><span class="xfs-star">四绿</span><span class="xfs-name">文曲星</span><span class="xfs-pos">正南</span><span class="xfs-nature" style="color:#55bb55">吉</span><span class="xfs-desc">文昌位，宜放书桌绿植</span></div>
+                <div class="xfs-cell" style="border-left:3px solid #eeeeee"><span class="xfs-star">六白</span><span class="xfs-name">武曲星</span><span class="xfs-pos">西南</span><span class="xfs-nature" style="color:#cccccc">吉</span><span class="xfs-desc">偏财位，宜放金属饰品</span></div>
+                <div class="xfs-cell" style="border-left:3px solid #cc9900"><span class="xfs-star">五黄</span><span class="xfs-name">廉贞星</span><span class="xfs-pos">正东</span><span class="xfs-nature" style="color:#cc9900">大凶</span><span class="xfs-desc">灾煞位，放金属重物镇压</span></div>
+                <div class="xfs-cell" style="border-left:3px solid #ddaa44"><span class="xfs-star">八白</span><span class="xfs-name">左辅星</span><span class="xfs-pos">中宫</span><span class="xfs-nature" style="color:#ddaa44">大吉</span><span class="xfs-desc">正财位，忌堆放杂物</span></div>
+                <div class="xfs-cell" style="border-left:3px solid #cc6666"><span class="xfs-star">七赤</span><span class="xfs-name">破军星</span><span class="xfs-pos">正西</span><span class="xfs-nature" style="color:#cc6666">凶</span><span class="xfs-desc">破军位，宜放蓝色饰品</span></div>
+                <div class="xfs-cell" style="border-left:3px solid #888888"><span class="xfs-star">二黑</span><span class="xfs-name">巨门星</span><span class="xfs-pos">东北</span><span class="xfs-nature" style="color:#888888">凶</span><span class="xfs-desc">病符位，宜放金属化煞</span></div>
+                <div class="xfs-cell" style="border-left:3px solid #ee6666"><span class="xfs-star">九紫</span><span class="xfs-name">右弼星</span><span class="xfs-pos">正北</span><span class="xfs-nature" style="color:#ee6666">吉</span><span class="xfs-desc">喜庆位，宜放绿植催旺</span></div>
+                <div class="xfs-cell" style="border-left:3px solid #77aa66"><span class="xfs-star">三碧</span><span class="xfs-name">禄存星</span><span class="xfs-pos">西北</span><span class="xfs-nature" style="color:#77aa66">凶</span><span class="xfs-desc">是非位，宜放红色饰品</span></div>
+              </div>
+              <div style="margin-top:8px;font-size:0.78em;color:#aaa;line-height:1.6">
+                <p><b>重点：</b>2025年<b style="color:#ddaa44">中宫八白正财星</b>，保持中央干净整洁可催旺财运；<b style="color:#cc9900">正东五黄大凶</b>，此方位不宜动土、不宜久坐，宜放铜铃或金属摆件化解。</p>
+              </div>
+            </div>
           </div>
         </details>
         <div class="xiang-fs-control"><label>年份：</label><input type="number" id="xiangFsYear" value="2025" onchange="renderFengShuiStars()"><button class="btn btn-sm" onclick="renderFengShuiStars()">查看飞星</button></div>
@@ -408,6 +544,41 @@
               </table>
               <p>五格数字对应 <strong>81 数理</strong>，每格分为 🟢吉 / 🟡半吉 / 🔴凶。三才（天·人·地）的五行配置影响整体评分。</p>
               <p><b>用法</b>：输入中文姓名 → 点「分析」→ 看五格数理和三才配置。</p>
+              <div class="xiang-demo-box">
+                <h5>📛 示例：「李白」姓名分析结果</h5>
+                <div style="margin-top:8px">
+                  <div style="font-size:1.1em;font-weight:700;margin-bottom:8px;color:#d4a84c">李白 · 中吉 (72分)</div>
+                  <div style="margin:8px 0;padding:8px;background:rgba(255,255,255,0.03);border-radius:6px">
+                    <span style="font-weight:600">天格</span> <span style="margin-left:8px">8画</span>
+                    <span style="color:#4caf50;margin-left:8px">中吉 · 天格</span>
+                    <div style="font-size:0.85em;color:#aaa;margin-top:4px">祖运、长辈运、上司运</div>
+                    <div style="font-size:0.8em;color:#888">意志坚定，勤勉发展。</div>
+                  </div>
+                  <div style="margin:8px 0;padding:8px;background:rgba(255,255,255,0.03);border-radius:6px">
+                    <span style="font-weight:600">人格</span> <span style="margin-left:8px">18画</span>
+                    <span style="color:#4caf50;margin-left:8px">中吉 · 人格</span>
+                    <div style="font-size:0.85em;color:#aaa;margin-top:4px">主运、本人、婚姻</div>
+                    <div style="font-size:0.8em;color:#888">权威显达，博得名利，且养柔德。</div>
+                  </div>
+                  <div style="margin:8px 0;padding:8px;background:rgba(255,255,255,0.03);border-radius:6px">
+                    <span style="font-weight:600">地格</span> <span style="margin-left:8px">6画</span>
+                    <span style="color:#4caf50;margin-left:8px">大吉 · 地格</span>
+                    <div style="font-size:0.85em;color:#aaa;margin-top:4px">前运、子女运（36岁前）</div>
+                    <div style="font-size:0.8em;color:#888">天德地祥俱备，福庆甚丰。</div>
+                  </div>
+                  <div style="margin:8px 0;padding:8px;background:rgba(255,255,255,0.03);border-radius:6px">
+                    <span style="font-weight:600">总格</span> <span style="margin-left:8px">18画</span>
+                    <span style="color:#4caf50;margin-left:8px">中吉 · 总格</span>
+                    <div style="font-size:0.85em;color:#aaa;margin-top:4px">总运、晚年运（36岁后）</div>
+                    <div style="font-size:0.8em;color:#888">有志竟成，内外有运。</div>
+                  </div>
+                  <div style="margin:8px 0;padding:8px;background:rgba(255,255,255,0.03);border-radius:6px">
+                    <span style="font-weight:600">三才配置：</span>
+                    <span style="color:#4caf50">金·金·土 → 三才顺遂，基础稳固</span>
+                  </div>
+                  <p style="font-size:0.78em;color:#666;margin-top:8px">以上分析基于三才五格法，仅供参考。笔画为估算值，精确分析需查康熙字典。</p>
+                </div>
+              </div>
             </div>
           </details>
           <div style="display:flex;gap:8px;margin-bottom:12px;margin-top:12px">
