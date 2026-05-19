@@ -222,6 +222,12 @@ body {
   letter-spacing: 1px;
 }
 
+.xiang-svg {
+  overflow: hidden;
+  max-width: 100%;
+  height: auto;
+}
+
 /* 风水九宫示例表格 */
 .xfs-demo-table {
   width: 100%;
