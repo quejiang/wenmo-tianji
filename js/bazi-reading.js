@@ -723,6 +723,93 @@ var BaZiReading = (function() {
     };
   }
 
+  // ==================== 袁天罡称骨算命 ====================
+
+  var YEAR_WEIGHT = {'甲子':12,'乙丑':9,'丙寅':6,'丁卯':7,'戊辰':12,'己巳':5,'庚午':9,'辛未':8,'壬申':7,'癸酉':8,'甲戌':15,'乙亥':9,'丙子':16,'丁丑':8,'戊寅':8,'己卯':19,'庚辰':12,'辛巳':6,'壬午':8,'癸未':7,'甲申':5,'乙酉':15,'丙戌':6,'丁亥':16,'戊子':15,'己丑':7,'庚寅':9,'辛卯':12,'壬辰':12,'癸巳':7,'甲午':15,'乙未':6,'丙申':5,'丁酉':14,'戊戌':14,'己亥':9,'庚子':7,'辛丑':7,'壬寅':9,'癸卯':12,'甲辰':8,'乙巳':7,'丙午':13,'丁未':5,'戊申':14,'己酉':5,'庚戌':9,'辛亥':17,'壬子':5,'癸丑':7,'甲寅':12,'乙卯':8,'丙辰':8,'丁巳':6,'戊午':19,'己未':6,'庚申':8,'辛酉':16,'壬戌':5,'癸亥':7};
+  var MONTH_WEIGHT = [6,7,18,9,5,16,9,15,18,8,9,6];
+  var DAY_WEIGHT = [5,10,8,15,16,15,8,16,8,16,9,17,8,17,10,8,9,18,5,15,10,9,8,9,15,18,7,8,16,6];
+  var HOUR_WEIGHT = [16,6,7,10,9,16,10,8,8,9,6,6];
+
+  var CHENGGU_SONGS = {
+    21:'短命非业谓大凶，平生灾难事重重；凶祸频临陷逆境，终世困苦事不成。',
+    22:'身寒骨冷苦伶仃，此命推来行乞人；劳劳碌碌无度日，终年打拱过平生。',
+    23:'此命推来骨格轻，求谋作事事难成；妻儿兄弟应难许，别处他乡作散人。',
+    24:'此命推来福禄无，门庭困苦总难荣；六亲骨肉皆无靠，流浪他乡作老翁。',
+    25:'此命推来祖业微，门庭营度似稀奇；六亲骨肉如冰炭，一世勤劳自把持。',
+    26:'平生衣禄苦中求，独自营谋事不休；离祖出门宜早计，晚来衣禄自无休。',
+    27:'一生作事少商量，难靠祖宗作主张；独马单枪空做去，早年晚岁总无长。',
+    28:'一生行事似飘蓬，祖宗产业在梦中；若不过房改名姓，也当移徒二三通。',
+    29:'初年运限未曾亨，纵有功名在后成；须过四旬才可立，移居改姓始为良。',
+    30:'劳劳碌碌苦中求，东奔西走何日休；若使终身勤与俭，老来稍可免忧愁。',
+    31:'忙忙碌碌苦中求，何日云开见日头；难得祖基家可立，中年衣食渐无忧。',
+    32:'初年运蹇事难谋，渐有财源如水流；到得中年衣食旺，那时名利一齐收。',
+    33:'早年做事事难成，百年勤劳枉费心；半世自如流水去，后来运到始得金。',
+    34:'此命福气果如何，僧道门中衣禄多；离祖出家方为妙，朝晚拜佛念弥陀。',
+    35:'生平福量不周全，祖业根基觉少传；营事生涯宜守旧，时来衣食胜从前。',
+    36:'不须劳碌过平生，独自成家福不轻；早有福星常照命，任君行去百般成。',
+    37:'此命般般事不成、弟兄少力自孤行；虽然祖业须微有，来得明时去不明。',
+    38:'一身骨肉最清高，早入簧门姓氏标；待到年将三十六，蓝衫脱去换红袍。',
+    39:'此命终身运不通，劳劳作事尽皆空；苦心竭力成家计，到得那时在梦中。',
+    40:'平生衣禄是绵长，件件心中自主张；前面风霜多受过，后来必定享安康。',
+    41:'此命推来自不同，为人能干异凡庸；中年还有逍遥福，不比前时运未通。',
+    42:'得宽怀处且宽怀，何用双眉皱不开；若使中年命运济，那时名利一起来。',
+    43:'为人心性最聪明，作事轩昂近贵人；衣禄一生天注定，不须劳碌是丰亨。',
+    44:'万事由天莫苦求，须知福碌赖人修；当年财帛难如意，晚景欣然便不忧。',
+    45:'名利推求竟若何，前番辛苦后奔波；命中难养男和女，骨肉扶持也不多。',
+    46:'东西南北尽皆通，出姓移居更觉隆；衣禄无穷无数定，中年晚景一般同。',
+    47:'此命推求旺末年，妻荣子贵自怡然；平生原有滔滔福，可卜财源若水泉。',
+    48:'初年运道未曾通，几许蹉跎命亦穷；兄弟六亲无依靠，一生事业晚来整。',
+    49:'此命推来福不轻，自成自立显门庭；从来富贵人钦敬，使婢差奴过一生。',
+    50:'为利为名终日劳，中年福禄也多遭；老来自有财星照，不比前番目下高。',
+    51:'一世荣华事事通，不须劳碌自亨通；兄弟叔侄皆如意，家业成时福禄宏。',
+    52:'一世亨通事事能，不须劳苦自然宁；宗族有光欣喜甚，家产丰盈自称心。',
+    53:'此格推来福泽宏，兴家立业在其中；一生衣食安排定，却是人间一福翁。',
+    54:'此格详采福泽宏，诗书满腹看功成；丰衣足食多安稳，正是人间有福人。',
+    55:'策马扬鞭争名利，少年作事费筹论；一朝福禄源源至，富贵荣华显六亲。',
+    56:'此格推来礼义通，一身福禄用无穷；甜酸苦辣皆尝过，滚滚财源盈而丰。',
+    57:'福禄丰盈万事全，一身荣耀乐天年；名扬威震人争羡，此世逍遥宛似仙。',
+    58:'平生衣食自然来，名利双全富贵偕；金榜题名登甲第，紫袍玉带走金阶。',
+    59:'细推此格秀而清，必定才高学业成；甲第之中应有分，扬鞭走马显威荣。',
+    60:'一朝金榜快题名，显祖荣宗大器成；衣禄定然无欠缺，田园财帛更丰盈。',
+    61:'不作朝中金榜客，定为世上大财翁；聪明天赋经书熟，名显高科自是荣。',
+    62:'此命生来福不穷，读书必定显亲宗；紫衣金带为卿相，富贵荣华孰与同。',
+    63:'命主为官福禄长，得来富贵实非常；名题雁塔传金榜，大显门庭天下扬。',
+    64:'此格威权不可当，紫袍金带尘高堂；荣华富贵谁能及，万古留名姓氏扬。',
+    65:'细推此命福非轻，富贵荣华孰与争；定国安邦人极品，威声显赫震寰瀛。',
+    66:'此格人间一福人，堆金积玉满堂春；从来富贵有天定，金榜题名更显亲。',
+    67:'此命生来福自宏，田园家业最高隆；平生衣禄盈丰足，一路荣华万事通。',
+    68:'富贵由天莫苦求，万金家计不须谋；如今不比前番事，祖业根基百世留。',
+    69:'君是人间衣禄星，一生富贵众人钦；总然福禄由天定，安享荣华过一生。',
+    70:'此命推来福禄宏，不须愁虑苦劳心；荣华富贵天注定，正笏垂绅拜紫宸。',
+    71:'此命生成大不同，公侯卿相在其中；一生自有逍遥福，富贵荣华极品隆。',
+    72:'此格世界罕有生，十代积善产此人；天上紫微来照命，统治万民乐太平。'
+  };
+
+  function calcChengGuWeight(ganZhiYear, lunarMonth, lunarDay, shichenIdx) {
+    return (YEAR_WEIGHT[ganZhiYear]||12) + (MONTH_WEIGHT[(lunarMonth-1+12)%12]||9) + (DAY_WEIGHT[Math.min(lunarDay-1,29)]||10) + (HOUR_WEIGHT[shichenIdx%12]||10);
+  }
+
+  function getChengGuSong(totalQian) {
+    if (CHENGGU_SONGS[totalQian]) return CHENGGU_SONGS[totalQian];
+    var keys = Object.keys(CHENGGU_SONGS).map(Number).sort(function(a,b){return a-b;});
+    var nearest = keys[0];
+    for (var i=0;i<keys.length;i++) { if (Math.abs(keys[i]-totalQian) < Math.abs(nearest-totalQian)) nearest = keys[i]; }
+    return CHENGGU_SONGS[nearest] || '命格非凡，无法以常规称骨论断。';
+  }
+
+  function chengGuReading(bazi, gender) {
+    var ganzhiYear = bazi.year.full;
+    var lunarMonth = bazi.lunar ? bazi.lunar.lunarMonth : 1;
+    var lunarDay = bazi.lunar ? bazi.lunar.lunarDay : 1;
+    var shichenIdx = bazi.hour.shichenIdx;
+    var totalQian = calcChengGuWeight(ganzhiYear, lunarMonth, lunarDay, shichenIdx);
+    var liang = Math.floor(totalQian / 10), qian = totalQian % 10;
+    var song = getChengGuSong(totalQian);
+    var level = totalQian<35?'下等':totalQian<45?'中下':totalQian<52?'中等':totalQian<60?'中上':totalQian<70?'上等':'上上等';
+    var desc = totalQian<35?'称骨偏轻，一生劳碌奔波较多。但命由天定运由己造，积德行善勤勉努力同样可以改变命运。':totalQian<45?'称骨中等偏下，早年多有波折，中晚年后运势渐入佳境。':totalQian<52?'称骨中等，一生平稳，衣食无忧，偶有小波折但无大碍。':totalQian<60?'称骨中等偏上，命带福禄，事业有成，晚景荣华。':totalQian<70?'称骨上等，福禄深厚，名成利就，一生顺遂。':'称骨上上等，世间罕有，大贵之命，福禄寿俱全。';
+    return {totalQian:totalQian, liang:liang, qian:qian, weight:liang+'两'+qian+'钱', song:song, level:level, desc:desc, breakdown:{year:{label:'年柱 '+ganzhiYear, qian:YEAR_WEIGHT[ganzhiYear]||12}, month:{label:'农历'+lunarMonth+'月', qian:MONTH_WEIGHT[(lunarMonth-1+12)%12]||9}, day:{label:'农历'+lunarDay+'日', qian:DAY_WEIGHT[Math.min(lunarDay-1,29)]||10}, hour:{label:bazi.hour.zhi+'时', qian:HOUR_WEIGHT[shichenIdx%12]||10}}};
+  }
+
   return {
     calcWuxingStrength:calcWuxingStrength, calcYongShen:calcYongShen,
     calcShiShenDistribution:calcShiShenDistribution, getShiShen:getShiShen,
@@ -733,6 +820,7 @@ var BaZiReading = (function() {
     calcTaiYuan:calcTaiYuan, calcBaZiMingGong:calcBaZiMingGong,
     calcBaZiShenGong:calcBaZiShenGong, calcLiuYue:calcLiuYue,
     calcLiuShi:calcLiuShi, heHun:heHun, matchClassics:matchClassics,
-    WUXING:WUXING, WUXING_COLORS:WUXING_COLORS
+    WUXING:WUXING, WUXING_COLORS:WUXING_COLORS,
+    chengGuReading:chengGuReading, calcChengGuWeight:calcChengGuWeight
   };
 })();

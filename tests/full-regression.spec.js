@@ -1,5 +1,12 @@
 import { test, expect } from '@playwright/test';
 
+// 绕过欢迎弹窗：预设专业模式避免遮罩层拦截点击
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem('wm_mode', JSON.stringify({level:'professional',style:'',chosen:true}));
+  });
+});
+
 test.describe('文墨天机 - 全量回归测试', () => {
 
   test('页面加载：标题、五术标签栏、排盘表单均可见', async ({ page }) => {

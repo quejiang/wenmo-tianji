@@ -165,7 +165,14 @@ function updateLunarMonthOptions() {
     } else {
       label = (i + 1) + '月';
     }
-    var val = (info.leapMonth > 0 && i > info.leapMonth ? i : i + 1);
+    var val;
+    if (info.leapMonth > 0 && i === info.leapMonth) {
+      val = info.leapMonth; // 闰月用被闰的月份编号
+    } else if (info.leapMonth > 0 && i > info.leapMonth) {
+      val = i;
+    } else {
+      val = i + 1;
+    }
     var marker = isLeapMonth ? '|leap' : '';
     html += '<option value="' + val + marker + '"' + (isLeapMonth ? ' style="color:#e0a050"' : '') + '>' + label + '</option>';
   }
@@ -526,8 +533,11 @@ function showStarPopup(starName, event) {
   var body = document.getElementById('popupStarBody');
   var html = '';
 
+  // 判断当前模式
+  var isPro = (typeof UserMode !== 'undefined') ? UserMode.isProfessional() : true;
+  var style = (typeof UserMode !== 'undefined') ? UserMode.getStyle() : '';
+
   if (!info) {
-    // 未知星曜：显示通用提示
     html += '<div class="sp-props"><span class="sp-category">紫微斗数星曜</span></div>';
     html += '<div class="sp-detail">「'+ starName + '」是紫微斗数中的一颗星曜，目前百科中暂无该星的详细解读。可参阅相关古籍资料以获取更多信息。</div>';
   } else {
@@ -540,9 +550,33 @@ function showStarPopup(starName, event) {
     if (info.trait) props.push('<span class="sp-trait">' + info.trait + '</span>');
     html += '<div class="sp-props">' + props.join(' · ') + '</div>';
 
-    // 详解
-    if (info.detail) {
-      html += '<div class="sp-detail">' + info.detail + '</div>';
+    // 详解 — 根据模式选择解读
+    var reading = '';
+    if (isPro) {
+      reading = info.detail || '';
+    } else if (style === 'story' && info.storyTelling) {
+      reading = info.storyTelling;
+    } else if (style === 'psychology' && info.psychology) {
+      reading = info.psychology;
+    } else if (info.simplified) {
+      reading = info.simplified;
+    } else {
+      reading = info.detail || '';
+      // 非专业模式自动简化术语
+      if (typeof UserMode !== 'undefined' && typeof UserMode.simplifyText === 'function') {
+        reading = UserMode.simplifyText(reading, style);
+      }
+    }
+
+    if (reading) {
+      html += '<div class="sp-detail">' + reading + '</div>';
+    }
+
+    // 非专业模式加术语提示条
+    if (!isPro) {
+      html += '<div class="sp-nonpro-hint">💡 <em>以上为' + 
+        (style==='story'?'故事化':style==='psychology'?'心理化':'生活化') + 
+        '解读，点击右上角 🔬 可切换专业模式</em></div>';
     }
 
     // 关键词
@@ -744,7 +778,13 @@ function showPalacePopup(palaceName, event) {
 
     // 详解
     if (info.detail) {
-      html += '<div class="sp-detail">' + info.detail + '</div>';
+      var isPro = (typeof UserMode !== 'undefined') ? UserMode.isProfessional() : true;
+      var style = (typeof UserMode !== 'undefined') ? UserMode.getStyle() : '';
+      var palaceReading = info.detail;
+      if (!isPro && typeof UserMode !== 'undefined' && typeof UserMode.simplifyText === 'function') {
+        palaceReading = UserMode.simplifyText(palaceReading, style);
+      }
+      html += '<div class="sp-detail">' + palaceReading + '</div>';
     }
 
     // 关键词
@@ -999,12 +1039,15 @@ function switchXiangTab(sub) {
   if (sub === 'palm') renderXiangPalm();
   else if (sub === 'face') renderXiangFace();
   else if (sub === 'fengshui') renderFengShuiStars();
+  else if (sub === 'luopan') renderLuoPan();
   else if (sub === 'name') { /* name analysis is self-contained */ }
 }
 function switchBuTab(sub) {
   switchSubTab('bu', sub);
   if (sub === 'tarot') ensureTarotLoaded();
   else if (sub === 'horoscope') ensureHoroscopeLoaded();
+  else if (sub === 'qimen') renderQiMen();
+  else if (sub === 'zeri') renderZeRiCalendar();
 }
 function switchSubTab(prefix, sub) {
   var panel = document.getElementById('wushu' + prefix.charAt(0).toUpperCase() + prefix.slice(1));
@@ -1335,6 +1378,23 @@ function renderBaziTab(bazi, gender) {
     html += '</div>';
   }
 
+  // 称骨
+  if (BaZiReading.chengGuReading) {
+    var cg = BaZiReading.chengGuReading(bazi, gender);
+    html += '<div class="br-block">';
+    html += '<div class="brb-title"><span class="brb-icon">⚖</span> 袁天罡称骨算命</div>';
+    html += '<div class="brb-text">';
+    html += '<p style="margin-bottom:6px;"><b style="font-size:1.1em;color:#f0d78c;">' + cg.weight + '</b> <span style="color:#aaa;">（' + cg.level + '）</span></p>';
+    html += '<p style="color:#c0b080;margin-bottom:8px;">' + cg.song + '</p>';
+    html += '<p style="color:#9a8c6c;">' + cg.desc + '</p>';
+    html += '<p style="color:#7a7c60;font-size:0.78em;margin-top:6px;">';
+    html += cg.breakdown.year.label + '(' + cg.breakdown.year.qian + '钱) + ';
+    html += cg.breakdown.month.label + '(' + cg.breakdown.month.qian + '钱) + ';
+    html += cg.breakdown.day.label + '(' + cg.breakdown.day.qian + '钱) + ';
+    html += cg.breakdown.hour.label + '(' + cg.breakdown.hour.qian + '钱)';
+    html += '</p></div></div>';
+  }
+
   // 免责声明
   html += '<div class="br-disclaimer">以上解读由八字规则引擎自动生成，仅供参考。命理为概率之学，人生之路仍在自己手中。</div>';
 
@@ -1534,11 +1594,39 @@ window.addEventListener('DOMContentLoaded', () => {
   initCitySelect();
   // 显示初始时辰
   onTimeChange();
+  // 初始化用户模式 (专业/大众)
+  if (typeof UserMode !== 'undefined') {
+    UserMode.init();
+    // 应用模式 class 到 body，控制高级功能显隐
+    if (!UserMode.isProfessional()) {
+      document.body.classList.add('mode-nonpro');
+    }
+    // 更新模式切换按钮图标
+    updateModeButton();
+  }
   // 页面加载时自动排盘
   generateChart();
   // 刷新命例库列表
   renderCaseList();
 });
+
+function updateModeButton() {
+  var btn = document.getElementById('btnModeToggle');
+  if (!btn) return;
+  if (typeof UserMode === 'undefined') return;
+  var level = UserMode.getLevel();
+  var style = UserMode.getStyle();
+  if (level === 'professional') {
+    btn.textContent = '🔬';
+    btn.title = '当前：专业模式 | 点击切换';
+  } else if (level === 'non-professional') {
+    var icons = { story: '📖', daily: '🏠', psychology: '🧠' };
+    btn.textContent = (icons[style] || '🌟');
+    btn.title = '当前：大众模式（' + 
+      (style==='story'?'故事化':style==='psychology'?'心理化':'生活化') + 
+      '）| 点击切换';
+  }
+}
 
 // ==================== 命例库 UI ====================
 
@@ -3680,5 +3768,269 @@ function analyzeName() {
 
   html += '<p style="font-size:0.8em;color:#666;margin-top:8px">以上分析基于三才五格法，仅供参考。笔画为估算值，精确分析需查康熙字典。</p>';
   html += '</div>';
+  resultDiv.innerHTML = html;
+}
+
+// ==================== 奇门遁甲渲染 ====================
+
+function renderQiMen() {
+  var resultDiv = document.getElementById('qmResult');
+  if (!resultDiv) return;
+
+  if (typeof QiMen === 'undefined') {
+    resultDiv.innerHTML = '<p style="color:#e06040;">奇门遁甲模块未加载</p>';
+    return;
+  }
+
+  var now = new Date();
+  var year = now.getFullYear(), month = now.getMonth() + 1, day = now.getDate();
+  var hour = now.getHours(), minute = now.getMinutes();
+
+  // Try using chart data if available
+  if (currentChart && currentBazi) {
+    var birthDate = document.getElementById('birthDate');
+    if (birthDate && birthDate.value) {
+      var parts = birthDate.value.split('-').map(Number);
+      year = parts[0];
+      month = parts[1];
+      day = parts[2];
+    }
+    hour = parseInt(document.getElementById('birthHour').value) || new Date().getHours();
+    minute = parseInt(document.getElementById('birthMinute').value) || 0;
+  }
+
+  var result = QiMen.compute(year, month, day, hour, minute);
+  var GAN = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+  var ZHI = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+
+  var html = '';
+  html += '<div class="qm-info">';
+  html += '<span>🕐 '+year+'-'+month+'-'+day+' '+GAN[result.dayGanIdx]+ZHI[result.dayZhiIdx]+'日 '+GAN[result.shiGanIdx]+ZHI[result.shiZhiIdx]+'时</span>';
+  html += '<span> | '+result.bureau.dun+'遁'+result.bureau.ju+'局 · '+result.bureau.yuan+' · '+result.bureau.jieqi+'</span>';
+  html += '</div>';
+
+  // 九宫格
+  html += '<div class="qm-grid">';
+  var luoshuOrder = [4,9,2,3,5,7,8,1,6];
+  var gridHtml = ['','','','','','','','',''];
+
+  result.luoshuPalaces.forEach(function(p) {
+    var luoIdx = luoshuOrder.indexOf(p.gong);
+    if (luoIdx < 0) return;
+    var cellHtml = '<div class="qm-cell'+(p.gong===5?' qm-cell-center':'')+'">';
+    cellHtml += '<div class="qm-gong-name">'+p.gua+'宫('+p.gong+')</div>';
+    if (p.spirit) cellHtml += '<div class="qm-spirit">'+p.spirit+'</div>';
+    if (p.star) cellHtml += '<div class="qm-star" style="color:'+p.star.color+'">'+p.star.name+'</div>';
+    if (p.door) cellHtml += '<div class="qm-door">'+p.door.name+'</div>';
+    cellHtml += '<div class="qm-qiyi">'+p.earthQiYi+'</div>';
+    cellHtml += '<div class="qm-gua-yi">'+p.guaYi+'</div>';
+    cellHtml += '</div>';
+    gridHtml[luoIdx] = cellHtml;
+  });
+
+  for (var i = 0; i < 9; i++) {
+    html += gridHtml[i] || '<div class="qm-cell"></div>';
+  }
+  html += '</div>';
+
+  // 星门神含义
+  html += '<div class="qm-legend">';
+  var shownStars = {};
+  result.luoshuPalaces.forEach(function(p) {
+    if (p.star && p.door) {
+      html += '<div class="qm-legend-item">';
+      html += '<b style="color:'+p.star.color+'">'+p.star.name+'</b> + <b>'+p.door.name+'</b> @ '+p.gua+'宫';
+      html += '<span style="color:#888"> — '+p.door.desc+'</span>';
+      html += '</div>';
+    }
+  });
+  html += '</div>';
+
+  resultDiv.innerHTML = html;
+}
+
+function useQiMenNow() {
+  // Clear date/time to current
+  if (currentBazi) {
+    // Reset input fields to now
+    document.getElementById('birthDate').value = '';
+    document.getElementById('birthHour').value = 12;
+    document.getElementById('birthMinute').value = 0;
+  }
+  renderQiMen();
+}
+
+// ==================== 择日渲染 ====================
+
+function renderZeRiCalendar() {
+  var resultDiv = document.getElementById('zrResult');
+  if (!resultDiv) return;
+
+  var now = new Date();
+  var yearEl = document.getElementById('zrYear');
+  var monthEl = document.getElementById('zrMonth');
+  var year = parseInt(yearEl && yearEl.value ? yearEl.value : now.getFullYear());
+  var month = parseInt(monthEl && monthEl.value ? monthEl.value : now.getMonth() + 1);
+
+  if (!yearEl.value) yearEl.value = year;
+  if (!monthEl.value) monthEl.value = month;
+
+  if (typeof ZeRi === 'undefined') {
+    resultDiv.innerHTML = '<p style="color:#e06040;">择日模块未加载</p>';
+    return;
+  }
+
+  var calendar = ZeRi.generateMonthCalendar(year, month);
+  var activity = (document.getElementById('zrActivity')||{}).value || '';
+  var GAN = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+  var ZHI = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+  var WEEKDAY = ['日','一','二','三','四','五','六'];
+
+  var html = '';
+  html += '<div class="zr-cal-header">📅 '+calendar.monthName+'</div>';
+
+  // 图例
+  html += '<div class="zr-legend" style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:8px;font-size:0.78em;">';
+  html += '<span style="color:#4caf50">🟢 吉日</span><span style="color:#ff9800">🟡 平日</span><span style="color:#e06040">🔴 凶日</span>';
+  if (activity) html += '<span style="color:#f0d78c">⭐ 宜'+activity+'</span>';
+  html += '</div>';
+
+  html += '<div class="zr-cal-grid">';
+  // Day of week header
+  for (var w = 0; w < 7; w++) {
+    html += '<div class="zr-day-header">周'+WEEKDAY[w]+'</div>';
+  }
+
+  // Find first day of week offset
+  var firstDay = new Date(year, month-1, 1).getDay();
+  // Fill blank cells before first day
+  for (var b = 0; b < firstDay; b++) {
+    html += '<div class="zr-day zr-day-empty"></div>';
+  }
+
+  calendar.days.forEach(function(d) {
+    var cls = 'zr-day';
+    var badge = '';
+    var tooltip = '';
+
+    if (d.jianChuJiXiong === '吉') cls += ' zr-day-ji';
+    else if (d.jianChuJiXiong === '凶') cls += ' zr-day-xiong';
+
+    if (d.isToday) cls += ' zr-day-today';
+
+    if (activity && d.yi.indexOf(activity) >= 0) {
+      badge += ' ⭐';
+      cls += ' zr-day-match';
+    }
+
+    if (d.bigTaboo) {
+      badge += ' ⚠';
+      cls += ' zr-day-taboo';
+    }
+
+    var yiStr = d.yi.slice(0, 3).join('·');
+    var jiStr = d.ji.slice(0, 2).join('·');
+
+    html += '<div class="'+cls+'" title="'+d.ganzhi+' '+d.jianChu+' '+yiStr+'">';
+    html += '<div class="zr-day-num">'+d.solarDay+badge+'</div>';
+    html += '<div class="zr-day-lunar">'+d.lunarMonth+'/'+d.lunarDay+'</div>';
+    html += '<div class="zr-day-jc">'+d.jianChu+'</div>';
+    html += '<div class="zr-day-gz">'+d.ganzhi+'</div>';
+    html += '</div>';
+  });
+
+  html += '</div>';
+  resultDiv.innerHTML = html;
+}
+
+function findZeRiBest() {
+  var resultDiv = document.getElementById('zrResult');
+  if (!resultDiv) return;
+
+  var now = new Date();
+  var yearEl = document.getElementById('zrYear');
+  var monthEl = document.getElementById('zrMonth');
+  var year = parseInt(yearEl && yearEl.value ? yearEl.value : now.getFullYear());
+  var month = parseInt(monthEl && monthEl.value ? monthEl.value : now.getMonth() + 1);
+  var activity = (document.getElementById('zrActivity')||{}).value || '嫁娶';
+
+  if (typeof ZeRi === 'undefined') return;
+
+  var best = ZeRi.findBestDates(year, month, activity, 3);
+
+  var html = '';
+  html += '<div style="padding:12px;background:rgba(240,215,140,0.06);border-radius:6px;margin-top:12px;">';
+  html += '<h4 style="color:#f0d78c;margin-bottom:8px;">🔍 适宜<b>'+activity+'</b>的最佳日期（'+year+'年'+month+'月）</h4>';
+  best.forEach(function(b) {
+    var d = b.day;
+    html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(240,215,140,0.08);">';
+    html += '<span><b style="color:#f0d78c;">'+year+'-'+month+'-'+d.solarDay+'</b> '+d.ganzhi+' '+d.jianChu+'</span>';
+    html += '<span style="font-size:0.78em;color:#888;">匹配度: <b style="color:#4caf50">'+b.score+'分</b></span>';
+    html += '<span style="font-size:0.78em;color:#aaa;">宜: '+d.yi.slice(0,3).join('·')+'</span>';
+    html += '</div>';
+  });
+  if (best.length === 0) html += '<p style="color:#888;">本月暂无特别适合的日期</p>';
+  html += '</div>';
+  resultDiv.innerHTML = resultDiv.innerHTML + html;
+}
+
+// ==================== 风水罗盘渲染 ====================
+
+function renderLuoPan() {
+  var resultDiv = document.getElementById('lpResult');
+  if (!resultDiv) return;
+
+  if (typeof FengShuiLuopan === 'undefined') {
+    resultDiv.innerHTML = '<p style="color:#e06040;">风水罗盘模块未加载</p>';
+    return;
+  }
+
+  var now = new Date();
+  var year = parseInt(document.getElementById('lpYear').value) || now.getFullYear();
+  if (!document.getElementById('lpYear').value) document.getElementById('lpYear').value = year;
+
+  var yearStars = FengShuiLuopan.computeYearStars(year);
+  var yun = FengShuiLuopan.getCurrentYun(year);
+
+  // Luoshu positions for grid
+  var LUOSHU_POS = {4:{r:0,c:0},9:{r:0,c:1},2:{r:0,c:2},3:{r:1,c:0},5:{r:1,c:1},7:{r:1,c:2},8:{r:2,c:0},1:{r:2,c:1},6:{r:2,c:2}};
+  var GONG_NAMES = {1:'坎·北',2:'坤·西南',3:'震·东',4:'巽·东南',5:'中宫',6:'乾·西北',7:'兑·西',8:'艮·东北',9:'离·南'};
+  var gridCells = ['','','','','','','','',''];
+
+  yearStars.forEach(function(s) {
+    var pos = LUOSHU_POS[s.gong];
+    if (!pos) return;
+    var idx = pos.r * 3 + pos.c;
+    var star = s.star;
+    var bg = star.ji ? 'rgba(76,175,80,0.08)' : 'rgba(224,96,64,0.08)';
+    var borderColor = star.ji ? 'rgba(76,175,80,0.3)' : 'rgba(224,96,64,0.3)';
+    if (s.gong === 5) { bg = 'rgba(224,96,64,0.15)'; borderColor = 'rgba(224,96,64,0.5)'; }
+
+    var cellHtml = '<div style="background:'+bg+';border:1px solid '+borderColor+';border-radius:4px;padding:8px;text-align:center;">';
+    cellHtml += '<div style="font-size:0.7em;color:#888;">'+GONG_NAMES[s.gong]+'</div>';
+    cellHtml += '<div style="font-size:1.4em;font-weight:700;color:'+star.color+';">'+star.name+'</div>';
+    cellHtml += '<div style="font-size:0.7em;color:'+(star.ji?'#4caf50':'#e06040')+';">'+(star.ji?'吉':'凶')+'</div>';
+    cellHtml += '<div style="font-size:0.68em;color:#888;margin-top:2px;">'+star.desc+'</div>';
+    cellHtml += '</div>';
+    gridCells[idx] = cellHtml;
+  });
+
+  var html = '';
+  html += '<div style="margin-bottom:8px;color:#ccc;">🏠 <b>'+year+'年</b>飞星图 · <span style="color:#f0d78c;">下元'+yun.name+'</span>（'+yun.range+'）</div>';
+  html += '<div class="lp-grid" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;max-width:500px;">';
+  gridCells.forEach(function(c) { html += c || '<div></div>'; });
+  html += '</div>';
+
+  // 廿四山罗盘
+  html += '<div style="margin-top:16px;">';
+  html += '<div style="margin-bottom:8px;color:#ccc;">🧭 <b>廿四山方位</b></div>';
+  html += '<div class="lp-24shan" style="display:flex;flex-wrap:wrap;gap:2px;max-width:500px;">';
+  FengShuiLuopan.MOUNTAINS.forEach(function(m) {
+    var bg = m.wx === '金' ? 'rgba(212,192,128,0.12)' : m.wx === '木' ? 'rgba(90,168,90,0.12)' : m.wx === '水' ? 'rgba(96,144,208,0.12)' : m.wx === '火' ? 'rgba(224,96,64,0.12)' : 'rgba(208,160,64,0.12)';
+    var color = m.wx === '金' ? '#d4c080' : m.wx === '木' ? '#5da85d' : m.wx === '水' ? '#6090d0' : m.wx === '火' ? '#e06040' : '#d0a040';
+    html += '<span style="padding:2px 4px;font-size:0.68em;background:'+bg+';color:'+color+';border-radius:2px;cursor:default;" title="'+m.full+' '+m.dir+' '+m.deg+'° '+m.wx+' '+m.yinYang+'">'+m.name+'</span>';
+  });
+  html += '</div></div>';
+
   resultDiv.innerHTML = html;
 }
