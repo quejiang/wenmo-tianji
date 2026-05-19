@@ -1,5 +1,6 @@
-const CACHE = 'wenmo-v9';
+const CACHE = 'wenmo-v10';
 const FILES = [
+  './',
   './index.html',
   './css/style.css',
   './js/lunar.js',
@@ -25,7 +26,9 @@ const FILES = [
   './js/app.js'
 ];
 
+// 安装完成后立即激活，不等待旧 SW 释放
 self.addEventListener('install', function(e) {
+  self.skipWaiting();
   e.waitUntil(
     caches.open(CACHE).then(function(cache) {
       return cache.addAll(FILES);
@@ -33,6 +36,7 @@ self.addEventListener('install', function(e) {
   );
 });
 
+// 激活后立即接管所有窗口，并清理旧缓存
 self.addEventListener('activate', function(e) {
   e.waitUntil(
     caches.keys().then(function(keys) {
@@ -40,10 +44,13 @@ self.addEventListener('activate', function(e) {
         keys.filter(function(k) { return k !== CACHE; })
             .map(function(k) { return caches.delete(k); })
       );
+    }).then(function() {
+      return self.clients.claim();
     })
   );
 });
 
+// 缓存优先，回退网络
 self.addEventListener('fetch', function(e) {
   e.respondWith(
     caches.match(e.request).then(function(resp) {
