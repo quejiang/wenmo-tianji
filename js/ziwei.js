@@ -826,6 +826,208 @@ function calculateZiWeiChart(year, month, day, hour, bazi, gender) {
   };
 }
 
+// ==================== 紫微合盘（两人盘对比） ====================
+function calculateZiWeiSynastry(chart1, chart2, bazi1, bazi2) {
+  var scores = [];
+  var details = [];
+  var totalScore = 0;
+  var maxScore = 0;
+
+  // 1. 命宫主星五行生克 (25分)
+  maxScore += 25;
+  var ming1Stars = getPalaceStars(chart1, chart1.mingGong.zhiIndex);
+  var ming2Stars = getPalaceStars(chart2, chart2.mingGong.zhiIndex);
+  var elem1 = getStarElements(ming1Stars);
+  var elem2 = getStarElements(ming2Stars);
+  var elemScore = calcElementCompatibility(elem1, elem2) * 25;
+  scores.push({ name: '命宫五行契合度', score: Math.round(elemScore), max: 25, detail: '命宫主星五行生克关系' });
+  totalScore += elemScore;
+  if (elemScore >= 20) details.push('命宫主星五行相生，性格互补和谐');
+  else if (elemScore >= 12) details.push('命宫主星五行中立，性格尚可磨合');
+  else details.push('命宫主星五行相克，性格差异较大需更多的理解和包容');
+
+  // 2. 夫妻宫互动 (20分)
+  maxScore += 20;
+  var fuqi1 = getPalaceStars(chart1, (chart1.mingGong.zhiIndex + 2) % 12);
+  var fuqi2 = getPalaceStars(chart2, (chart2.mingGong.zhiIndex + 2) % 12);
+  var fuqiCompat = calcElementCompatibility(getStarElements(fuqi1), getStarElements(fuqi2)) * 20;
+  scores.push({ name: '夫妻宫和谐度', score: Math.round(fuqiCompat), max: 20, detail: '双方夫妻宫主星五行互动' });
+  totalScore += fuqiCompat;
+  if (fuqiCompat >= 14) details.push('夫妻宫相合，感情容易维系');
+  else details.push('夫妻宫互动一般，需要更多经营');
+
+  // 3. 四化飞入对方命宫/夫妻宫 (20分)
+  maxScore += 20;
+  var crossSihuaScore = calcCrossSihua(chart1, chart2);
+  scores.push({ name: '四化互动', score: Math.round(crossSihuaScore * 20), max: 20, detail: '双方化禄化权化科是否入对方重要宫位' });
+  totalScore += crossSihuaScore * 20;
+  if (crossSihuaScore > 0.5) details.push('四化互动良好，缘分牵引力强');
+  else details.push('四化互动较弱，缘分较淡');
+
+  // 4. 命宫地支六合/三合 (15分)
+  maxScore += 15;
+  var zhiScore = calcZhiCompatibility(chart1.mingGong.zhiIndex, chart2.mingGong.zhiIndex) * 15;
+  scores.push({ name: '命宫地支合度', score: Math.round(zhiScore), max: 15, detail: '命宫地支是否六合或三合' });
+  totalScore += zhiScore;
+  if (zhiScore >= 12) details.push('命宫地支相合，根基相投');
+  else details.push('命宫地支无特殊合相');
+
+  // 5. 命主星互动 (10分)
+  maxScore += 10;
+  var mingZhuScore = calcMingZhuCompat(chart1.mingZhu, chart2.mingZhu) * 10;
+  scores.push({ name: '命主星互动', score: Math.round(mingZhuScore), max: 10, detail: '双方命主星的五行关系' });
+  totalScore += mingZhuScore;
+
+  // 6. 身宫关系 (10分)
+  maxScore += 10;
+  var shenScore = calcZhiCompatibility(chart1.shenGong.zhiIndex, chart2.shenGong.zhiIndex) * 10;
+  scores.push({ name: '身宫和谐度', score: Math.round(shenScore), max: 10, detail: '身宫地支合度（后天发展重心）' });
+  totalScore += shenScore;
+
+  return {
+    totalScore: Math.round(totalScore),
+    maxScore: maxScore,
+    scores: scores,
+    details: details,
+    verdict: totalScore >= 80 ? '天作之合，缘分深厚' :
+             totalScore >= 60 ? '缘分不错，可以发展' :
+             totalScore >= 40 ? '需要磨合，但仍有希望' : '缘分较浅，需要加倍努力'
+  };
+}
+
+function getPalaceStars(chart, zhiIdx) {
+  for (var i = 0; i < chart.palaces.length; i++) {
+    if (chart.palaces[i].zhiIndex === zhiIdx) {
+      return chart.palaces[i].stars.map(function(s) { return s.key; });
+    }
+  }
+  return [];
+}
+
+function getStarElements(starKeys) {
+  var STAR_ELEMENTS = {
+    ziwei: '土', tianji: '木', taiyang: '火', wuqu: '金',
+    tiantong: '水', lianzhen: '火', tianfu: '土', taiyin: '水',
+    tanlang: '木', jumen: '水', tianxiang: '水', tianliang: '土',
+    qisha: '金', pojund: '水'
+  };
+  var elements = [];
+  starKeys.forEach(function(k) {
+    if (STAR_ELEMENTS[k]) elements.push(STAR_ELEMENTS[k]);
+  });
+  return elements;
+}
+
+function calcElementCompatibility(elems1, elems2) {
+  var ELEM_CYCLE = { '木': 0, '火': 1, '土': 2, '金': 3, '水': 4 };
+  var bestScore = 0;
+  elems1.forEach(function(e1) {
+    elems2.forEach(function(e2) {
+      var diff = (ELEM_CYCLE[e2] - ELEM_CYCLE[e1] + 5) % 5;
+      if (diff === 0) bestScore = Math.max(bestScore, 1.0);    // 同
+      else if (diff === 1) bestScore = Math.max(bestScore, 0.7); // 生
+      else if (diff === 4) bestScore = Math.max(bestScore, 0.5); // 被生
+      else bestScore = Math.max(bestScore, 0.2);                  // 克/被克
+    });
+  });
+  return elems1.length === 0 || elems2.length === 0 ? 0.5 : bestScore;
+}
+
+function calcZhiCompatibility(z1, z2) {
+  var sixHeMap = [[0,1],[2,11],[3,10],[4,9],[5,8],[6,7]];
+  for (var i = 0; i < sixHeMap.length; i++) {
+    if ((sixHeMap[i][0] === z1 && sixHeMap[i][1] === z2) || (sixHeMap[i][1] === z1 && sixHeMap[i][0] === z2)) return 1.0;
+  }
+  if ((z1 + 4) % 12 === z2 || (z2 + 4) % 12 === z1) return 0.8;
+  if (z1 === z2) return 0.6;
+  if ((z1 + 6) % 12 === z2) return 0.3;
+  return 0.4;
+}
+
+function calcCrossSihua(chart1, chart2) {
+  var score = 0;
+  var targetZhis = [chart2.mingGong.zhiIndex, (chart2.mingGong.zhiIndex + 2) % 12]; // 对方命宫+夫妻宫
+  chart1.palaces.forEach(function(p1) {
+    (p1.sihua || []).forEach(function(sh) {
+      if (sh.type === '禄' || sh.type === '权' || sh.type === '科') {
+        for (var i = 0; i < p1.stars.length; i++) {
+          if (p1.stars[i].name === sh.starName) {
+            // 找到这颗星在chart2的哪个宫
+            chart2.palaces.forEach(function(p2) {
+              for (var j = 0; j < p2.stars.length; j++) {
+                if (p2.stars[j].name === sh.starName && targetZhis.indexOf(p2.zhiIndex) !== -1) {
+                  score += sh.type === '禄' ? 0.5 : 0.25;
+                }
+              }
+            });
+          }
+        }
+      }
+    });
+  });
+  // 双向计算
+  chart2.palaces.forEach(function(p2) {
+    (p2.sihua || []).forEach(function(sh) {
+      if (sh.type === '禄' || sh.type === '权' || sh.type === '科') {
+        for (var i = 0; i < p2.stars.length; i++) {
+          if (p2.stars[i].name === sh.starName) {
+            chart1.palaces.forEach(function(p1) {
+              for (var j = 0; j < p1.stars.length; j++) {
+                if (p1.stars[j].name === sh.starName && [chart1.mingGong.zhiIndex, (chart1.mingGong.zhiIndex + 2) % 12].indexOf(p1.zhiIndex) !== -1) {
+                  score += sh.type === '禄' ? 0.5 : 0.25;
+                }
+              }
+            });
+          }
+        }
+      }
+    });
+  });
+  return Math.min(score, 1.0);
+}
+
+function calcMingZhuCompat(mz1, mz2) {
+  var elemMap = { '紫微':'土','天机':'木','太阳':'火','武曲':'金','天同':'水','廉贞':'火','天府':'土','太阴':'水','贪狼':'木','巨门':'水','天相':'水','天梁':'土','七杀':'金','破军':'水' };
+  var e1 = elemMap[mz1] || '土';
+  var e2 = elemMap[mz2] || '土';
+  return calcElementCompatibility([e1], [e2]);
+}
+
+// ==================== 宫位量化评分 ====================
+function scorePalaces(chart) {
+  return chart.palaces.map(function(p) {
+    var score = 50; // 基准分
+    // 主星庙旺加分
+    p.stars.forEach(function(s) {
+      if (s.brightness === '庙') score += 15;
+      else if (s.brightness === '旺') score += 10;
+      else if (s.brightness === '得') score += 5;
+      else if (s.brightness === '陷') score -= 10;
+      else if (s.brightness === '不') score -= 5;
+    });
+    // 吉星加分
+    p.auxStars.forEach(function(a) {
+      if (['zuofu','youbi','wenchang','wenqu','tiankui','tianyue','lucun'].indexOf(a.key) !== -1) score += 5;
+      if (['qingyang','tuoluo','huoxing','lingxing','dikong','dijie'].indexOf(a.key) !== -1) score -= 5;
+    });
+    // 四化影响
+    (p.sihua || []).forEach(function(sh) {
+      if (sh.type === '禄') score += 8;
+      else if (sh.type === '权') score += 5;
+      else if (sh.type === '科') score += 6;
+      else if (sh.type === '忌') score -= 8;
+    });
+    // 无主星空宫扣分
+    if (p.stars.length === 0) score -= 10;
+    return {
+      name: p.name,
+      score: Math.max(0, Math.min(100, score)),
+      level: score >= 80 ? '强宫' : score >= 60 ? '中上' : score >= 40 ? '中等' : score >= 20 ? '偏弱' : '弱宫',
+      zhiIndex: p.zhiIndex
+    };
+  });
+}
+
 // ==================== 宫位网格布局 ====================
 // 将12地支映射到4x4网格的显示位置
 //  巳(5) 午(6) 未(7) 申(8)
@@ -856,6 +1058,7 @@ if (typeof module !== 'undefined' && module.exports) {
     getElementBureau, calcZiWeiPosition, arrangeAllStars,
     arrangeAuxStars, arrangeMinorStars, arrangeShenSha,
     getSiHua, computePalaceSiHua, getStarBrightness,
-    calcDaXian, calcXiaoXian, calculateZiWeiChart
+    calcDaXian, calcXiaoXian, calculateZiWeiChart,
+    calculateZiWeiSynastry, scorePalaces
   };
 }

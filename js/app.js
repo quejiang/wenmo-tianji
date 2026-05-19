@@ -866,6 +866,7 @@ function switchXiangTab(sub) {
   if (sub === 'palm') renderXiangPalm();
   else if (sub === 'face') renderXiangFace();
   else if (sub === 'fengshui') renderFengShuiStars();
+  else if (sub === 'name') { /* name analysis is self-contained */ }
 }
 function switchBuTab(sub) {
   switchSubTab('bu', sub);
@@ -963,11 +964,24 @@ function generateChart() {
 
   const [y, m, d] = dateInput.split('-').map(Number);
 
-  // 日期范围验证（农历数据覆盖1900-2100年）
+  // 日期范围验证（农历数据覆盖1900-1986年）
   if (y < 1900 || y > 2100) {
     alert('日期超出范围，请选择1900年-2100年之间的日期');
     return;
   }
+
+  // 夏令时提醒
+  var dstWarn = document.getElementById('dstWarning');
+  if (dstWarn) {
+    var isDst = (y === 1986 && m >= 5 && m <= 9) ||
+                (y === 1987 && m >= 4 && m <= 9) ||
+                (y === 1988 && m >= 4 && m <= 9) ||
+                (y === 1989 && m >= 4 && m <= 9) ||
+                (y === 1990 && m >= 4 && m <= 9) ||
+                (y === 1991 && m >= 4 && m <= 9);
+    dstWarn.style.display = isDst ? 'block' : 'none';
+  }
+
   const hour = parseInt(hourVal) || 0;
   const minute = parseInt(minuteVal) || 0;
 
@@ -1020,9 +1034,27 @@ function generateChart() {
   // 如果新手教程正停在"输入出生信息"步骤，排盘完成后自动前进到"看懂命盘"步骤
   if (typeof Tutorial !== 'undefined' && Tutorial.isOpen && Tutorial.isOpen()) {
     var stepIdx = Tutorial.getCurrentStep ? Tutorial.getCurrentStep() : -1;
-    if (stepIdx === 1 && Tutorial.steps[1] && Tutorial.steps[1].id === 'input') {
+    if (stepIdx === 1 && Tutorial.steps && Tutorial.steps[1] && Tutorial.steps[1].id === 'input') {
       Tutorial.goTo(2);
+      // 确保命盘区域可见
+      var chartContainer = document.querySelector('.chart-container');
+      if (chartContainer) {
+        setTimeout(function() { chartContainer.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300);
+      }
     }
+  }
+
+  // ---- 检测命盘特殊格局 ----
+  if (typeof ZiweiPatterns !== 'undefined') {
+    var patterns = ZiweiPatterns.detectAll(chart);
+    renderPatterns(patterns);
+    _lastPatterns = patterns;
+  }
+
+  // ---- 宫位评分 ----
+  if (typeof scorePalaces !== 'undefined') {
+    _lastPalaceScores = scorePalaces(chart);
+    renderPalaceScores(_lastPalaceScores);
   }
 }
 
@@ -3194,4 +3226,310 @@ function renderLiuYaoResult(result) {
   html += '<p class="ly-disclaimer">以上解读由六爻规则引擎生成，仅供参考。</p>';
   html += '</div>';
   document.getElementById('lyResult').innerHTML = html;
+}
+
+// ==================== 格局展示 ====================
+var _lastPatterns = [];
+var _lastPalaceScores = [];
+
+function renderPatterns(patterns) {
+  var container = document.getElementById('patternsContainer');
+  if (!container) return;
+  if (!patterns || patterns.length === 0) {
+    container.style.display = 'none';
+    return;
+  }
+  container.style.display = 'block';
+  var html = '<div style="color:#d4a84c;font-weight:700;margin-bottom:8px">🏷️ 命盘格局 (' + patterns.length + ')</div><div class="patterns-grid">';
+  patterns.forEach(function(p) {
+    var catColor = p.category.indexOf('凶') >= 0 ? '#e06050' :
+                   p.category.indexOf('富') >= 0 ? '#e0c050' :
+                   p.category.indexOf('贵') >= 0 ? '#d4a84c' :
+                   p.category.indexOf('文') >= 0 ? '#8899cc' :
+                   p.category.indexOf('武') >= 0 ? '#e0a050' :
+                   p.category.indexOf('特殊') >= 0 ? '#a080cc' : '#88bb88';
+    html += '<div class="pattern-card" style="border-left:3px solid ' + catColor + '" title="' + p.desc + '">';
+    html += '<span class="pattern-name">' + p.name + '</span>';
+    html += '<span class="pattern-cat" style="color:' + catColor + '">' + p.category + '</span>';
+    html += '</div>';
+  });
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+function renderPalaceScores(scores) {
+  var container = document.getElementById('scoresContainer');
+  if (!container || !scores) return;
+  container.style.display = 'block';
+  var html = '<div style="color:#88bbff;font-weight:700;margin-bottom:8px">📊 宫位评分</div><div class="scores-grid">';
+  scores.forEach(function(s) {
+    var barColor = s.level === '强宫' ? '#4caf50' : s.level === '中上' ? '#8bc34a' :
+                   s.level === '中等' ? '#ffc107' : s.level === '偏弱' ? '#ff9800' : '#f44336';
+    html += '<div class="score-item">';
+    html += '<span class="score-name">' + s.name + '</span>';
+    html += '<div class="score-bar-bg"><div class="score-bar-fill" style="width:' + s.score + '%;background:' + barColor + '"></div></div>';
+    html += '<span class="score-val" style="color:' + barColor + '">' + s.score + ' ' + s.level + '</span>';
+    html += '</div>';
+  });
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+// ==================== 三方四正分析弹窗 ====================
+function showSanFangPopup(zhiIndex, event) {
+  if (!currentChart) return;
+  if (typeof Tutorial !== 'undefined' && Tutorial.isOpen && Tutorial.isOpen()) return;
+
+  var triads = [(zhiIndex + 4) % 12, (zhiIndex + 8) % 12];
+  var opposite = (zhiIndex + 6) % 12;
+  var allZhis = [zhiIndex].concat(triads).concat([opposite]);
+  var allPalaces = allZhis.map(function(z) {
+    return findPalaceByZhiIdx(z);
+  }).filter(Boolean);
+
+  var popup = document.getElementById('starPopup');
+  document.getElementById('popupStarName').textContent = '三方四正分析';
+
+  var html = '';
+  allPalaces.forEach(function(p, i) {
+    var label = '';
+    if (p.zhiIndex === zhiIndex) label = '【本宫】';
+    else if (triads.indexOf(p.zhiIndex) !== -1) label = '【三合】';
+    else label = '【对宫】';
+
+    html += '<div class="sf-palace-item" style="margin-bottom:8px;padding:8px;background:rgba(255,255,255,0.03);border-radius:6px">';
+    html += '<span class="sf-label">' + label + ' ' + p.name + ' (' + p.ganZhi + ')</span>';
+    if (p.stars.length > 0) {
+      html += '<div style="margin-top:4px">';
+      p.stars.forEach(function(s) {
+        html += '<span class="sp-kw-tag" style="margin:2px">' + s.name + (s.brightness ? ' [' + s.brightness + ']' : '') + '</span>';
+      });
+      html += '</div>';
+    }
+    if (p.auxStars.length > 0) {
+      html += '<div style="margin-top:4px;font-size:0.85em;color:#aaa">';
+      html += p.auxStars.map(function(a) { return a.name; }).join(' · ');
+      html += '</div>';
+    }
+    if (p.sihua && p.sihua.length > 0) {
+      html += '<div style="margin-top:4px;font-size:0.85em">';
+      p.sihua.forEach(function(sh) {
+        var c = sh.type === '禄' ? '#4caf50' : sh.type === '权' ? '#ff9800' : sh.type === '科' ? '#2196f3' : '#f44336';
+        html += '<span style="color:' + c + ';margin-right:6px">' + sh.source + sh.type + '</span>';
+      });
+      html += '</div>';
+    }
+    html += '</div>';
+  });
+
+  document.getElementById('popupStarBody').innerHTML = html;
+  popup.style.display = 'block';
+  var x = event.clientX, y = event.clientY;
+  requestAnimationFrame(function() {
+    var pw = popup.offsetWidth, ph = popup.offsetHeight;
+    var ww = window.innerWidth, wh = window.innerHeight;
+    if (x + pw + 10 > ww) x = ww - pw - 10;
+    if (y + ph + 10 > wh) y = wh - ph - 10;
+    if (x < 10) x = 10; if (y < 10) y = 10;
+    popup.style.left = x + 'px'; popup.style.top = y + 'px';
+  });
+}
+
+function findPalaceByZhiIdx(zhi) {
+  if (!currentChart) return null;
+  for (var i = 0; i < currentChart.palaces.length; i++) {
+    if (currentChart.palaces[i].zhiIndex === zhi) return currentChart.palaces[i];
+  }
+  return null;
+}
+
+// ==================== 紫微合盘 ====================
+var _synastryChart = null;
+function showSynastryPanel() {
+  var panel = document.getElementById('synastryPanel');
+  if (!panel) return;
+  var isOpen = panel.style.display === 'block';
+  panel.style.display = isOpen ? 'none' : 'block';
+  if (!isOpen && !_synastryChart && typeof casesModule !== 'undefined') {
+    refreshSynastryPicker();
+  }
+}
+
+function refreshSynastryPicker() {
+  var sel = document.getElementById('synastrySelect');
+  if (!sel || typeof casesModule === 'undefined') return;
+  var cases = casesModule.listAll ? casesModule.listAll() : [];
+  sel.innerHTML = '<option value="">-- 选择命例对比 --</option>';
+  cases.forEach(function(c, i) {
+    sel.innerHTML += '<option value="' + i + '">' + (c.name || '未命名') + '</option>';
+  });
+}
+
+function runSynastry() {
+  var sel = document.getElementById('synastrySelect');
+  if (!sel || !sel.value && sel.value !== '0') return;
+  if (!currentChart || !currentBazi) { alert('请先完成排盘'); return; }
+  if (typeof casesModule === 'undefined') { alert('命例库模块未加载'); return; }
+  var cases = casesModule.listAll();
+  var caseData = cases[parseInt(sel.value)];
+  if (!caseData || !caseData.chart) { alert('命例数据不完整'); return; }
+
+  if (typeof calculateZiWeiSynastry === 'undefined') { alert('合盘引擎未加载'); return; }
+  var result = calculateZiWeiSynastry(currentChart, caseData.chart, currentBazi, caseData.bazi);
+
+  var container = document.getElementById('synastryResult');
+  var html = '<div style="margin-top:12px">';
+  html += '<div style="font-size:1.2em;font-weight:700;margin-bottom:8px;color:#d4a84c">';
+  html += '🔗 合盘结果：' + result.verdict + ' (' + result.totalScore + '/' + result.maxScore + '分)</div>';
+  result.scores.forEach(function(s) {
+    var pct = s.max > 0 ? Math.round(s.score / s.max * 100) : 0;
+    html += '<div style="margin:4px 0"><span style="display:inline-block;width:120px">' + s.name + '</span>';
+    html += '<span style="display:inline-block;width:80px;text-align:right">' + s.score + '/' + s.max + '</span>';
+    html += '<span style="margin-left:8px;font-size:0.8em;color:#aaa">' + s.detail + '</span></div>';
+  });
+  result.details.forEach(function(d) {
+    html += '<div style="margin-top:6px;font-size:0.9em;color:#ccc">• ' + d + '</div>';
+  });
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+// ==================== 三盘同参（本命+大限+流年） ====================
+function toggleThreePanel() {
+  var panel = document.getElementById('threePanel');
+  if (!panel) return;
+  if (panel.style.display === 'block') { panel.style.display = 'none'; return; }
+  if (!currentChart || !_lvChart) { alert('请先排盘并切换到大限或流年盘'); return; }
+  renderThreePanel();
+  panel.style.display = 'block';
+}
+
+function renderThreePanel() {
+  var container = document.getElementById('threePanelContent');
+  if (!container) return;
+  var bp = currentChart;   // 本命
+  var dp = _dxChart;       // 大限 (may be null)
+  var lp = _lvChart;       // 流年
+
+  var html = '<table style="width:100%;font-size:0.85em;border-collapse:collapse">';
+  html += '<tr style="color:#d4a84c"><th>宫位</th><th>本命</th><th>大限</th><th>流年</th></tr>';
+  for (var i = 0; i < 12; i++) {
+    var bpP = findPalaceByZhiIdxIn(bp, i);
+    var dpP = dp ? findPalaceByZhiIdxIn(dp, (i - _dxOffset + 12) % 12) : null;
+    var lpP = lp ? findPalaceByZhiIdxIn(lp, (i - _lvOffset + 12) % 12) : null;
+
+    html += '<tr>';
+    html += '<td style="white-space:nowrap;padding:2px 4px">' + (bpP ? bpP.name : '') + '</td>';
+    html += '<td style="padding:2px 4px">' + (bpP ? bpP.stars.map(function(s){return s.name;}).join(' ') : '-') + '</td>';
+    html += '<td style="padding:2px 4px">' + (dpP ? dpP.stars.map(function(s){return s.name;}).join(' ') : '-') + '</td>';
+    html += '<td style="padding:2px 4px">' + (lpP ? lpP.stars.map(function(s){return s.name;}).join(' ') : '-') + '</td>';
+    html += '</tr>';
+  }
+  html += '</table>';
+  container.innerHTML = html;
+}
+
+var _dxChart = null, _dxOffset = 0;
+var _lvChart = null, _lvOffset = 0;
+
+function findPalaceByZhiIdxIn(chart, zhi) {
+  if (!chart) return null;
+  for (var i = 0; i < chart.palaces.length; i++) {
+    if (chart.palaces[i].zhiIndex === zhi) return chart.palaces[i];
+  }
+  return null;
+}
+
+// ==================== 命盘导出 ====================
+function exportChartImage() {
+  var chartEl = document.querySelector('.chart-container');
+  if (!chartEl) { alert('请先完成排盘'); return; }
+
+  // 使用 canvas 方式导出
+  var canvas = document.createElement('canvas');
+  var ctx = canvas.getContext('2d');
+  var rect = chartEl.getBoundingClientRect();
+  var scale = 2;
+  canvas.width = rect.width * scale;
+  canvas.height = rect.height * scale;
+  ctx.scale(scale, scale);
+
+  // 创建临时SVG捕获
+  var html = '<html><head><meta charset="utf-8"><style>';
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    try {
+      var rules = sheets[i].cssRules || sheets[i].rules;
+      for (var j = 0; j < rules.length; j++) {
+        html += rules[j].cssText;
+      }
+    } catch(e) {}
+  }
+  html += '</style></head><body style="background:#1a1a2e">';
+  html += chartEl.outerHTML;
+  html += '</body></html>';
+
+  var blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'wenmo-ziwei-' + new Date().toISOString().slice(0,10) + '.html';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function exportChartImagePng() {
+  var chartEl = document.querySelector('.chart-container');
+  if (!chartEl) { alert('请先完成排盘'); return; }
+
+  // 简单方式：用 html2canvas 库如果可用
+  if (typeof html2canvas !== 'undefined') {
+    html2canvas(chartEl, { backgroundColor: '#1a1a2e', scale: 2 }).then(function(canvas) {
+      var link = document.createElement('a');
+      link.download = 'wenmo-ziwei-' + new Date().toISOString().slice(0,10) + '.png';
+      link.href = canvas.toDataURL();
+      link.click();
+    });
+  } else {
+    // fallback: export as HTML
+    exportChartImage();
+  }
+}
+
+// ==================== 姓名分析 ====================
+function analyzeName() {
+  var input = document.getElementById('nameInput');
+  var resultDiv = document.getElementById('nameResult');
+  if (!input || !resultDiv) return;
+  var name = (input.value || '').trim();
+  if (!name) { resultDiv.innerHTML = '<p style="color:#e06050">请输入中文姓名</p>'; return; }
+  if (typeof NameReading === 'undefined') { resultDiv.innerHTML = '<p style="color:#e06050">姓名学模块未加载</p>'; return; }
+
+  var result = NameReading.analyze(name);
+  if (result.error) { resultDiv.innerHTML = '<p style="color:#e06050">' + result.error + '</p>'; return; }
+
+  var html = '<div style="margin-top:12px">';
+  html += '<div style="font-size:1.2em;font-weight:700;margin-bottom:8px;color:#d4a84c">';
+  html += result.name + ' · ' + result.verdict + ' (' + result.totalScore + '分)</div>';
+
+  result.grids.forEach(function(g) {
+    var clr = g.luck === '大吉' ? '#4caf50' : g.luck === '中吉' ? '#8bc34a' : g.luck === '中凶' ? '#ff9800' : '#f44336';
+    html += '<div style="margin:8px 0;padding:8px;background:rgba(255,255,255,0.03);border-radius:6px">';
+    html += '<span style="font-weight:600">' + g.name + '</span> ';
+    html += '<span style="margin-left:8px">' + g.strokes + '画</span> ';
+    html += '<span style="color:' + clr + ';margin-left:8px">' + g.luck + ' · ' + g.name + '</span>';
+    html += '<div style="font-size:0.85em;color:#aaa;margin-top:4px">' + g.desc + '</div>';
+    html += '<div style="font-size:0.8em;color:#888">' + g.meaning + '</div>';
+    html += '</div>';
+  });
+
+  html += '<div style="margin-top:8px;padding:8px;background:rgba(255,255,255,0.03);border-radius:6px">';
+  html += '<span style="font-weight:600">三才配置：</span>';
+  html += '<span style="color:' + (result.sanCai.isGood ? '#4caf50' : '#ff9800') + '">' + result.sanCai.config + '</span>';
+  html += '<div style="font-size:0.85em;color:#aaa">' + result.sanCai.desc + '</div>';
+  html += '</div>';
+
+  html += '<p style="font-size:0.8em;color:#666;margin-top:8px">以上分析基于三才五格法，仅供参考。笔画为估算值，精确分析需查康熙字典。</p>';
+  html += '</div>';
+  resultDiv.innerHTML = html;
 }

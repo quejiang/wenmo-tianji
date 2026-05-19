@@ -1840,6 +1840,30 @@ body {
   box-shadow: 0 0 16px rgba(240, 215, 140, 0.2);
 }
 
+/* ==================== 简繁切换按钮 ==================== */
+.btn-lang {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(140, 180, 220, 0.35);
+  background: rgba(140, 180, 220, 0.06);
+  color: #8cb4dc;
+  font-size: 0.85em;
+  font-family: inherit;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-left: 8px;
+}
+.btn-lang:hover {
+  background: rgba(140, 180, 220, 0.18);
+  border-color: #8cb4dc;
+  color: #b0d0f0;
+  box-shadow: 0 0 14px rgba(140, 180, 220, 0.2);
+}
+
 /* ==================== 功能全览面板 ==================== */
 .feature-overlay {
   position: fixed;
@@ -3392,6 +3416,7 @@ body {
   .tutorial-footer { gap: 8px; padding: 10px 16px 16px; }
   .tutorial-btn { padding: 8px 16px; font-size: 0.8em; }
   .btn-tutorial { padding: 8px 16px; font-size: 0.82em; margin-left: 6px; }
+  .btn-lang { padding: 4px 10px; font-size: 0.78em; margin-left: 4px; }
 }
 
 @media (max-width: 400px) {
@@ -3448,4 +3473,105 @@ body {
     font-size: 0.72em;
     padding: 8px 12px;
   }
+}
+
+/* ==================== 格局展示 ==================== */
+.patterns-container {
+  padding: 12px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 8px;
+}
+.patterns-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+.pattern-card {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 12px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 6px;
+  cursor: help;
+  min-width: 150px;
+  transition: background 0.15s;
+}
+.pattern-card:hover {
+  background: rgba(255,255,255,0.08);
+}
+.pattern-name {
+  font-weight: 600;
+  font-size: 0.9em;
+  color: #e0d5c1;
+}
+.pattern-cat {
+  font-size: 0.75em;
+  margin-top: 2px;
+}
+
+/* ==================== 宫位评分 ==================== */
+.scores-container {
+  padding: 12px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 8px;
+}
+.scores-grid {
+  margin-top: 8px;
+}
+.score-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0;
+  font-size: 0.85em;
+}
+.score-name {
+  width: 50px;
+  text-align: right;
+  color: #aaa;
+}
+.score-bar-bg {
+  flex: 1;
+  height: 8px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.score-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+.score-val {
+  width: 60px;
+  font-size: 0.75em;
+  text-align: right;
+}
+
+/* ==================== 合盘 ==================== */
+.synastry-panel select {
+  font-size: 0.9em;
+}
+
+/* ==================== 三盘同参 ==================== */
+.three-panel table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.three-panel td, .three-panel th {
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 4px 6px;
+  font-size: 0.82em;
+  vertical-align: top;
+}
+.three-panel th {
+  background: rgba(255,255,255,0.05);
+}
+
+/* ==================== 导出按钮 ==================== */
+.detail-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
 }

@@ -246,6 +246,20 @@ var Tutorial = (function() {
       highlightElement(step.highlight);
     }
 
+    // 输入步骤允许穿透点击（用户需要操作表单和"开始排盘"按钮）
+    // 非输入步骤恢复拦截（防止误操作页面元素）
+    if (overlayEl) {
+      if (step.id === 'input') {
+        overlayEl.style.pointerEvents = 'none';
+        var dlg = document.getElementById('tutorialDialog');
+        if (dlg) dlg.style.pointerEvents = 'auto';
+      } else {
+        overlayEl.style.pointerEvents = '';
+        var dlg = document.getElementById('tutorialDialog');
+        if (dlg) dlg.style.pointerEvents = '';
+      }
+    }
+
     // 滚动教程对话框到顶部
     var dialog = document.getElementById('tutorialDialog');
     if (dialog) dialog.scrollTop = 0;

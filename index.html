@@ -21,6 +21,7 @@
       <div class="subtitle">山 · 医 · 命 · 相 · 卜 — 五术玄学</div>
       <button class="btn-features" onclick="openFeatureOverview()" title="功能全览">📋 功能全览</button>
       <button class="btn-tutorial" onclick="Tutorial.open()" title="新手教程">🎓 新手教程</button>
+      <button class="btn-lang" id="btnLangToggle" onclick="Lang.toggle()" title="切换简繁中文">繁</button>
     </div>
 
     <!-- 五术主标签栏 -->
@@ -128,6 +129,9 @@
               <label><input type="checkbox" id="useTrueSolar" onchange="onTrueSolarToggle()">使用真太阳时</label>
             </div>
             <button class="btn btn-primary" onclick="generateChart()">开始排盘</button>
+            <div id="dstWarning" style="display:none;margin-top:8px;padding:8px;background:rgba(255,180,80,0.15);border-left:3px solid #e0a050;border-radius:4px;font-size:0.85em;color:#e0a050">
+              ⚠️ 您输入的日期处于中国夏令时期间（1986-1991年），如出生时间未减1小时，请勾选「真太阳时」或手动调整时间。
+            </div>
             <button class="btn" onclick="useCurrentTime()">当前时间</button>
             <button class="btn btn-save" id="saveCaseBtn" onclick="saveCurrentCase()">保存命例</button>
           </div>
@@ -187,10 +191,33 @@
         <div class="detail-panel" id="detailPanel" style="display:none;">
           <h3>命盘概要</h3>
           <div class="detail-grid" id="detailGrid"></div>
-          <div class="detail-actions"><button class="btn btn-ai" id="btnAiAnalyze" onclick="toggleAiAnalysis()">🤖 AI 命盘解读</button></div>
+          <div class="detail-actions">
+            <button class="btn btn-ai" id="btnAiAnalyze" onclick="toggleAiAnalysis()">🤖 AI 命盘解读</button>
+            <button class="btn btn-sm" onclick="exportChartImage()" style="margin-left:8px">📥 导出</button>
+            <button class="btn btn-sm" onclick="showSynastryPanel()" style="margin-left:8px">🔗 合盘</button>
+            <button class="btn btn-sm" onclick="toggleThreePanel()" style="margin-left:8px">📐 三盘同参</button>
+          </div>
+          <!-- 格局检测 -->
+          <div class="patterns-container" id="patternsContainer" style="display:none;margin-top:12px"></div>
+          <!-- 宫位评分 -->
+          <div class="scores-container" id="scoresContainer" style="display:none;margin-top:12px"></div>
           <div class="ai-analysis-container" id="aiAnalysisContainer" style="display:none;">
             <div class="ai-header"><h3>个人命盘 AI 解读</h3><span class="ai-badge">基于规则引擎</span></div>
             <div class="ai-content" id="aiContent"></div>
+          </div>
+          <!-- 紫微合盘 -->
+          <div class="synastry-panel" id="synastryPanel" style="display:none;margin-top:12px;padding:12px;background:rgba(255,255,255,0.03);border-radius:8px">
+            <h3 style="color:#d4a84c;margin-bottom:8px">🔗 紫微合盘</h3>
+            <div style="display:flex;gap:8px;align-items:center">
+              <select id="synastrySelect" style="flex:1;padding:8px;background:#1a1a2e;color:#ccc;border:1px solid #333;border-radius:6px"><option value="">-- 选择命例对比 --</option></select>
+              <button class="btn btn-sm" onclick="runSynastry()">开始合盘</button>
+            </div>
+            <div id="synastryResult"></div>
+          </div>
+          <!-- 三盘同参 -->
+          <div class="three-panel" id="threePanel" style="display:none;margin-top:12px;padding:12px;background:rgba(255,255,255,0.03);border-radius:8px">
+            <h3 style="color:#88bbff;margin-bottom:8px">📐 三盘同参（本命 · 大限 · 流年）</h3>
+            <div id="threePanelContent" style="max-height:400px;overflow-y:auto"></div>
           </div>
         </div>
       </div>
@@ -232,6 +259,7 @@
         <button class="ws-tab active" data-subtab="xiang-palm" onclick="switchXiangTab('palm')">🖐 手相分析</button>
         <button class="ws-tab" data-subtab="xiang-face" onclick="switchXiangTab('face')">👤 面相十二宫</button>
         <button class="ws-tab" data-subtab="xiang-fengshui" onclick="switchXiangTab('fengshui')">🏠 风水九宫</button>
+        <button class="ws-tab" data-subtab="xiang-name" onclick="switchXiangTab('name')">📛 姓名分析</button>
       </div>
 
       <!-- 手相 -->
@@ -249,6 +277,18 @@
       <div class="ws-content" id="xiangFengshui">
         <div class="xiang-fs-control"><label>年份：</label><input type="number" id="xiangFsYear" value="2025" onchange="renderFengShuiStars()"><button class="btn btn-sm" onclick="renderFengShuiStars()">查看飞星</button></div>
         <div class="xiang-fs-grid" id="xiangFsGrid"></div>
+      </div>
+
+      <!-- 姓名分析 -->
+      <div class="ws-content" id="xiangName">
+        <div style="padding:16px">
+          <h3 style="color:#d4a84c;margin-bottom:12px">📛 姓名学分析（三才五格）</h3>
+          <div style="display:flex;gap:8px;margin-bottom:12px">
+            <input type="text" id="nameInput" placeholder="输入中文姓名（如：李白）" style="flex:1;padding:10px;background:#1a1a2e;color:#ccc;border:1px solid #333;border-radius:6px">
+            <button class="btn btn-sm" onclick="analyzeName()">分析</button>
+          </div>
+          <div id="nameResult"></div>
+        </div>
       </div>
     </div>
 
@@ -400,6 +440,7 @@
   <script src="js/lunar.js?v=22"></script>
   <script src="js/ziwei.js?v=22"></script>
   <script src="js/ziwei-flow.js?v=22"></script>
+  <script src="js/ziwei-patterns.js?v=22"></script>
   <script src="js/encyclopedia.js?v=22"></script>
   <script src="js/ai-analysis.js?v=22"></script>
   <script src="js/astrology.js?v=22"></script>
@@ -412,8 +453,10 @@
   <script src="js/shan-shu.js?v=22"></script>
   <script src="js/yi-shu.js?v=22"></script>
   <script src="js/xiang-shu.js?v=22"></script>
+  <script src="js/name-reading.js?v=22"></script>
   <script src="js/bu-shu-extra.js?v=22"></script>
   <script src="js/tutorial.js?v=22"></script>
+  <script src="js/lang.js?v=22"></script>
   <script src="js/app.js?v=22"></script>
   <script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js');}</script>
 </body>
