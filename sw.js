@@ -1,4 +1,4 @@
-const CACHE = 'wenmo-v10';
+const CACHE = 'wenmo-v11';
 const FILES = [
   './',
   './index.html',
