@@ -307,4 +307,82 @@ test.describe('文墨天机 - 全量回归测试', () => {
     await expect(featureOverlay).not.toBeVisible();
   });
 
+  test('农历输入：切换到农历模式，输入日期后排盘成功', async ({ page }) => {
+    await page.goto('/');
+    await page.click('.wushu-tab[data-wushu="ming"]');
+    await page.waitForTimeout(200);
+
+    // 切换到农历模式
+    await page.click('.dt-opt[data-type="lunar"]');
+    await page.waitForTimeout(300);
+
+    // 农历输入区域应该可见
+    const lunarInput = page.locator('#lunarDateInput');
+    await expect(lunarInput).toBeVisible();
+
+    // 公历输入应该隐藏
+    const solarInput = page.locator('#solarDateInput');
+    await expect(solarInput).not.toBeVisible();
+
+    // 默认已填充年份和月份，设置日子
+    await page.selectOption('#lunarDay', '15');
+
+    // 应该显示公历预览
+    const preview = page.locator('#lunarSolarPreview');
+    await expect(preview).toContainText('公历');
+
+    // 输入时间并排盘
+    await page.fill('#birthHour', '8');
+    await page.fill('#birthMinute', '0');
+    await page.selectOption('#gender', 'male');
+
+    await page.click('button:has-text("开始排盘")');
+    await page.waitForTimeout(1000);
+
+    // 命盘应该渲染
+    const chartGrid = page.locator('#chartGrid');
+    await expect(chartGrid).toBeVisible();
+  });
+
+  test('农历输入：从公历切换到农历，自动填充对应农历日期', async ({ page }) => {
+    await page.goto('/');
+    await page.click('.wushu-tab[data-wushu="ming"]');
+    await page.waitForTimeout(200);
+
+    // 先设置一个公历日期
+    await page.fill('#birthDate', '1990-06-15');
+    await page.waitForTimeout(100);
+
+    // 切换到农历模式
+    await page.click('.dt-opt[data-type="lunar"]');
+    await page.waitForTimeout(300);
+
+    // 年份应自动填充为1990
+    const lunarYear = page.locator('#lunarYear');
+    await expect(lunarYear).toHaveValue('1990');
+
+    // 预览应该显示回公历1990-06-15
+    const preview = page.locator('#lunarSolarPreview');
+    await expect(preview).toContainText('1990-06-15');
+  });
+
+  test('农历模式：闰月年份显示闰月选项', async ({ page }) => {
+    await page.goto('/');
+    await page.click('.wushu-tab[data-wushu="ming"]');
+    await page.waitForTimeout(200);
+
+    // 切换到农历模式
+    await page.click('.dt-opt[data-type="lunar"]');
+    await page.waitForTimeout(200);
+
+    // 2023年有闰二月
+    await page.fill('#lunarYear', '2023');
+    await page.waitForTimeout(200);
+
+    // 月份选择应该包含"闰2月"
+    const monthSelect = page.locator('#lunarMonth');
+    const monthText = await monthSelect.textContent();
+    expect(monthText).toContain('闰');
+  });
+
 });

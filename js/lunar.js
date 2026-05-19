@@ -307,6 +307,56 @@ function solarToLunar(year, month, day) {
   };
 }
 
+/**
+ * 农历转公历
+ * @param {number} lunarYear - 农历年份 (1900-2100)
+ * @param {number} lunarMonth - 农历月份 (1-12)
+ * @param {number} lunarDay - 农历日期 (1-30)
+ * @param {boolean} isLeap - 是否闰月
+ * @returns {{ year: number, month: number, day: number } | null}
+ */
+function lunarToSolar(lunarYear, lunarMonth, lunarDay, isLeap) {
+  if (lunarYear < 1900 || lunarYear > 2100) return null;
+  if (lunarMonth < 1 || lunarMonth > 12) return null;
+  if (lunarDay < 1 || lunarDay > 30) return null;
+
+  var yearInfo = getLunarYearInfo(lunarYear);
+  if (!yearInfo) return null;
+
+  // 如果是闰月，确认该年确实有闰月且月份匹配
+  if (isLeap) {
+    if (yearInfo.leapMonth !== lunarMonth) return null;
+  }
+
+  // 正月初一的儒略日
+  var jd = getLunarNewYearJD(lunarYear);
+
+  // 遍历到目标月份之前的所有月份，累加天数
+  for (var i = 0; i < yearInfo.totalMonths; i++) {
+    var monthNum = i + 1;
+    if (yearInfo.leapMonth > 0 && i > yearInfo.leapMonth) {
+      monthNum = i; // 闰月之后的月份号减1
+    }
+    if (yearInfo.leapMonth > 0 && i === yearInfo.leapMonth) {
+      monthNum = yearInfo.leapMonth; // 闰月保持月份号
+    }
+
+    var isTargetMonth;
+    if (isLeap) {
+      isTargetMonth = (i === yearInfo.leapMonth);
+    } else {
+      isTargetMonth = (monthNum === lunarMonth);
+    }
+    if (isTargetMonth) break;
+    jd += yearInfo.days[i];
+  }
+
+  // 加上日期偏移
+  jd += (lunarDay - 1);
+
+  return jdnToGregorian(jd);
+}
+
 // ==================== 干支计算 ====================
 
 /**
@@ -1038,7 +1088,7 @@ if (typeof module !== 'undefined' && module.exports) {
     JIEQI_NAMES, JIEQI_LONGITUDE, CITY_LONGITUDE,
     gregorianToJDN, jdnToGregorian,
     getSolarTermJD, getJieqiMonth, getLichunYear,
-    getLunarYearInfo, getLunarNewYearJD, solarToLunar,
+    getLunarYearInfo, getLunarNewYearJD, solarToLunar, lunarToSolar,
     getYearGanZhi, getMonthGanZhi, getDayGanZhi, getHourGanZhi,
     getShichenIndex, getTrueSolarTime, getEquationOfTime, dayOfYear,
     getHourGanZhiByShichen, calculateBaZi

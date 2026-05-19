@@ -86,6 +86,139 @@ function onTrueSolarToggle() {
   document.getElementById('trueSolarRow').style.display = checked ? 'flex' : 'none';
 }
 
+// ==================== 农历/公历日期切换 ====================
+var currentDateType = 'solar';
+
+function switchDateType(type) {
+  currentDateType = type;
+  var solarDiv = document.getElementById('solarDateInput');
+  var lunarDiv = document.getElementById('lunarDateInput');
+  var opts = document.querySelectorAll('.dt-opt');
+  opts.forEach(function(o) {
+    var isActive = o.getAttribute('data-type') === type;
+    o.classList.toggle('active', isActive);
+    o.style.background = isActive ? 'rgba(240,215,140,0.12)' : 'transparent';
+    o.style.color = isActive ? '#f0d78c' : '#888';
+  });
+  if (type === 'lunar') {
+    solarDiv.style.display = 'none';
+    lunarDiv.style.display = 'block';
+    // 从当前公历日期初始化农历
+    var dateVal = document.getElementById('birthDate').value;
+    if (dateVal) {
+      var parts = dateVal.split('-').map(Number);
+      if (parts.length === 3 && typeof solarToLunar === 'function') {
+        var lunar = solarToLunar(parts[0], parts[1], parts[2]);
+        document.getElementById('lunarYear').value = lunar.lunarYear;
+        updateLunarMonthOptions();
+        // 选中正确的月份（处理闰月位置）
+        var monthSel = document.getElementById('lunarMonth');
+        var leapInfo = getLunarYearInfo(lunar.lunarYear);
+        var monthIdx = lunar.lunarMonth - 1;
+        if (lunar.isLeap) monthIdx = leapInfo.leapMonth; // 闰月 = leapMonth 位置
+        else if (leapInfo.leapMonth > 0 && lunar.lunarMonth > leapInfo.leapMonth) monthIdx += 1;
+        monthSel.selectedIndex = monthIdx;
+        document.getElementById('isLeapMonth').checked = lunar.isLeap;
+        showLeapCheckbox();
+        updateLunarDayOptions();
+        document.getElementById('lunarDay').value = lunar.lunarDay;
+      }
+    } else {
+      updateLunarMonthOptions();
+      updateLunarDayOptions();
+    }
+    onLunarInputChange();
+  } else {
+    solarDiv.style.display = 'block';
+    lunarDiv.style.display = 'none';
+  }
+}
+
+function getLunarDateValues() {
+  var y = parseInt(document.getElementById('lunarYear').value) || 1990;
+  var monthSel = document.getElementById('lunarMonth');
+  var dayVal = parseInt(document.getElementById('lunarDay').value) || 1;
+  var isLeap = document.getElementById('isLeapMonth').checked;
+  // 解析选中项的值（格式: "月份编号" 或 "月份编号|leap"）
+  var optVal = monthSel.value;
+  if (optVal.indexOf('|') >= 0) {
+    var parts = optVal.split('|');
+    return { year: y, month: parseInt(parts[0]), day: dayVal, isLeap: parts[1] === 'leap' };
+  }
+  return { year: y, month: parseInt(optVal), day: dayVal, isLeap: false };
+}
+
+function updateLunarMonthOptions() {
+  var year = parseInt(document.getElementById('lunarYear').value) || 1990;
+  var monthSel = document.getElementById('lunarMonth');
+  if (typeof getLunarYearInfo !== 'function') return;
+  var info = getLunarYearInfo(year);
+  if (!info) return;
+  var html = '';
+  for (var i = 0; i < info.totalMonths; i++) {
+    var label, isLeapMonth = false;
+    if (info.leapMonth > 0 && i === info.leapMonth) {
+      label = '闰' + info.leapMonth + '月';
+      isLeapMonth = true;
+    } else if (info.leapMonth > 0 && i > info.leapMonth) {
+      label = (i) + '月';
+    } else {
+      label = (i + 1) + '月';
+    }
+    var val = (info.leapMonth > 0 && i > info.leapMonth ? i : i + 1);
+    var marker = isLeapMonth ? '|leap' : '';
+    html += '<option value="' + val + marker + '"' + (isLeapMonth ? ' style="color:#e0a050"' : '') + '>' + label + '</option>';
+  }
+  monthSel.innerHTML = html;
+  showLeapCheckbox();
+  updateLunarDayOptions();
+  onLunarInputChange();
+}
+
+function showLeapCheckbox() {
+  var year = parseInt(document.getElementById('lunarYear').value) || 1990;
+  var monthSel = document.getElementById('lunarMonth');
+  var leapLabel = document.getElementById('leapLabel');
+  if (typeof getLunarYearInfo !== 'function') { leapLabel.style.display = 'none'; return; }
+  var info = getLunarYearInfo(year);
+  if (!info || info.leapMonth === 0) { leapLabel.style.display = 'none'; return; }
+  // 只有选中的是闰月时才显示
+  var optVal = monthSel.value;
+  leapLabel.style.display = (optVal.indexOf('|leap') >= 0) ? 'inline' : 'none';
+}
+
+function updateLunarDayOptions() {
+  var year = parseInt(document.getElementById('lunarYear').value) || 1990;
+  var monthSel = document.getElementById('lunarMonth');
+  var daySel = document.getElementById('lunarDay');
+  if (typeof getLunarYearInfo !== 'function') return;
+  var info = getLunarYearInfo(year);
+  if (!info) return;
+  // 找到选中的月份在 days[] 中的索引
+  var idx = monthSel.selectedIndex;
+  var maxDay = (idx >= 0 && idx < info.days.length) ? info.days[idx] : 30;
+  var curDay = parseInt(daySel.value) || 1;
+  var html = '';
+  for (var d = 1; d <= maxDay; d++) {
+    html += '<option value="' + d + '"' + (d === curDay ? ' selected' : '') + '>' + d + '</option>';
+  }
+  daySel.innerHTML = html;
+  if (curDay > maxDay) daySel.value = maxDay;
+}
+
+function onLunarInputChange() {
+  var preview = document.getElementById('lunarSolarPreview');
+  if (!preview) return;
+  if (currentDateType !== 'lunar') { preview.textContent = ''; return; }
+  if (typeof lunarToSolar !== 'function') { preview.textContent = ''; return; }
+  var v = getLunarDateValues();
+  var solar = lunarToSolar(v.year, v.month, v.day, v.isLeap);
+  if (solar) {
+    var d = ('0' + solar.day).slice(-2);
+    preview.textContent = '→ 公历 ' + solar.year + '-' + ('0' + solar.month).slice(-2) + '-' + d;
+  }
+}
+
 // ==================== 亮度CSS类映射 ====================
 const BRIGHTNESS_CSS = {
   '庙': 'miao',
@@ -953,16 +1086,32 @@ function switchTab(tab) {
 }
 
 function generateChart() {
-  const dateInput = document.getElementById('birthDate').value;
-  const hourVal = document.getElementById('birthHour').value;
-  const minuteVal = document.getElementById('birthMinute').value;
+  var y, m, d;
 
-  if (!dateInput) {
-    alert('请选择出生日期');
-    return;
+  // 农历模式：先转换为公历
+  if (currentDateType === 'lunar' && typeof lunarToSolar === 'function') {
+    var lv = getLunarDateValues();
+    var solar = lunarToSolar(lv.year, lv.month, lv.day, lv.isLeap);
+    if (!solar) {
+      alert('农历日期转换失败，请检查输入');
+      return;
+    }
+    y = solar.year;
+    m = solar.month;
+    d = solar.day;
+    // 同步回公历日期选择器
+    document.getElementById('birthDate').value = y + '-' + ('0' + m).slice(-2) + '-' + ('0' + d).slice(-2);
+  } else {
+    const dateInput = document.getElementById('birthDate').value;
+    if (!dateInput) {
+      alert('请选择出生日期');
+      return;
+    }
+    [y, m, d] = dateInput.split('-').map(Number);
   }
 
-  const [y, m, d] = dateInput.split('-').map(Number);
+  const hourVal = document.getElementById('birthHour').value;
+  const minuteVal = document.getElementById('birthMinute').value;
 
   // 日期范围验证（农历数据覆盖1900-1986年）
   if (y < 1900 || y > 2100) {
