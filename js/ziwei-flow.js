@@ -53,7 +53,7 @@ function calcLiuNianChart(baseChart, baseBazi, flowYear, gender) {
 
   // 流年博士十二神：禄存位起博士
   var boshiNames = ['博士','力士','青龙','小耗','将军','奏书','飞廉','喜神','病符','大耗','伏兵','官符'];
-  var lucunZhi = { 0:11, 1:2, 2:3, 3:5, 4:6, 5:5, 6:6, 7:8, 8:9, 9:11 }[yearGanIdx] || 11;
+  var lucunZhi = [2, 3, 5, 6, 5, 6, 8, 9, 11, 0][yearGanIdx];
 
   // 将前十二神：年支三合局起将星
   var triBase = yearZhiIdx % 4;
@@ -127,7 +127,7 @@ function calcLiuYueChart(baseChart, baseBazi, flowYear, flowMonth, gender) {
 
   // 流月博士十二神
   var boshiNames = ['博士','力士','青龙','小耗','将军','奏书','飞廉','喜神','病符','大耗','伏兵','官符'];
-  var lucunZhi = {0:11,1:2,2:3,3:5,4:6,5:5,6:6,7:8,8:9,9:11}[yearGanIdx] || 11;
+  var lucunZhi = [2, 3, 5, 6, 5, 6, 8, 9, 11, 0][yearGanIdx];
 
   palaces.forEach(function(p) {
     p.shenSha.boshi = boshiNames[(p.zhiIndex - lucunZhi + 12) % 12];
@@ -252,7 +252,7 @@ function getXiaoXianDistribution(yearZhiIdx, gender, virtualAge) {
  * 禄存位起博士，阳男阴女顺行/阴男阳女逆行
  */
 function getBoshiStars(yearGanIdx, gender) {
-  var lucunZhi = {0:11,1:2,2:3,3:5,4:6,5:5,6:6,7:8,8:9,9:11}[yearGanIdx] || 11;
+  var lucunZhi = [2, 3, 5, 6, 5, 6, 8, 9, 11, 0][yearGanIdx];
   var yangGan = [0,2,4,6,8];
   var isYang = yangGan.indexOf(yearGanIdx) !== -1;
   var shun = (gender === 'male' && isYang) || (gender === 'female' && !isYang);

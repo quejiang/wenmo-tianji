@@ -1156,7 +1156,7 @@ function generateChart() {
   const hourVal = document.getElementById('birthHour').value;
   const minuteVal = document.getElementById('birthMinute').value;
 
-  // 日期范围验证（农历数据覆盖1900-1986年）
+  // 日期范围验证（农历数据覆盖1900-2100年）
   if (y < 1900 || y > 2100) {
     alert('日期超出范围，请选择1900年-2100年之间的日期');
     return;
@@ -3200,269 +3200,36 @@ function renderFengShuiStars() {
 // ==================== 梅花易数 ====================
 
 function doMeiHuaQiGua() {
-  var year = parseInt(document.getElementById('mhYear').value) || 2025;
-  var month = parseInt(document.getElementById('mhMonth').value) || 6;
-  var day = parseInt(document.getElementById('mhDay').value) || 15;
-  var shichen = parseInt(document.getElementById('mhShichen').value) || 6;
-  var result = BuShuExtra.meiHuaQiGua(year, month, day, shichen);
-  renderMeiHuaResult(result);
+  var year = parseInt(document.getElementById('mhYear').value) || new Date().getFullYear();
+  var month = parseInt(document.getElementById('mhMonth').value) || (new Date().getMonth() + 1);
+  var day = parseInt(document.getElementById('mhDay').value) || new Date().getDate();
+  var result = MeiHua.divinate(year, month, day);
+  result.numbers = [year, month, day];
+  document.getElementById('mhResult').innerHTML = MeiHua.buildMeiHuaHTML(result);
 }
 
 function doMeiHuaFromNumbers() {
   var n1 = parseInt(document.getElementById('mhNum1').value) || 1;
   var n2 = parseInt(document.getElementById('mhNum2').value) || 1;
   var n3 = parseInt(document.getElementById('mhNum3').value) || 1;
-  var result = BuShuExtra.meiHuaFromNumbers(n1, n2, n3);
-  renderMeiHuaResult(result);
+  var result = MeiHua.divinate(n1, n2, n3);
+  result.numbers = [n1, n2, n3];
+  document.getElementById('mhResult').innerHTML = MeiHua.buildMeiHuaHTML(result);
 }
 
 function renderMeiHuaResult(result) {
-  var r = result;
-  var html = '<div class="mh-result-card">';
-
-  // 本卦
-  html += '<div class="mh-gua-display"><span class="mh-gua-label">本卦</span>';
-  html += '<span class="mh-gua-sym">' + r.benGua.upper.symbol + '</span>';
-  html += '<span class="mh-gua-name">' + r.benGua.upper.name + '上</span>';
-  html += '<span class="mh-gua-sym">' + r.benGua.lower.symbol + '</span>';
-  html += '<span class="mh-gua-name">' + r.benGua.lower.name + '下</span>';
-  html += '</div>';
-
-  // 本卦释义
-  var benGuaNum = BuShuExtra.getGuaNumByTrigrams(
-    BAGUA_ORDER.indexOf(r.benGua.upper.name),
-    BAGUA_ORDER.indexOf(r.benGua.lower.name)
-  );
-  var benInterp = BuShuExtra.getGuaInterpretation(benGuaNum);
-  html += '<div class="mh-gua-interp">';
-  html += '<h5>📖 ' + benInterp.name + ' · 卦辞释义</h5>';
-  html += '<p>' + benInterp.overall + '</p>';
-  html += '</div>';
-
-  // 互卦
-  if (r.huGua) {
-    html += '<div class="mh-gua-display mh-hu"><span class="mh-gua-label">互卦</span>';
-    html += '<span class="mh-gua-sym">' + r.huGua.upper.symbol + '</span>';
-    html += '<span class="mh-gua-name">' + r.huGua.upper.name + '上</span>';
-    html += '<span class="mh-gua-sym">' + r.huGua.lower.symbol + '</span>';
-    html += '<span class="mh-gua-name">' + r.huGua.lower.name + '下</span></div>';
-
-    var huGuaNum = BuShuExtra.getGuaNumByTrigrams(
-      BAGUA_ORDER.indexOf(r.huGua.upper.name),
-      BAGUA_ORDER.indexOf(r.huGua.lower.name)
-    );
-    var huInterp = BuShuExtra.getGuaInterpretation(huGuaNum);
-    html += '<div class="mh-gua-interp">';
-    html += '<h5>🔄 ' + huInterp.name + ' · 互卦释义</h5>';
-    html += '<p>' + huInterp.overall + '</p>';
-    html += '</div>';
-  }
-
-  // 动爻
-  html += '<div class="mh-dongyao">动爻：第<b>' + (r.dongYao + 1) + '</b>爻</div>';
-
-  // 变卦
-  if (r.bianGua) {
-    html += '<div class="mh-gua-display mh-bian"><span class="mh-gua-label">变卦</span>';
-    html += '<span class="mh-gua-sym">' + r.bianGua.upper.symbol + '</span>';
-    html += '<span class="mh-gua-name">' + r.bianGua.upper.name + '上</span>';
-    html += '<span class="mh-gua-sym">' + r.bianGua.lower.symbol + '</span>';
-    html += '<span class="mh-gua-name">' + r.bianGua.lower.name + '下</span></div>';
-
-    var bianGuaNum = BuShuExtra.getGuaNumByTrigrams(
-      BAGUA_ORDER.indexOf(r.bianGua.upper.name),
-      BAGUA_ORDER.indexOf(r.bianGua.lower.name)
-    );
-    var bianInterp = BuShuExtra.getGuaInterpretation(bianGuaNum);
-    html += '<div class="mh-gua-interp">';
-    html += '<h5>🔀 ' + bianInterp.name + ' · 变卦释义</h5>';
-    html += '<p>' + bianInterp.overall + '</p>';
-    html += '</div>';
-  }
-
-  // 体用生克
-  html += '<div class="mh-tiyong" style="border-left:4px solid ' + r.relationColor + '">';
-  html += '<span class="mh-relation" style="color:' + r.relationColor + '">' + r.relation + '</span>';
-  html += '<span class="mh-ty-desc">' + r.relationDesc + '</span>';
-  html += '</div>';
-
-  // 分项解读
-  if (benInterp.career) {
-    html += '<div class="mh-sections">';
-    html += '<div class="mh-sec"><h5>💼 事业</h5><p>' + benInterp.career + '</p></div>';
-    html += '<div class="mh-sec"><h5>💕 感情</h5><p>' + benInterp.love + '</p></div>';
-    html += '<div class="mh-sec"><h5>💰 财运</h5><p>' + benInterp.wealth + '</p></div>';
-    html += '<div class="mh-sec"><h5>🏥 健康</h5><p>' + (benInterp.health || '暂无。') + '</p></div>';
-    html += '<div class="mh-sec"><h5>✈️ 出行</h5><p>' + (benInterp.travel || '暂无。') + '</p></div>';
-    html += '<div class="mh-sec"><h5>🔍 寻物</h5><p>' + (benInterp.lost || '暂无。') + '</p></div>';
-    html += '</div>';
-  }
-
-  // 公式
-  html += '<div class="mh-formula">' + r.formula + '</div>';
-  html += '<p class="mh-disclaimer">以上解读由梅花易数规则引擎生成，仅供参考。</p>';
-  html += '</div>';
-  document.getElementById('mhResult').innerHTML = html;
+  document.getElementById('mhResult').innerHTML = MeiHua.buildMeiHuaHTML(result);
 }
-
-// 八卦顺序映射（用于64卦序号计算）
-var BAGUA_ORDER = ['乾','兑','离','震','巽','坎','艮','坤'];
 
 // ==================== 六爻起卦 ====================
 
-var _liuYaoGuaDict = {};
-
-function _buildLiuYaoGuaDict() {
-  var GUAS = [
-    {n:1,name:'乾为天', symbol:'䷀', nature:'金'},
-    {n:2,name:'坤为地', symbol:'䷁', nature:'土'},
-    {n:3,name:'水雷屯', symbol:'䷂', nature:'水'},
-    {n:4,name:'山水蒙', symbol:'䷃', nature:'火'},
-    {n:5,name:'水天需', symbol:'䷄', nature:'土'},
-    {n:6,name:'天水讼', symbol:'䷅', nature:'水'},
-    {n:7,name:'地水师', symbol:'䷆', nature:'水'},
-    {n:8,name:'水地比', symbol:'䷇', nature:'土'},
-    {n:9,name:'风天小畜', symbol:'䷈', nature:'木'},
-    {n:10,name:'天泽履', symbol:'䷉', nature:'土'},
-    {n:11,name:'地天泰', symbol:'䷊', nature:'土'},
-    {n:12,name:'天地否', symbol:'䷋', nature:'金'},
-    {n:13,name:'天火同人', symbol:'䷌', nature:'火'},
-    {n:14,name:'火天大有', symbol:'䷍', nature:'金'},
-    {n:15,name:'地山谦', symbol:'䷎', nature:'金'},
-    {n:16,name:'雷地豫', symbol:'䷏', nature:'木'},
-    {n:17,name:'泽雷随', symbol:'䷐', nature:'金'},
-    {n:18,name:'山风蛊', symbol:'䷑', nature:'木'},
-    {n:19,name:'地泽临', symbol:'䷒', nature:'土'},
-    {n:20,name:'风地观', symbol:'䷓', nature:'金'},
-    {n:21,name:'火雷噬嗑', symbol:'䷔', nature:'木'},
-    {n:22,name:'山火贲', symbol:'䷕', nature:'土'},
-    {n:23,name:'山地剥', symbol:'䷖', nature:'金'},
-    {n:24,name:'地雷复', symbol:'䷗', nature:'土'},
-    {n:25,name:'天雷无妄', symbol:'䷘', nature:'木'},
-    {n:26,name:'山天大畜', symbol:'䷙', nature:'土'},
-    {n:27,name:'山雷颐', symbol:'䷚', nature:'土'},
-    {n:28,name:'泽风大过', symbol:'䷛', nature:'木'},
-    {n:29,name:'坎为水', symbol:'䷜', nature:'水'},
-    {n:30,name:'离为火', symbol:'䷝', nature:'火'},
-    {n:31,name:'泽山咸', symbol:'䷞', nature:'金'},
-    {n:32,name:'雷风恒', symbol:'䷟', nature:'木'},
-    {n:33,name:'天山遁', symbol:'䷠', nature:'金'},
-    {n:34,name:'雷天大壮', symbol:'䷡', nature:'土'},
-    {n:35,name:'火地晋', symbol:'䷢', nature:'金'},
-    {n:36,name:'地火明夷', symbol:'䷣', nature:'水'},
-    {n:37,name:'风火家人', symbol:'䷤', nature:'木'},
-    {n:38,name:'火泽睽', symbol:'䷥', nature:'火'},
-    {n:39,name:'水山蹇', symbol:'䷦', nature:'土'},
-    {n:40,name:'雷水解', symbol:'䷧', nature:'木'},
-    {n:41,name:'山泽损', symbol:'䷨', nature:'土'},
-    {n:42,name:'风雷益', symbol:'䷩', nature:'木'},
-    {n:43,name:'泽天夬', symbol:'䷪', nature:'土'},
-    {n:44,name:'天风姤', symbol:'䷫', nature:'金'},
-    {n:45,name:'泽地萃', symbol:'䷬', nature:'金'},
-    {n:46,name:'地风升', symbol:'䷭', nature:'木'},
-    {n:47,name:'泽水困', symbol:'䷮', nature:'金'},
-    {n:48,name:'水风井', symbol:'䷯', nature:'木'},
-    {n:49,name:'泽火革', symbol:'䷰', nature:'水'},
-    {n:50,name:'火风鼎', symbol:'䷱', nature:'火'},
-    {n:51,name:'震为雷', symbol:'䷲', nature:'木'},
-    {n:52,name:'艮为山', symbol:'䷳', nature:'土'},
-    {n:53,name:'风山渐', symbol:'䷴', nature:'土'},
-    {n:54,name:'雷泽归妹', symbol:'䷵', nature:'金'},
-    {n:55,name:'雷火丰', symbol:'䷶', nature:'火'},
-    {n:56,name:'火山旅', symbol:'䷷', nature:'火'},
-    {n:57,name:'巽为风', symbol:'䷸', nature:'木'},
-    {n:58,name:'兑为泽', symbol:'䷹', nature:'金'},
-    {n:59,name:'风水涣', symbol:'䷺', nature:'火'},
-    {n:60,name:'水泽节', symbol:'䷻', nature:'水'},
-    {n:61,name:'风泽中孚', symbol:'䷼', nature:'土'},
-    {n:62,name:'雷山小过', symbol:'䷽', nature:'金'},
-    {n:63,name:'水火既济', symbol:'䷾', nature:'水'},
-    {n:64,name:'火水未济', symbol:'䷿', nature:'火'}
-  ];
-  GUAS.forEach(function(g) {
-    _liuYaoGuaDict[g.n] = g;
-  });
-}
-
 function doLiuYaoToss() {
-  if (Object.keys(_liuYaoGuaDict).length === 0) _buildLiuYaoGuaDict();
-  var result = BuShuExtra.liuYaoCoinToss();
-  renderLiuYaoResult(result);
+  var result = LiuYao.cast();
+  document.getElementById('lyResult').innerHTML = LiuYao.buildLiuYaoHTML(result);
 }
 
 function renderLiuYaoResult(result) {
-  var benGua = _liuYaoGuaDict[result.benGuaNum + 1] || { name:'未知卦', symbol:'?', nature:'?' };
-  var bianGua = _liuYaoGuaDict[result.bianGuaNum + 1] || { name:'未知卦', symbol:'?', nature:'?' };
-  var benInterp = BuShuExtra.getGuaInterpretation(result.benGuaNum + 1);
-  var bianInterp = BuShuExtra.getGuaInterpretation(result.bianGuaNum + 1);
-
-  var html = '<div class="ly-result-card">';
-  // 本卦
-  html += '<div class="ly-gua"><span class="ly-gua-label">本卦</span><span class="ly-gua-sym">' + benGua.symbol + '</span><span class="ly-gua-name">' + benGua.name + '</span><span class="ly-gua-nature">' + benGua.nature + '</span></div>';
-
-  // 本卦释义
-  html += '<div class="ly-gua-interp">';
-  html += '<h5>📖 ' + benInterp.name + ' · 卦辞释义</h5>';
-  html += '<p>' + benInterp.overall + '</p>';
-  html += '</div>';
-
-  // 六爻显示
-  html += '<div class="ly-yao-lines">';
-  result.yaoLines.forEach(function(l, i) {
-    html += '<div class="ly-yao-row' + (l.isChanging ? ' changing' : '') + '">';
-    html += '<span class="ly-yao-pos">' + l.posName + '</span>';
-    html += '<span class="ly-yao-sym">' + l.type.symbol + '</span>';
-    html += '<span class="ly-yao-type">' + l.type.type + '</span>';
-    if (l.isChanging) html += '<span class="ly-yao-bian">→ ' + l.type.bian + '</span>';
-    html += '</div>';
-  });
-  html += '</div>';
-
-  // 变卦
-  if (result.benGuaNum !== result.bianGuaNum) {
-    html += '<div class="ly-gua ly-bian"><span class="ly-gua-label">变卦</span><span class="ly-gua-sym">' + bianGua.symbol + '</span><span class="ly-gua-name">' + bianGua.name + '</span><span class="ly-gua-nature">' + bianGua.nature + '</span></div>';
-
-    // 变卦释义
-    html += '<div class="ly-gua-interp">';
-    html += '<h5>🔀 ' + bianInterp.name + ' · 变卦释义</h5>';
-    html += '<p>' + bianInterp.overall + '</p>';
-    html += '</div>';
-  }
-
-  // 分项解读
-  html += '<div class="ly-sections">';
-  html += '<div class="ly-sec"><h5>💼 事业</h5><p>' + benInterp.career + '</p></div>';
-  html += '<div class="ly-sec"><h5>💕 感情</h5><p>' + benInterp.love + '</p></div>';
-  html += '<div class="ly-sec"><h5>💰 财运</h5><p>' + benInterp.wealth + '</p></div>';
-  html += '<div class="ly-sec"><h5>🏥 健康</h5><p>' + (benInterp.health || '暂无。') + '</p></div>';
-  html += '<div class="ly-sec"><h5>✈️ 出行</h5><p>' + (benInterp.travel || '暂无。') + '</p></div>';
-  html += '<div class="ly-sec"><h5>🔍 寻物</h5><p>' + (benInterp.lost || '暂无。') + '</p></div>';
-  html += '</div>';
-
-  // 动爻爻位解读
-  var changingLines = result.yaoLines.filter(function(l) { return l.isChanging; });
-  if (changingLines.length > 0) {
-    html += '<div class="ly-yao-guide">';
-    html += '<h5>📐 动爻爻位含义</h5>';
-    changingLines.forEach(function(l) {
-      var yaoIdx = l.position - 1;
-      var guide = (typeof BuShuExtra !== 'undefined' && BuShuExtra.getYaoPositionInterpretation) ? BuShuExtra.getYaoPositionInterpretation(yaoIdx) : null;
-      if (guide) {
-        html += '<div class="ly-yao-guide-item">';
-        html += '<span class="ly-yao-pos-badge">' + l.posName + '</span>';
-        html += '<span class="ly-yao-pos-level">' + guide.level + '</span>';
-        html += '<p>' + guide.meaning + '</p>';
-        html += '</div>';
-      }
-    });
-    html += '</div>';
-  }
-
-  // 提示
-  html += '<div class="ly-tip">本卦为当前状态，变卦为发展方向。老阳(○)老阴(×)为动爻。</div>';
-  html += '<p class="ly-disclaimer">以上解读由六爻规则引擎生成，仅供参考。</p>';
-  html += '</div>';
-  document.getElementById('lyResult').innerHTML = html;
+  document.getElementById('lyResult').innerHTML = LiuYao.buildLiuYaoHTML(result);
 }
 
 // ==================== 格局展示 ====================
