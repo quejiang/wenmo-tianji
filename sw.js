@@ -1,10 +1,11 @@
-const CACHE = 'wenmo-v8';
+const CACHE = 'wenmo-v9';
 const FILES = [
   './index.html',
   './css/style.css',
   './js/lunar.js',
   './js/ziwei.js',
   './js/ziwei-flow.js',
+  './js/ziwei-patterns.js',
   './js/encyclopedia.js',
   './js/ai-analysis.js',
   './js/astrology.js',
@@ -17,8 +18,10 @@ const FILES = [
   './js/shan-shu.js',
   './js/yi-shu.js',
   './js/xiang-shu.js',
+  './js/name-reading.js',
   './js/bu-shu-extra.js',
   './js/tutorial.js',
+  './js/lang.js',
   './js/app.js'
 ];
 
