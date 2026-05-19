@@ -3697,6 +3697,81 @@ body {
   .btn-tutorial { padding: 7px 12px; font-size: 0.75em; }
 }
 
+/* ==================== 速成课程 ==================== */
+
+.btn-course {
+  padding: 10px 28px;
+  border-radius: 22px;
+  border: 1px solid rgba(136, 180, 240, 0.5);
+  background: linear-gradient(135deg, rgba(80, 140, 220, 0.15), rgba(60, 120, 200, 0.05));
+  color: #88bbff;
+  font-size: 0.95em;
+  font-family: inherit;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-left: 12px;
+  white-space: nowrap;
+}
+.btn-course:hover {
+  background: rgba(80, 140, 220, 0.25);
+  box-shadow: 0 0 18px rgba(80, 140, 220, 0.25);
+  border-color: rgba(136, 180, 240, 0.7);
+  transform: translateY(-1px);
+}
+
+.course-dialog {
+  max-width: 700px !important;
+}
+
+.course-phase-indicator {
+  font-size: 0.78em;
+  color: #88bbff;
+  letter-spacing: 1px;
+  padding: 2px 10px;
+  border-radius: 10px;
+  background: rgba(136, 180, 240, 0.08);
+  border: 1px solid rgba(136, 180, 240, 0.2);
+}
+
+.course-card {
+  background: rgba(136, 180, 240, 0.05);
+  border: 1px solid rgba(136, 180, 240, 0.15);
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin: 10px 0;
+  text-align: left;
+  line-height: 1.7;
+}
+.course-card h5 {
+  color: #88bbff;
+  font-size: 0.95em;
+  margin-bottom: 6px;
+}
+.course-card ul, .course-card ol {
+  padding-left: 20px;
+  margin: 4px 0;
+}
+.course-card li {
+  margin: 3px 0;
+  font-size: 0.88em;
+}
+.course-card table {
+  border-collapse: collapse;
+  margin: 6px 0;
+}
+.course-card th {
+  color: #aaa;
+  font-size: 0.78em;
+  padding: 3px 6px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.course-card td {
+  padding: 3px 6px;
+  font-size: 0.8em;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
 /* ==================== 悬停提示 Tooltip ==================== */
 
 .tooltip-popup {
@@ -4250,3 +4325,175 @@ body.mode-nonpro .sp-category { background: rgba(240,215,140,0.1); }
 }
 .mode-back-btn:hover { color: #ccc; border-color: rgba(255,255,255,0.2); }
 .mode-footer-hint { text-align: center; color: #555; font-size: 0.72em; margin-top: 16px; }
+
+/* ==================== 教程/课程弹窗 ==================== */
+.tutorial-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+.tutorial-dialog {
+  background: linear-gradient(145deg, #1e1e3a 0%, #1a1a2e 100%);
+  border: 1px solid rgba(240,215,140,0.25);
+  border-radius: 16px;
+  width: min(620px, 92vw);
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  pointer-events: auto;
+}
+.course-dialog {
+  width: min(680px, 94vw);
+  max-height: 88vh;
+}
+.tutorial-header {
+  display: flex;
+  align-items: center;
+  padding: 16px 20px 8px;
+  gap: 10px;
+  position: sticky;
+  top: 0;
+  background: linear-gradient(145deg, #1e1e3a 0%, #1a1a2e 100%);
+  z-index: 1;
+  border-bottom: 1px solid rgba(240,215,140,0.08);
+}
+.tutorial-close {
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 1.4em;
+  cursor: pointer;
+  margin-left: auto;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+.tutorial-close:hover { color: #e06040; }
+.tutorial-step-indicator {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+.tutorial-dot {
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.12);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.tutorial-dot.active { background: #f0d78c; transform: scale(1.3); }
+.tutorial-dot.done { background: rgba(240,215,140,0.4); }
+.tutorial-body { padding: 16px 24px 8px; }
+.tutorial-emoji { font-size: 2em; text-align: center; margin-bottom: 6px; }
+.tutorial-title {
+  font-size: 1.2em;
+  color: #f0d78c;
+  text-align: center;
+  margin-bottom: 14px;
+}
+.tutorial-content { color: #ccc; line-height: 1.8; font-size: 0.9em; }
+.tutorial-content p { margin-bottom: 10px; }
+.tutorial-content strong { color: #f0d78c; }
+.tutorial-content mark {
+  background: rgba(240,215,140,0.15);
+  color: #f0d78c;
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+.tutorial-content em { color: #d4a84c; }
+.tutorial-content ol, .tutorial-content ul { margin: 6px 0 12px 20px; }
+.tutorial-content li { margin-bottom: 3px; }
+.tutorial-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px 18px;
+  gap: 12px;
+}
+.tutorial-progress { color: #666; font-size: 0.8em; }
+.tutorial-btn {
+  padding: 8px 18px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.04);
+  color: #ccc;
+  cursor: pointer;
+  font-size: 0.88em;
+  transition: all 0.2s;
+}
+.tutorial-btn:hover { background: rgba(240,215,140,0.1); border-color: rgba(240,215,140,0.35); color: #f0d78c; }
+.tutorial-btn-finish {
+  background: rgba(240,215,140,0.15);
+  border-color: rgba(240,215,140,0.4);
+  color: #f0d78c;
+  font-weight: 700;
+}
+.tutorial-btn-finish:hover { background: rgba(240,215,140,0.25); }
+.tutorial-highlight {
+  box-shadow: 0 0 0 4px rgba(240,215,140,0.45);
+  border-radius: 12px;
+  position: relative;
+  z-index: 9000;
+}
+
+/* ==================== 速成课程卡片 ==================== */
+.course-phase-indicator {
+  font-size: 0.78em;
+  color: #d4a84c;
+  background: rgba(240,215,140,0.06);
+  padding: 3px 10px;
+  border-radius: 12px;
+  white-space: nowrap;
+}
+.btn-course {
+  background: linear-gradient(135deg, rgba(212,168,76,0.15), rgba(240,215,140,0.08));
+  border: 1px solid rgba(240,215,140,0.35);
+  color: #f0d78c;
+  font-size: 0.88em;
+  padding: 7px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-course:hover {
+  background: linear-gradient(135deg, rgba(212,168,76,0.25), rgba(240,215,140,0.15));
+  border-color: rgba(240,215,140,0.6);
+  transform: translateY(-1px);
+}
+
+/* 课程内卡片 */
+.course-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(240,215,140,0.1);
+  border-left: 3px solid rgba(240,215,140,0.4);
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+}
+.course-card h5 {
+  color: #d4a84c;
+  font-size: 0.92em;
+  margin-bottom: 6px;
+}
+.course-card ul, .course-card ol { margin: 4px 0 0 18px; font-size: 0.88em; }
+.course-card li { margin-bottom: 2px; color: #bbb; }
+.course-card p { font-size: 0.88em; }
+.course-card table { border-collapse: collapse; margin-top: 4px; }
+.course-card table th, .course-card table td {
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 5px 8px;
+  text-align: center;
+  font-size: 0.85em;
+}
+.course-card table th { background: rgba(240,215,140,0.08); color: #d4a84c; }
+.course-card pre {
+  background: rgba(0,0,0,0.25);
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin: 6px 0;
+  overflow-x: auto;
+}
