@@ -36,6 +36,7 @@
       <button class="btn-course" onclick="ZiweiCourse.open()" title="0基础到精通速成">📖 速成课</button>
       <button class="btn-lang" id="btnLangToggle" onclick="Lang.toggle()" title="切换简繁中文">繁</button>
       <button class="btn-mode" id="btnModeToggle" onclick="UserMode.toggleMode()" title="切换专业/大众模式">🔬</button>
+      <button class="btn-ai" id="btnAiToggle" onclick="_aiLazy.togglePanel()" title="本地AI助手（点击加载）"><span class="ai-status-badge ai-idle" id="aiStatusBadge">未加载</span>🤖 AI</button>
     </div>
 
     <!-- 五术主标签栏 -->
@@ -835,6 +836,47 @@
     <div class="astro-info-popup" id="astroInfoPopup" style="display:none;" onclick="event.stopPropagation()">
       <div class="aip-header"><span class="aip-icon" id="aipIcon"></span><span class="aip-title" id="aipTitle"></span><button class="aip-close" onclick="closeAstroPopup()">✕</button></div>
       <div class="aip-body" id="aipBody"></div><div class="aip-footer" id="aipFooter"></div>
+    </div>
+
+    <!-- ===== 本地 AI 大模型面板 ===== -->
+    <div class="ai-local-panel" id="aiLocalPanel" style="display:none;">
+      <div class="ai-local-header">
+        <h3>🤖 本地 AI 助手</h3>
+        <span class="ai-local-subtitle">基于 WebLLM · 完全离线 · 无需 API</span>
+        <button class="feature-close" onclick="_aiLazy.togglePanel()">✕</button>
+      </div>
+
+      <!-- 模型选择 -->
+      <div class="ai-model-bar">
+        <select id="aiModelSelect" class="ai-model-select"></select>
+        <button class="btn btn-sm btn-primary" onclick="_aiLazy.loadModel()">加载模型</button>
+        <button class="btn btn-sm" onclick="_aiLazy.unloadModel()">卸载</button>
+      </div>
+
+      <!-- 进度条 -->
+      <div class="ai-progress-bar" id="aiProgressBar" style="display:none;">
+        <div class="ai-progress-fill"></div>
+      </div>
+      <div class="ai-progress-text" id="aiProgressText" style="display:none;"></div>
+
+      <!-- 知识库管理 -->
+      <div class="ai-kb-bar">
+        <span class="ai-kb-label">📚 知识库</span>
+        <input type="file" id="aiDocInput" accept=".txt,.pdf,.md" style="display:none" onchange="_aiLazy.handleDocumentSelected(event)">
+        <button class="btn btn-sm" onclick="_aiLazy.uploadDocument()">📤 上传文档</button>
+        <button class="btn btn-sm" onclick="_aiLazy.clearKnowledgeBase()" style="margin-left:4px;color:#e06050">清空</button>
+      </div>
+      <div class="ai-kb-list" id="aiKnowledgeList"></div>
+
+      <!-- 聊天区 -->
+      <div class="ai-chat-messages" id="aiChatMessages"></div>
+
+      <!-- 输入区 -->
+      <div class="ai-chat-input-bar">
+        <textarea id="aiChatInput" rows="2" placeholder="输入你的问题... （Enter 发送）" onkeydown="_aiLazy.handleChatKeydown(event)"></textarea>
+        <button class="btn btn-primary btn-sm" onclick="_aiLazy.sendMessage()">发送</button>
+        <button class="btn btn-sm" onclick="_aiLazy.clearChat()">清屏</button>
+      </div>
     </div>
 
   </div>

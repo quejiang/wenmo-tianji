@@ -163,6 +163,36 @@ var HELP_SECTIONS = [
     ]
   },
   {
+    id: 'local-ai',
+    icon: '🤖',
+    title: '本地 AI 大模型（新增 · 完全离线）',
+    content: [
+      { subtitle: '如何使用？',
+        text: '点击顶部 <b>「🤖 AI」</b>按钮，在右侧面板中：<br>'
+          + '1. 选择模型（推荐 Llama 3.2 1B，约 1GB）<br>'
+          + '2. 点击「加载模型」，首次需下载 1-5 分钟，后续秒开<br>'
+          + '3. 在输入框输入问题，按 Enter 发送' },
+      { subtitle: '支持哪些模型？',
+        text: '• Llama 3.2 1B/3B（Meta）<br>'
+          + '• SmolLM2 1.7B（HuggingFace）<br>'
+          + '• Gemma 2 2B（Google）<br>'
+          + '• Phi 3.5 Mini（Microsoft）<br>'
+          + '• Qwen2 1.5B（通义千问）' },
+      { subtitle: '如何让 AI 学习书籍？',
+        text: '1. 准备 .txt 或 .pdf 格式的命理书籍<br>'
+          + '2. 在 AI 面板点击「📤 上传文档」<br>'
+          + '3. 系统自动分块索引，完成后即可提问书中内容' },
+      { subtitle: '完全离线 · 无需 API',
+        text: '所有推理和数据均在浏览器本地完成，不会上传到任何服务器。' },
+      { subtitle: '浏览器要求',
+        text: '需要 <b>Chrome 113+</b> 或 <b>Edge 113+</b>（需支持 WebGPU）。<br>'
+          + 'Safari / Firefox 目前不支持 WebLLM。' },
+      { subtitle: '关于视频学习',
+        text: '浏览器端不支持视频/音频的 AI 学习（需 ASR 语音识别 + 视觉模型，计算量和模型尺寸远超浏览器承载能力）。<br>'
+          + '建议将视频内容整理为文字文档后上传。' }
+    ]
+  },
+  {
     id: 'tech',
     icon: '⚙️',
     title: '技术特性',

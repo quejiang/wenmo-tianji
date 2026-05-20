@@ -4292,7 +4292,59 @@ var IDB = (function() {
 // ==================== 初始化高级功能 ====================
 if (typeof initAdvancedFeatures === 'function') {
   document.addEventListener('DOMContentLoaded', function() {
-    // 延迟一点确保所有模块已加载
     setTimeout(function() { initAdvancedFeatures(); }, 200);
   });
 }
+
+// ==================== AI 模块懒加载代理 ====================
+// 点击 🤖 按钮时才动态加载 js/local-ai.js，不点就不下载
+var _aiLazy = (function() {
+  var _loaded = false;
+  var _queue = [];
+
+  function _ensure(cb) {
+    if (_loaded) { cb(); return; }
+    _queue.push(cb);
+    var badge = document.getElementById('aiStatusBadge');
+    if (badge) { badge.textContent = '加载中'; badge.className = 'ai-status-badge ai-loading'; }
+
+    var s = document.createElement('script');
+    s.src = 'js/local-ai.js?v=25';
+    s.onload = function() {
+      _loaded = true;
+      if (typeof LocalAI !== 'undefined') {
+        LocalAI.init();
+        _queue.forEach(function(fn) { fn(); });
+        _queue = [];
+      }
+    };
+    s.onerror = function() {
+      var badge = document.getElementById('aiStatusBadge');
+      if (badge) { badge.textContent = '失败'; badge.className = 'ai-status-badge ai-error'; }
+    };
+    document.body.appendChild(s);
+  }
+
+  function _proxy(method) {
+    return function() {
+      var args = arguments;
+      _ensure(function() {
+        if (typeof LocalAI !== 'undefined' && LocalAI[method]) {
+          LocalAI[method].apply(LocalAI, args);
+        }
+      });
+    };
+  }
+
+  return {
+    togglePanel:              _proxy('togglePanel'),
+    loadModel:                _proxy('loadModel'),
+    unloadModel:              _proxy('unloadModel'),
+    sendMessage:              _proxy('sendMessage'),
+    clearChat:                _proxy('clearChat'),
+    uploadDocument:           _proxy('uploadDocument'),
+    handleDocumentSelected:   _proxy('handleDocumentSelected'),
+    handleChatKeydown:        _proxy('handleChatKeydown'),
+    clearKnowledgeBase:       _proxy('clearKnowledgeBase')
+  };
+})();
