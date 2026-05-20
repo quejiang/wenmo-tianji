@@ -305,7 +305,13 @@ function arrangeAuxStars(lunarMonth, shichenIdx, yearGanIndex, yearZhiIndex) {
  * 返回 { starKey: '禄'|'权'|'科'|'忌' }
  */
 function getSiHua(yearGanIndex) {
-  const sihuaTable = [
+  // 支持多流派：优先使用流派配置的四化表
+  if (typeof ZIWEI_SCHOOLS !== 'undefined' && typeof activeSchool !== 'undefined' && ZIWEI_SCHOOLS[activeSchool]) {
+    var arr = ZIWEI_SCHOOLS[activeSchool].sihua[yearGanIndex];
+    return { lu: arr[0], quan: arr[1], ke: arr[2], ji: arr[3] };
+  }
+  // 回退：默认中州派四化表
+  var sihuaTable = [
     // 禄,      权,      科,      忌
     ['lianzhen', 'pojund', 'wuqu', 'taiyang'],  // 甲
     ['tianji', 'tianliang', 'ziwei', 'taiyin'],  // 乙
@@ -319,8 +325,8 @@ function getSiHua(yearGanIndex) {
     ['pojund', 'jumen', 'taiyin', 'tanlang']        // 癸
   ];
   
-  const [lu, quan, ke, ji] = sihuaTable[yearGanIndex];
-  return { lu, quan, ke, ji };
+  var entry = sihuaTable[yearGanIndex];
+  return { lu: entry[0], quan: entry[1], ke: entry[2], ji: entry[3] };
 }
 
 // ==================== 宫干四化（飞宫四化/后天四化） ====================

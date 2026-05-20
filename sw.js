@@ -1,4 +1,4 @@
-const CACHE = 'shan-yi-ming-xiang-bu-v1';
+const CACHE = 'shan-yi-ming-xiang-bu-v2';
 const FILES = [
   './',
   './index.html',
@@ -6,6 +6,7 @@ const FILES = [
   './sw.js',
   './css/style.css',
   './js/lunar.js',
+  './js/ziwei-schools.js',
   './js/ziwei.js',
   './js/ziwei-flow.js',
   './js/ziwei-patterns.js',
@@ -15,6 +16,10 @@ const FILES = [
   './js/astrology-pro.js',
   './js/bazi-reading.js',
   './js/cases.js',
+  './js/qimen.js',
+  './js/zeri.js',
+  './js/luopan.js',
+  './js/user-mode.js',
   './js/tarot-dice.js',
   './js/xiao-liuren.js',
   './js/daily-horoscope.js',
@@ -23,21 +28,17 @@ const FILES = [
   './js/xiang-shu.js',
   './js/name-reading.js',
   './js/bu-shu-extra.js',
-  './js/tutorial.js',
-  './js/lang.js',
-  './js/app.js',
-  './js/qimen.js',
-  './js/zeri.js',
-  './js/luopan.js',
-  './js/user-mode.js',
   './js/liuyao.js',
   './js/meihua.js',
   './js/bazi-advanced.js',
   './js/export-pdf.js',
-  './js/chart-analysis.js',
   './js/ai-llm.js',
   './js/ai-tutorial.js',
+  './js/chart-analysis.js',
+  './js/tutorial.js',
   './js/ziwei-course.js',
+  './js/lang.js',
+  './js/app.js',
 ];
 
 // 安装时预缓存核心文件，完成后立即激活

@@ -145,6 +145,14 @@
                 <option value="female">女</option>
               </select>
             </div>
+            <div class="form-group">
+              <label for="ziweiSchool">流派</label>
+              <select id="ziweiSchool" onchange="onSchoolChange()">
+                <option value="zhongzhou">中州派</option>
+                <option value="qintian">钦天派</option>
+                <option value="feixing">飞星派</option>
+              </select>
+            </div>
             <div class="form-group form-group-check">
               <label><input type="checkbox" id="useTrueSolar" onchange="onTrueSolarToggle()">使用真太阳时</label>
             </div>
@@ -202,6 +210,7 @@
         </div>
         <!-- 命盘 -->
         <div class="chart-container"><div class="chart-grid" id="chartGrid"></div></div>
+        <div class="timeline-panel" id="timelinePanel" style="display:none;margin-top:16px;padding:16px;background:rgba(255,255,255,.03);border-radius:12px;border:1px solid rgba(255,255,255,.08)"></div>
         <div class="legend">
           <span class="legend-item"><span class="legend-dot main"></span> 主星</span>
           <span class="legend-item"><span class="legend-dot aux"></span> 辅星</span>
@@ -768,7 +777,13 @@
 
     <!-- 命例库面板 -->
     <div class="cases-panel" id="casesPanel" style="display:none;">
-      <div class="cases-header"><h3>命例库</h3><span class="cases-count" id="casesCount"></span><button class="btn btn-sm" onclick="toggleCasesPanel()">✕</button></div>
+      <div class="cases-header"><h3>命例库</h3><span class="cases-count" id="casesCount"></span>
+        <button class="btn btn-sm" onclick="exportCasesJSON()" title="导出 JSON">📤</button>
+        <button class="btn btn-sm" onclick="document.getElementById('importFileInput').click()" title="导入 JSON">📥</button>
+        <input type="file" id="importFileInput" accept=".json" style="display:none" onchange="importCasesJSON(event)">
+        <button class="btn btn-sm" onclick="toggleCasesPanel()">✕</button>
+      </div>
+      <div class="cases-search"><input type="text" id="casesSearchInput" placeholder="🔍 搜索命例..." oninput="renderCaseList()"></div>
       <div class="cases-list" id="casesList"></div>
       <div class="cases-tags-bar" id="casesTagsBar" style="display:none;"></div>
     </div>
@@ -807,38 +822,48 @@
   </div>
 
   <script src="js/lunar.js?v=25"></script>
+  <script src="js/ziwei-schools.js?v=25"></script>
   <script src="js/ziwei.js?v=25"></script>
   <script src="js/ziwei-flow.js?v=25"></script>
   <script src="js/ziwei-patterns.js?v=25"></script>
   <script src="js/encyclopedia.js?v=25"></script>
   <script src="js/ai-analysis.js?v=25"></script>
-  <script src="js/astrology.js?v=25"></script>
-  <script src="js/astrology-pro.js?v=25"></script>
   <script src="js/bazi-reading.js?v=25"></script>
   <script src="js/cases.js?v=25"></script>
-  <script src="js/qimen.js?v=25"></script>
-  <script src="js/zeri.js?v=25"></script>
-  <script src="js/luopan.js?v=25"></script>
   <script src="js/user-mode.js?v=25"></script>
-  <script src="js/tarot-dice.js?v=25"></script>
-  <script src="js/xiao-liuren.js?v=25"></script>
-  <script src="js/daily-horoscope.js?v=25"></script>
-  <script src="js/shan-shu.js?v=25"></script>
-  <script src="js/yi-shu.js?v=25"></script>
-  <script src="js/xiang-shu.js?v=25"></script>
-  <script src="js/name-reading.js?v=25"></script>
-  <script src="js/bu-shu-extra.js?v=25"></script>
-  <script src="js/liuyao.js?v=25"></script>
-  <script src="js/meihua.js?v=25"></script>
-  <script src="js/bazi-advanced.js?v=25"></script>
-  <script src="js/export-pdf.js?v=25"></script>
-  <script src="js/ai-llm.js?v=25"></script>
-  <script src="js/ai-tutorial.js?v=25"></script>
-  <script src="js/chart-analysis.js?v=25"></script>
   <script src="js/tutorial.js?v=25"></script>
   <script src="js/ziwei-course.js?v=25"></script>
   <script src="js/lang.js?v=25"></script>
+  <script src="js/export-pdf.js?v=25"></script>
+  <script src="js/chart-analysis.js?v=25"></script>
+  <script src="js/ai-llm.js?v=25"></script>
+  <script src="js/ai-tutorial.js?v=25"></script>
+  <script src="js/name-reading.js?v=25"></script>
   <script src="js/app.js?v=25"></script>
+
+  <!-- 非核心模块：按需延迟加载 -->
+  <script src="js/astrology.js?v=25" defer></script>
+  <script src="js/astrology-pro.js?v=25" defer></script>
+  <script src="js/bazi-advanced.js?v=25" defer></script>
+  <script src="js/qimen.js?v=25" defer></script>
+  <script src="js/zeri.js?v=25" defer></script>
+  <script src="js/luopan.js?v=25" defer></script>
+  <script src="js/tarot-dice.js?v=25" defer></script>
+  <script src="js/xiao-liuren.js?v=25" defer></script>
+  <script src="js/daily-horoscope.js?v=25" defer></script>
+  <script src="js/shan-shu.js?v=25" defer></script>
+  <script src="js/yi-shu.js?v=25" defer></script>
+  <script src="js/xiang-shu.js?v=25" defer></script>
+  <script src="js/bu-shu-extra.js?v=25" defer></script>
+  <script src="js/liuyao.js?v=25" defer></script>
+  <script src="js/meihua.js?v=25" defer></script>
+  <!-- 按需懒加载模块 — 由 switchWushu 触发 -->
+  <script>
+  var _lazyModules = {
+    shan: [], yi: [], ming: [], xiang: [], bu: []
+  };
+  var _lazyLoaded = {};
+  </script>
   <script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js');}</script>
 </body>
 </html>

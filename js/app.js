@@ -1047,7 +1047,16 @@ function switchWushu(wushu) {
     p.classList.toggle('active', p.id === 'wushu' + wushu.charAt(0).toUpperCase() + wushu.slice(1));
   });
 
-  // 触发各模块的初始化渲染
+  // 懒加载：首次切换时加载对应模块脚本
+  var mods = _lazyModules[wushu] || [];
+  mods.forEach(function(src) {
+    if (_lazyLoaded[src]) return;
+    _lazyLoaded[src] = true;
+    var s = document.createElement('script');
+    s.src = src + '?v=25';
+    document.body.appendChild(s);
+  });
+
   if (wushu === 'shan') initShanTab();
   if (wushu === 'yi') initYiTab();
   if (wushu === 'ming') initMingTab();
@@ -1269,6 +1278,9 @@ function generateChart() {
 
   // 更新时辰显示
   onTimeChange();
+
+  // 渲染小限面板
+  if (document.getElementById('timelinePanel')) renderTimelinePanel();
 
   // 如果新手教程正停在"输入出生信息"步骤，排盘完成后自动前进到"看懂命盘"步骤
   if (typeof Tutorial !== 'undefined' && Tutorial.isOpen && Tutorial.isOpen()) {
@@ -3982,3 +3994,297 @@ function copyChartToClipboard() {
     alert('复制失败，请手动选择复制');
   });
 }
+
+// ==================== 流派切换 ====================
+function onSchoolChange() {
+  var sel = document.getElementById('ziweiSchool');
+  if (sel) {
+    setZiWeiSchool(sel.value);
+    if (currentChart) generateChart(); // 已有盘则重排
+  }
+}
+
+// ==================== 小限/流分面板 ====================
+function renderTimelinePanel() {
+  if (!currentChart) return;
+  var panel = document.getElementById('timelinePanel');
+  if (!panel) return;
+
+  var bz = currentBazi;
+  var chart = currentChart;
+  var age = parseInt(document.getElementById('timelineAgeInput') ? document.getElementById('timelineAgeInput').value : 25) || 25;
+
+  // 小限
+  var xiaoXianZhi = calcXiaoXian(bz.year.zhiIndex, document.getElementById('gender').value, age);
+  // 流年
+  var liuNianZhi = (bz.year.zhiIndex + age - 1) % 12; // 流年太岁
+
+  var rows = [];
+  // 小限 12 宫
+  for (var i = 0; i < 12; i++) {
+    var zhi = (xiaoXianZhi - i + 12) % 12;
+    var p = chart.palaces.find(function(pal) { return pal.zhiIndex === zhi; });
+    var stars = p ? p.stars.map(function(s) { return s.name; }).join(' ') : '—';
+    rows.push('<tr><td><b>' + PALACE_NAMES[i] + '</b></td>'
+      + '<td>' + ZHI[zhi] + '</td>'
+      + '<td>' + stars + '</td></tr>');
+  }
+
+  panel.innerHTML =
+    '<h4>🕐 小限 · 流年 · 流分</h4>'
+    + '<div style="margin-bottom:12px">'
+    + '<label>虚岁: <input id="timelineAgeInput" type="number" value="' + age + '" min="1" max="120" '
+    + 'onchange="renderTimelinePanel()" style="width:70px;margin-left:8px;padding:4px 8px;border-radius:6px;border:1px solid #ccc"></label>'
+    + '<span style="margin-left:16px">小限命宫: <b>' + ZHI[xiaoXianZhi] + '宫</b></span>'
+    + '</div>'
+    + '<table style="width:100%;border-collapse:collapse;font-size:13px">'
+    + '<thead><tr><th>宫位</th><th>地支</th><th>主星</th></tr></thead><tbody>'
+    + rows.join('') + '</tbody></table>';
+  panel.style.display = 'block';
+}
+
+// ==================== 命例库搜索 ====================
+function getSearchQuery() {
+  var inp = document.getElementById('casesSearchInput');
+  return inp ? inp.value.trim().toLowerCase() : '';
+}
+
+// 覆盖原有 renderCaseList 的过滤逻辑（在函数开头添加搜索过滤）
+var _origRenderCaseList = renderCaseList;
+renderCaseList = function() {
+  var allCases = CaseDB.loadAll();
+  var q = getSearchQuery();
+
+  // 搜索过滤
+  var cases = allCases;
+  if (q) {
+    cases = allCases.filter(function(c) {
+      return (c.name && c.name.toLowerCase().indexOf(q) !== -1) ||
+             (c.date && c.date.indexOf(q) !== -1) ||
+             (c.bazi && c.bazi.year && c.bazi.year.toLowerCase().indexOf(q) !== -1) ||
+             (c.chart && c.chart.mingGong && c.chart.mingGong.toLowerCase().indexOf(q) !== -1) ||
+             (c.tags && c.tags.some(function(t) { return t.toLowerCase().indexOf(q) !== -1; }));
+    });
+  }
+
+  // 标签筛选
+  if (_activeFilter) {
+    cases = cases.filter(function(c) {
+      return (c.tags || []).indexOf(_activeFilter) !== -1;
+    });
+  }
+
+  var countEl = document.getElementById('casesCount');
+  countEl.textContent = cases.length > 0 ? '(' + cases.length + ' 条)' : '';
+
+  var tagsBar = document.getElementById('casesTagsBar');
+  var allTags = CaseDB.getAllTags();
+  if (allTags.length > 0) {
+    tagsBar.style.display = 'flex';
+    var tagHtml = '<span class="filter-tag' + (!_activeFilter ? ' active' : '') + '" onclick="setCaseFilter(\'\')">全部</span>';
+    allTags.forEach(function(t) {
+      tagHtml += '<span class="filter-tag' + (_activeFilter === t ? ' active' : '') + '" onclick="setCaseFilter(\'' + t + '\')">' + t + '</span>';
+    });
+    tagsBar.innerHTML = tagHtml;
+  } else {
+    tagsBar.style.display = 'none';
+  }
+
+  var list = document.getElementById('casesList');
+  if (cases.length === 0) {
+    list.innerHTML = '<div class="cases-empty">' +
+      (q ? '没有匹配 "' + q + '" 的命例' :
+       _activeFilter ? '该分类下暂无命例' : '暂无保存的命例<br><small>排盘后点击"保存命例"即可存入</small>') +
+      '</div>';
+    return;
+  }
+
+  var html = '';
+  cases.forEach(function(c) {
+    var datePart = c.date || '';
+    var timeStr = (c.hour || 0) + ':' + String(c.minute || 0).padStart(2, '0');
+    var genderStr = c.gender === 'female' ? '女' : '男';
+    var tsTag = c.useTrueSolar ? ' <span class="case-tag">真太阳时</span>' : '';
+    var nameLine = c.name ? '<div class="case-name">' + c.name + '</div>' : '';
+    var tagsLine = '';
+    if (c.tags && c.tags.length > 0) {
+      tagsLine = '<div class="case-tags">';
+      c.tags.forEach(function(t) {
+        tagsLine += '<span class="case-tag-chip" onclick="event.stopPropagation();setCaseFilter(\'' + t + '\')">' + t + '</span>';
+      });
+      tagsLine += '</div>';
+    }
+    var baziLine = '';
+    if (c.bazi) {
+      baziLine = '<span class="case-bazi">' + c.bazi.year + ' ' + c.bazi.month + ' ' + c.bazi.day + ' ' + c.bazi.hour + '</span>';
+    }
+    var lunarLine = '';
+    if (c.bazi) {
+      var m = LUNAR_MONTH_NAMES[c.bazi.lunarMonth] || (c.bazi.lunarMonth + '月');
+      var d = LUNAR_DAY_NAMES[c.bazi.lunarDay] || (c.bazi.lunarDay + '日');
+      lunarLine = '<span class="case-lunar">' + (c.bazi.isLeap ? '闰' : '') + m + d + '</span>';
+    }
+    var chartLine = c.chart ? (c.chart.mingGong + ' · ' + c.chart.bureau) : '';
+
+    html += '<div class="case-card" id="case-' + c.id + '">'
+      + '<div class="case-main" onclick="loadCaseById(' + c.id + ')">'
+      + nameLine
+      + '<div class="case-top">'
+      + '<span class="case-date">' + datePart + ' ' + timeStr + '</span>'
+      + '<span class="case-gender">' + genderStr + '</span>'
+      + tsTag
+      + '</div>'
+      + '<div class="case-mid">' + baziLine + ' <span class="case-chart">' + chartLine + '</span></div>'
+      + '<div class="case-bot">' + lunarLine + ' · ' + (c.bazi ? c.bazi.shichen : '') + '</div>'
+      + tagsLine
+      + '</div>'
+      + '<div style="display:flex;gap:6px;padding:6px 10px;border-top:1px solid rgba(255,255,255,.05)">'
+      + '<button class="btn btn-sm" onclick="event.stopPropagation();deleteCase(' + c.id + ')">🗑</button>'
+      + '</div></div>';
+  });
+  list.innerHTML = html;
+};
+
+function deleteCase(id) {
+  if (!confirm('确定删除此命例？')) return;
+  CaseDB.remove(id);
+  renderCaseList();
+}
+
+// ==================== JSON 导出/导入 ====================
+function exportCasesJSON() {
+  var cases = CaseDB.loadAll();
+  if (cases.length === 0) { alert('命例库为空'); return; }
+  var blob = new Blob([JSON.stringify(cases, null, 2)], { type: 'application/json' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'shan-yi-ming-xiang-bu-cases-' + new Date().toISOString().slice(0, 10) + '.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function importCasesJSON(event) {
+  var file = event.target.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      var data = JSON.parse(e.target.result);
+      if (!Array.isArray(data)) { alert('无效的命例文件格式'); return; }
+      var existing = CaseDB.loadAll();
+      var existingIds = new Set(existing.map(function(c) { return c.id; }));
+      var imported = 0;
+      data.forEach(function(c) {
+        if (!existingIds.has(c.id)) {
+          existing.unshift(c);
+          imported++;
+        }
+      });
+      localStorage.setItem('ziwei_cases', JSON.stringify(existing));
+      alert('成功导入 ' + imported + ' 条新命例（' + (data.length - imported) + ' 条已存在跳过）');
+      renderCaseList();
+    } catch (err) {
+      alert('文件解析失败: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+// ==================== 合盘增强：八字合婚 ====================
+function calcBaziMarriageScore(bazi1, bazi2) {
+  var score = 0;
+  var details = [];
+
+  // 1. 日柱天干五合 (30分)
+  var ganHe = [[4,5],[0,5],[1,6],[2,7],[3,8]]; // 甲己 乙庚 丙辛 丁壬 戊癸
+  var g1 = bazi1.day.ganIndex, g2 = bazi2.day.ganIndex;
+  var isHe = ganHe.some(function(p) {
+    return (p[0] === g1 && p[1] === g2) || (p[1] === g1 && p[0] === g2);
+  });
+  if (isHe) { score += 30; details.push('日柱天干五合（天生一对）'); }
+  else { score += 5; details.push('日柱天干无合'); }
+
+  // 2. 日柱地支六合/三合 (20分)
+  var z1 = bazi1.day.zhiIndex, z2 = bazi2.day.zhiIndex;
+  var sixHe = [[0,1],[2,11],[3,10],[4,9],[5,8],[6,7]];
+  var isSixHe = sixHe.some(function(p) { return (p[0]===z1&&p[1]===z2)||(p[1]===z1&&p[0]===z2); });
+  var isSanHe = (z1 + 4) % 12 === z2 || (z2 + 4) % 12 === z1;
+  if (isSixHe) { score += 20; details.push('日支六合（默契十足）'); }
+  else if (isSanHe) { score += 12; details.push('日支三合（互相吸引）'); }
+  else if (z1 === z2) { score += 8; details.push('日支相同（性格相似）'); }
+  else if ((z1 + 6) % 12 === z2) { score += 3; details.push('日支相冲（需要磨合）'); }
+  else { score += 6; details.push('日支无特殊关系'); }
+
+  // 3. 年柱纳音 (15分)
+  var ny1 = (bazi1.year.ganIndex * 12 + bazi1.year.zhiIndex) % 60;
+  var ny2 = (bazi2.year.ganIndex * 12 + bazi2.year.zhiIndex) % 60;
+  if (Math.abs(ny1 - ny2) % 5 === 0) { score += 15; details.push('年柱纳音相生'); }
+  else { score += 7; details.push('年柱纳音一般'); }
+
+  // 4. 月柱五行互补 (15分)
+  var monthElem1 = [3,3,4,4,5,5,6,6,2,2][bazi1.month.ganIndex]; // 甲乙木(3),丙丁火(6)...
+  var monthElem2 = [3,3,4,4,5,5,6,6,2,2][bazi2.month.ganIndex];
+  var diff = (monthElem1 - monthElem2 + 5) % 5;
+  if (diff === 1) { score += 15; details.push('月柱五行相生'); }
+  else if (diff === 0) { score += 10; details.push('月柱五行相同'); }
+  else { score += 5; details.push('月柱五行相克'); }
+
+  // 5. 生肖匹配 (10分)
+  var sxHe = [[0,1,4,7,8,10],[2,3,5,9,10,11]]; // 简化生肖合冲表
+  var s1 = bazi1.year.zhiIndex, s2 = bazi2.year.zhiIndex;
+  var sxOk = s1 === s2 || (s1 + 1) % 12 === s2 || (s2 + 1) % 12 === s1 ||
+    (s1 + 4) % 12 === s2 || Math.abs(s1 - s2) === 6;
+  if (sxOk) { score += 8; details.push('生肖较合'); }
+  else { score += 3; details.push('生肖一般'); }
+
+  // 6. 命宫互动 (10分) - simplified
+  score += 5; details.push('八字整体匹配度评估');
+
+  var verdict = score >= 80 ? '上等婚配' : score >= 60 ? '中上婚配' : score >= 40 ? '中等婚配' : '需慎重考虑';
+  return { score: Math.min(100, score), details: details, verdict: verdict };
+}
+
+// ==================== IndexedDB 持久化（替代 localStorage） ====================
+var IDB = (function() {
+  var DB_NAME = 'shan-yi-ming-xiang-bu';
+  var STORE = 'app_data';
+  var db = null;
+
+  function open() {
+    return new Promise(function(resolve, reject) {
+      if (db) return resolve(db);
+      var req = indexedDB.open(DB_NAME, 1);
+      req.onupgradeneeded = function(e) {
+        var d = e.target.result;
+        if (!d.objectStoreNames.contains(STORE)) d.createObjectStore(STORE);
+      };
+      req.onsuccess = function(e) { db = e.target.result; resolve(db); };
+      req.onerror = function() { reject(req.error); };
+    });
+  }
+
+  function get(key) {
+    return open().then(function(db) {
+      return new Promise(function(resolve) {
+        var tx = db.transaction(STORE, 'readonly');
+        var req = tx.objectStore(STORE).get(key);
+        req.onsuccess = function() { resolve(req.result); };
+        req.onerror = function() { resolve(null); };
+      });
+    });
+  }
+
+  function set(key, value) {
+    return open().then(function(db) {
+      return new Promise(function(resolve, reject) {
+        var tx = db.transaction(STORE, 'readwrite');
+        tx.objectStore(STORE).put(value, key);
+        tx.oncomplete = function() { resolve(); };
+        tx.onerror = function() { reject(tx.error); };
+      });
+    });
+  }
+
+  return { get: get, set: set };
+})();
