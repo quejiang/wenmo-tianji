@@ -4300,29 +4300,43 @@ if (typeof initAdvancedFeatures === 'function') {
 // 点击 🤖 按钮时才动态加载 js/local-ai.js，不点就不下载
 var _aiLazy = (function() {
   var _loaded = false;
+  var _loading = false;
   var _queue = [];
+
+  function _setBadge(text, cls) {
+    var badge = document.getElementById('aiStatusBadge');
+    if (badge) { badge.textContent = text; badge.className = 'ai-status-badge ' + cls; }
+  }
+
+  function _initApp() {
+    _loaded = true;
+    _loading = false;
+    if (typeof LocalAI !== 'undefined') {
+      LocalAI.init();
+      _queue.forEach(function(fn) { fn(); });
+      _queue = [];
+    }
+  }
+
+  function _doLoad() {
+    if (_loading || _loaded) return;
+    _loading = true;
+    _setBadge('加载中', 'ai-loading');
+
+    var s = document.createElement('script');
+    s.src = 'js/local-ai.js?v=28';
+    s.onload = _initApp;
+    s.onerror = function() {
+      _setBadge('脚本错误', 'ai-error');
+      _loading = false;
+    };
+    document.body.appendChild(s);
+  }
 
   function _ensure(cb) {
     if (_loaded) { cb(); return; }
     _queue.push(cb);
-    var badge = document.getElementById('aiStatusBadge');
-    if (badge) { badge.textContent = '加载中'; badge.className = 'ai-status-badge ai-loading'; }
-
-    var s = document.createElement('script');
-    s.src = 'js/local-ai.js?v=26';
-    s.onload = function() {
-      _loaded = true;
-      if (typeof LocalAI !== 'undefined') {
-        LocalAI.init();
-        _queue.forEach(function(fn) { fn(); });
-        _queue = [];
-      }
-    };
-    s.onerror = function() {
-      var badge = document.getElementById('aiStatusBadge');
-      if (badge) { badge.textContent = '失败'; badge.className = 'ai-status-badge ai-error'; }
-    };
-    document.body.appendChild(s);
+    _doLoad();
   }
 
   function _proxy(method) {
