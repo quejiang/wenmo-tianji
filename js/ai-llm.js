@@ -233,14 +233,7 @@ var AILLM = (function() {
       },
       body: JSON.stringify(body)
     })
-    .then(function(resp) {
-      if (!resp.ok) {
-        return resp.json().then(function(err) {
-          throw new Error(err.error ? err.error.message : 'HTTP ' + resp.status);
-        });
-      }
-      return resp.json();
-    })
+    .then(function(resp) { return callAndTranslateError(resp); })
     .then(function(data) {
       var reply = data.choices && data.choices[0] && data.choices[0].message
         ? data.choices[0].message.content
@@ -256,8 +249,52 @@ var AILLM = (function() {
       if (onDone) onDone(reply);
     })
     .catch(function(err) {
-      onError('调用失败: ' + err.message);
+      onError(err.message);
     });
+  }
+
+  // ==================== 错误翻译 ====================
+  function translateError(status, message) {
+    // 将原始错误转成用户能看懂的中文
+    var raw = (message || '').toLowerCase();
+
+    if (status === 402 || raw.indexOf('insufficient') !== -1 || raw.indexOf('balance') !== -1) {
+      return '账户余额不足，请充值后再使用。\n\n' +
+        '👉 DeepSeek 用户：访问 platform.deepseek.com → 充值中心\n' +
+        '👉 通义千问用户：访问 dashscope.aliyun.com → 账户充值\n' +
+        '👉 OpenAI 用户：访问 platform.openai.com → Billing';
+    }
+    if (status === 401 || raw.indexOf('invalid api key') !== -1 || raw.indexOf('incorrect api key') !== -1) {
+      return 'API Key 无效或已过期。请检查 Key 是否正确，或重新生成一个。';
+    }
+    if (status === 403 || raw.indexOf('access denied') !== -1 || raw.indexOf('not allowed') !== -1) {
+      return 'API Key 没有权限访问该模型。请检查：\n' +
+        '① API Key 是否已开通此模型\n' +
+        '② Base URL 是否与供应商匹配\n' +
+        '③ 模型名称是否正确';
+    }
+    if (status === 429 || raw.indexOf('rate limit') !== -1) {
+      return '请求太频繁，请稍等片刻再试。';
+    }
+    if (status === 503 || status === 502) {
+      return 'AI 服务暂时不可用，请稍后重试。';
+    }
+    // 兜底
+    return 'HTTP ' + status + (message ? ': ' + message : '');
+  }
+
+  function callAndTranslateError(resp) {
+    if (!resp.ok) {
+      return resp.json().then(function(err) {
+        var msg = err.error ? err.error.message : '';
+        throw new Error(translateError(resp.status, msg));
+      }).catch(function(e) {
+        // 如果 JSON 解析失败，直接用状态码
+        if (e.message && e.message.indexOf('HTTP ') !== 0) throw e;
+        throw new Error(translateError(resp.status, ''));
+      });
+    }
+    return Promise.resolve(resp);
   }
 
   // ==================== API 连接测试 ====================
@@ -275,16 +312,7 @@ var AILLM = (function() {
         max_tokens: 20
       })
     })
-    .then(function(resp) {
-      if (!resp.ok) {
-        return resp.json().then(function(err) {
-          var msg = 'HTTP ' + resp.status;
-          if (err.error && err.error.message) msg += ': ' + err.error.message;
-          throw new Error(msg);
-        });
-      }
-      return resp.json();
-    })
+    .then(function(resp) { return callAndTranslateError(resp); })
     .then(function() { onSuccess(); })
     .catch(function(err) { onError(err.message); });
   }
@@ -397,7 +425,7 @@ var AILLM = (function() {
         AILLM.openChat();
       }, 800);
     }, function(err) {
-      document.getElementById('aiConfigStatus').innerHTML = '<span style="color:#e06050">❌ 连接失败: ' + err + '</span>';
+      document.getElementById('aiConfigStatus').innerHTML = '<span style="color:#e06050">❌ ' + err.replace(/\n/g, '<br>') + '</span>';
     });
   }
 
