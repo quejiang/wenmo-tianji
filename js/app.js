@@ -4309,7 +4309,7 @@ var _aiLazy = (function() {
     if (badge) { badge.textContent = '加载中'; badge.className = 'ai-status-badge ai-loading'; }
 
     var s = document.createElement('script');
-    s.src = 'js/local-ai.js?v=25';
+    s.src = 'js/local-ai.js?v=26';
     s.onload = function() {
       _loaded = true;
       if (typeof LocalAI !== 'undefined') {

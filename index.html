@@ -927,5 +927,41 @@
   var _lazyLoaded = {};
   </script>
   <script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js');}</script>
+
+  <!-- ==================== 本地 AI 面板（按需懒加载） ==================== -->
+  <div class="ai-local-panel" id="aiLocalPanel" style="display:none">
+    <div class="ai-local-header">
+      <h3>🤖 本地 AI</h3>
+      <span class="ai-local-subtitle">完全离线 · WebGPU</span>
+      <button style="background:none;border:none;color:#aaa;font-size:18px;cursor:pointer;margin-left:auto" onclick="_aiLazy.togglePanel()">✕</button>
+    </div>
+    <!-- 模型选择 -->
+    <div class="ai-model-bar">
+      <select class="ai-model-select" id="aiModelSelect"></select>
+      <button style="padding:6px 12px;border-radius:8px;border:1px solid rgba(139,195,74,.4);background:rgba(139,195,74,.12);color:#8bc34a;cursor:pointer;font-size:12px;white-space:nowrap" onclick="_aiLazy.loadModel()">加载模型</button>
+      <button style="padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:#888;cursor:pointer;font-size:12px;white-space:nowrap" onclick="_aiLazy.unloadModel()">卸载</button>
+    </div>
+    <!-- 进度条 -->
+    <div class="ai-progress-bar" id="aiProgressBar" style="display:none">
+      <div class="ai-progress-fill"></div>
+    </div>
+    <div class="ai-progress-text" id="aiProgressText"></div>
+    <!-- 知识库 -->
+    <div class="ai-kb-bar">
+      <span class="ai-kb-label">📚 知识库</span>
+      <button style="padding:3px 10px;border-radius:6px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:#aaa;cursor:pointer;font-size:11px;margin-left:auto" onclick="_aiLazy.uploadDocument()">📤 上传</button>
+      <button style="padding:3px 10px;border-radius:6px;border:1px solid rgba(255,255,255,.08);background:none;color:#888;cursor:pointer;font-size:11px" onclick="_aiLazy.clearKnowledgeBase()">清空</button>
+      <input type="file" id="aiDocInput" accept=".txt,.pdf,.md,.epub" style="display:none" onchange="_aiLazy.handleDocumentSelected(event)">
+    </div>
+    <div class="ai-kb-list" id="aiKnowledgeList"></div>
+    <!-- 聊天区 -->
+    <div class="ai-chat-messages" id="aiChatMessages"></div>
+    <!-- 输入区 -->
+    <div class="ai-chat-input-bar">
+      <textarea id="aiChatInput" rows="2" placeholder="输入问题，Enter 发送…" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();_aiLazy.sendMessage()}"></textarea>
+      <button style="padding:8px 16px;border-radius:10px;border:none;background:#8bc34a;color:#111;cursor:pointer;font-size:13px;font-weight:600;white-space:nowrap" onclick="_aiLazy.sendMessage()">发送</button>
+      <button style="padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.08);background:none;color:#888;cursor:pointer;font-size:12px;white-space:nowrap" onclick="_aiLazy.clearChat()">清空</button>
+    </div>
+  </div>
 </body>
 </html>

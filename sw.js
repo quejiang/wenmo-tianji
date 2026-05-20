@@ -1,4 +1,4 @@
-const CACHE = 'shan-yi-ming-xiang-bu-v4';
+const CACHE = 'shan-yi-ming-xiang-bu-v6';
 const FILES = [
   './',
   './index.html',
@@ -40,6 +40,8 @@ const FILES = [
   './js/lang.js',
   './js/feature-guide.js',
   './js/advanced-features.js',
+  './js/local-ai.js',
+  './js/kb-preload.json',
   './js/app.js',
 ];
 
