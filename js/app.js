@@ -4323,7 +4323,7 @@ var _aiLazy = (function() {
     _loading = true;
     _setBadge('加载中', 'ai-loading');
 
-    fetch('/js/local-ai.js?v=29', { cache: 'reload' })
+    fetch('/js/local-ai.js?v=30', { cache: 'reload' })
       .then(function(resp) {
         if (!resp.ok) throw new Error('HTTP ' + resp.status);
         return resp.text();

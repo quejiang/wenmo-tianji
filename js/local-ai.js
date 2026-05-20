@@ -25,15 +25,19 @@ var LocalAI = (function() {
 
   var DEFAULT_MODEL = 'Qwen2.5-0.5B-Instruct-q4f16_1-MLC';
 
+  // 按体积从小到大排列，1k 变体更省显存
   var MODEL_OPTIONS = [
     { id: 'SmolLM2-360M-Instruct-q4f16_1-MLC',   label: 'SmolLM2 360M (极小/约200MB)',   size: '~200MB' },
     { id: 'TinyLlama-1.1B-Chat-v1.0-q4f16_1-MLC',label: 'TinyLlama 1.1B (轻量/约500MB)',  size: '~500MB' },
+    { id: 'TinyLlama-1.1B-Chat-v1.0-q4f16_1-MLC-1k',label:'TinyLlama 1.1B·1k (最轻/约480MB)',size:'~480MB' },
     { id: 'Qwen2.5-0.5B-Instruct-q4f16_1-MLC',    label: 'Qwen2.5 0.5B (推荐·中文/约600MB)', size: '~600MB' },
     { id: 'Llama-3.2-1B-Instruct-q4f16_1-MLC',    label: 'Llama 3.2 1B (均衡/约880MB)',  size: '~880MB' },
     { id: 'Qwen2.5-1.5B-Instruct-q4f16_1-MLC',    label: 'Qwen2.5 1.5B (强中文/约1.2GB)', size: '~1.2GB' },
     { id: 'SmolLM2-1.7B-Instruct-q4f16_1-MLC',    label: 'SmolLM2 1.7B (轻量/约1.3GB)', size: '~1.3GB' },
     { id: 'Gemma-2-2B-it-q4f16_1-MLC',            label: 'Gemma 2 2B (Google/约1.5GB)',  size: '~1.5GB' },
-    { id: 'Phi-3.5-mini-instruct-q4f16_1-MLC',    label: 'Phi 3.5 Mini (Microsoft/约2.5GB)', size: '~2.5GB' }
+    { id: 'Gemma-2-2B-it-q4f16_1-MLC-1k',         label: 'Gemma 2 2B·1k (约1.2GB)',     size: '~1.2GB' },
+    { id: 'Phi-3.5-mini-instruct-q4f16_1-MLC',    label: 'Phi 3.5 Mini (Microsoft/约2.5GB)', size: '~2.5GB' },
+    { id: 'Phi-3.5-mini-instruct-q4f16_1-MLC-1k', label: 'Phi 3.5 Mini·1k (约1.7GB)',   size: '~1.7GB' }
   ];
 
   // ==================== 状态 ====================
@@ -45,11 +49,14 @@ var LocalAI = (function() {
   var chatHistory = [];
   var knowledgeBase = [];       // { id, title, text, totalChars, category, ... }
   var kbIndex = [];             // 知识库索引（快速加载，仅元数据）
+  var kbChunkCache = {};        // 预分块缓存 { docId: { chunks: [...], updatedAt } }
   var kbShardsLoaded = 0;       // 已加载分片数
   var kbShardFiles = [];        // 分片文件名列表
   var KB_CHUNK_SIZE = 600;      // 搜索时分块大小
   var KB_CHUNK_OVERLAP = 150;
-  var systemPrompt = '你是山医命相卜 AI 助手，精通紫微斗数、八字、奇门遁甲、六爻、梅花易数、姓名学等五术玄学。请用中文回答，言简意赅，引经据典。回答时可参考用户提供的知识库内容。';
+  var MAX_HISTORY_SEND = 8;     // 每次送入模型的历史消息数
+  var MAX_TOKENS = 512;         // 最大生成 token 数
+  var systemPrompt = '你是山医命相卜 AI 助手，精通紫微斗数、八字、奇门遁甲等玄学五术。请用中文简洁回答，引经据典。可参考知识库内容。';
 
   // ==================== 初始化 ====================
 
@@ -198,7 +205,7 @@ var LocalAI = (function() {
     saveChatHistory();
 
     // 检索知识库
-    var contexts = searchKnowledgeBase(msg, 3);
+    var contexts = searchKnowledgeBase(msg, 2);
     var ragContext = '';
     if (contexts.length > 0) {
       ragContext = '\n\n[知识库参考内容]\n' + contexts.map(function(c) {
@@ -207,13 +214,13 @@ var LocalAI = (function() {
       }).join('\n') + '\n[/知识库参考内容]';
     }
 
-    // 构建消息
+    // 构建消息 + token 预算
     var messages = [
       { role: 'system', content: systemPrompt + ragContext }
     ];
-    // 最近 10 轮历史
-    var recentHistory = chatHistory.slice(-20);
+    var recentHistory = chatHistory.slice(-MAX_HISTORY_SEND);
     messages = messages.concat(recentHistory);
+    messages = trimMessagesToBudget(messages);
 
     // 创建 AI 消息气泡
     var aiBubble = appendMessage('assistant', '');
@@ -223,7 +230,7 @@ var LocalAI = (function() {
       var chunks = await engine.chat.completions.create({
         messages: messages,
         temperature: 0.7,
-        max_tokens: 1024,
+        max_tokens: MAX_TOKENS,
         stream: true,
         stream_options: { include_usage: true }
       });
@@ -370,6 +377,8 @@ var LocalAI = (function() {
             knowledgeBase.push(d);
           }
         });
+        // 预分块缓存（内置典籍加载完成后构建）
+        docs.forEach(function(d) { buildKBChunkCache(d); });
         renderKnowledgeBaseList();
       } catch(e) {
         break; // 网络错误，停止加载后续分片
@@ -430,11 +439,14 @@ var LocalAI = (function() {
       };
 
       knowledgeBase.unshift(doc);
+      // 预分块缓存
+      buildKBChunkCache(doc);
       // 最多保留 20 个用户文档
       var userDocs = knowledgeBase.filter(function(d) { return !d._builtin; });
       if (userDocs.length > 20) {
         var toRemove = userDocs.slice(20);
         toRemove.forEach(function(d) {
+          removeKBChunkCache(d.id);
           knowledgeBase = knowledgeBase.filter(function(x) { return x.id !== d.id; });
         });
       }
@@ -639,10 +651,11 @@ var LocalAI = (function() {
   }
 
   /**
-   * 搜索知识库：在文档全文中动态分块 + 关键词评分
+   * 搜索知识库：使用预分块缓存 + 关键词评分。
+   * 优先从 kbChunkCache 取预分块，未命中时动态分块（fallback）。
    */
   function searchKnowledgeBase(query, topK) {
-    topK = topK || 3;
+    topK = topK || 2;
     if (knowledgeBase.length === 0) return [];
 
     var queryTerms = query.toLowerCase().split(/\s+/).filter(function(t) { return t.length > 0; });
@@ -652,24 +665,23 @@ var LocalAI = (function() {
       var text = doc.text || '';
       if (!text) return;
 
-      // 动态分块
-      var chunks = chunkText(text, KB_CHUNK_SIZE, KB_CHUNK_OVERLAP);
+      // 优先使用预分块缓存
+      var cached = kbChunkCache[doc.id];
+      var chunks = (cached && cached.chunks)
+        ? cached.chunks
+        : chunkText(text, KB_CHUNK_SIZE, KB_CHUNK_OVERLAP);
 
       chunks.forEach(function(chunk) {
         var score = 0;
         var lowerText = chunk.toLowerCase();
 
-        // 关键词计数
         queryTerms.forEach(function(term) {
           var safe = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
           var count = (lowerText.match(new RegExp(safe, 'g')) || []).length;
           score += count;
         });
 
-        // 连续短语匹配加分
         if (lowerText.indexOf(query.toLowerCase()) !== -1) score += 15;
-
-        // 标题匹配加分
         if (doc.title && doc.title.toLowerCase().indexOf(query.toLowerCase()) !== -1) score += 5;
 
         if (score > 0) {
@@ -688,6 +700,65 @@ var LocalAI = (function() {
   }
 
   /**
+   * 预分块缓存：文档加载/上传后调用，存储 chunks 供后续搜索使用
+   */
+  function buildKBChunkCache(doc) {
+    if (!doc || !doc.text) return;
+    if (!doc.id) doc.id = 'd' + Date.now() + Math.random().toString(36).slice(2, 8);
+    kbChunkCache[doc.id] = {
+      chunks: chunkText(doc.text, KB_CHUNK_SIZE, KB_CHUNK_OVERLAP),
+      updatedAt: Date.now()
+    };
+  }
+
+  function removeKBChunkCache(docId) {
+    delete kbChunkCache[docId];
+  }
+
+  /**
+   * Token 预算管理。
+   * Qwen2.5-0.5B context=4096 token，中文约 1 字≈1.5 token。
+   * 预留 512 token 给输出，system+RAG 最多 800 字，剩余给历史。
+   * 超出预算时按"system > 最新 2 轮 > 更早"优先级裁剪。
+   */
+  function trimMessagesToBudget(messages) {
+    var CONTEXT = 4096;
+    var OUTPUT_RESERVE = 512;
+    var SYS_MAX_CHARS = 800;
+    var BUDGET = CONTEXT - OUTPUT_RESERVE;
+    var TOKEN_PER_CHAR = 1.5;
+
+    // 1. 裁剪 system message 超长部分
+    if (messages.length > 0 && messages[0].role === 'system') {
+      var sysText = messages[0].content || '';
+      if (sysText.length > SYS_MAX_CHARS) {
+        var head = Math.floor(SYS_MAX_CHARS * 0.4);
+        var tail = Math.floor(SYS_MAX_CHARS * 0.6);
+        messages[0].content = sysText.substring(0, head) +
+          '\n...\n' + sysText.substring(sysText.length - tail);
+      }
+    }
+
+    // 2. 从最新消息往前累加，超出预算则丢弃旧消息
+    var used = 0;
+    var keep = [];
+    for (var i = messages.length - 1; i >= 0; i--) {
+      var cost = (messages[i].content || '').length * TOKEN_PER_CHAR;
+      if (used + cost <= BUDGET || keep.length === 0) {
+        keep.unshift(messages[i]);
+        used += cost;
+      } else if (i === 0 && messages[i].role === 'system') {
+        // system 必须保留
+        keep.unshift(messages[i]);
+      } else {
+        break;
+      }
+    }
+
+    return keep;
+  }
+
+  /**
    * 删除知识库文档（仅用户上传的）
    */
   function removeDocument(id) {
@@ -696,6 +767,7 @@ var LocalAI = (function() {
       appendSystemMessage('内置典籍不可删除。');
       return;
     }
+    removeKBChunkCache(id);
     knowledgeBase = knowledgeBase.filter(function(d) { return d.id !== id; });
     saveKnowledgeBase();
     renderKnowledgeBaseList();
@@ -711,6 +783,7 @@ var LocalAI = (function() {
       return;
     }
     if (!confirm('确定清空所有用户上传的文档（' + userDocs.length + ' 篇）？内置典籍不受影响。')) return;
+    userDocs.forEach(function(d) { removeKBChunkCache(d.id); });
     knowledgeBase = knowledgeBase.filter(function(d) { return d._builtin; });
     saveKnowledgeBase();
     renderKnowledgeBaseList();
