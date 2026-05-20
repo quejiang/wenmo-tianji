@@ -268,7 +268,7 @@ test.describe('山医命相卜 - 全量回归测试', () => {
     await page.waitForTimeout(1000);
 
     // 导出按钮应该可见
-    const exportBtn = page.locator('button:has-text("导出")');
+    const exportBtn = page.locator('button:has-text("截图导出")');
     await expect(exportBtn).toBeVisible();
   });
 

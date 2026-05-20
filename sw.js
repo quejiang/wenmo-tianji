@@ -1,4 +1,4 @@
-const CACHE = 'shan-yi-ming-xiang-bu-v3';
+const CACHE = 'shan-yi-ming-xiang-bu-v4';
 const FILES = [
   './',
   './index.html',
@@ -39,6 +39,7 @@ const FILES = [
   './js/ziwei-course.js',
   './js/lang.js',
   './js/feature-guide.js',
+  './js/advanced-features.js',
   './js/app.js',
 ];
 

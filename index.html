@@ -222,7 +222,14 @@
         </div>
         <!-- 命盘 -->
         <div class="chart-container"><div class="chart-grid" id="chartGrid"></div></div>
+        <div class="triad-info-bar" id="triadInfoBar" style="display:none;"></div>
+        <div style="display:flex;gap:8px;margin-top:8px;">
+          <button class="btn btn-sm" onclick="toggleSihuaChart()">🔗 四化飞星图</button>
+          <button class="btn btn-sm" onclick="exportChartPNG()">📸 截图导出</button>
+        </div>
         <div class="timeline-panel" id="timelinePanel" style="display:none;margin-top:16px;padding:16px;background:rgba(255,255,255,.03);border-radius:12px;border:1px solid rgba(255,255,255,.08)"></div>
+        <div class="bazi-adv-panel" id="baziAdvancedPanel" style="display:none;margin-top:16px;"></div>
+        <div class="sihua-overlay" id="sihuaOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:1000;background:rgba(0,0,0,.85);align-items:center;justify-content:center;" onclick="if(event.target===this)toggleSihuaChart()"></div>
         <div class="legend">
           <span class="legend-item"><span class="legend-dot main"></span> 主星</span>
           <span class="legend-item"><span class="legend-dot aux"></span> 辅星</span>
@@ -851,6 +858,7 @@
   <script src="js/ai-tutorial.js?v=25"></script>
   <script src="js/name-reading.js?v=25"></script>
   <script src="js/feature-guide.js?v=25"></script>
+  <script src="js/advanced-features.js?v=25"></script>
   <script src="js/app.js?v=25"></script>
 
   <!-- 非核心模块：按需延迟加载 -->

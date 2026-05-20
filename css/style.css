@@ -4997,3 +4997,118 @@ body.mode-nonpro .sp-category { background: rgba(240,215,140,0.1); }
   transition: all .2s; display: flex; align-items: center; justify-content: center;
 }
 .btn-help:hover { background: rgba(255,255,255,.12); color: #fff; }
+
+/* === 三方四正 === */
+.triad-info-bar {
+  padding: 10px 14px; margin-top: 8px; border-radius: 10px;
+  background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08);
+  font-size: 13px; gap: 10px; align-items: center; flex-wrap: wrap; color: #bbb;
+}
+.triad-label { color: #888; font-weight: 600; }
+.triad-name { color: #8bc34a; font-weight: 600; }
+.triad-name.triad-opp { color: #ff9800; }
+.triad-name.triad-anh { color: #9c27b0; }
+.triad-divider { color: rgba(255,255,255,.12); }
+.triad-click { color: #666; font-size: 12px; font-weight: 400; }
+.palace-cell.triad-highlight { box-shadow: inset 0 0 0 2px #8bc34a; background: rgba(139,195,74,.08); }
+.palace-cell.triad-opposite { box-shadow: inset 0 0 0 2px #ff9800; background: rgba(255,152,0,.06); }
+.palace-cell.triad-anhe { box-shadow: inset 0 0 0 2px #9c27b0; background: rgba(156,39,176,.06); }
+
+/* === 八字高级面板 === */
+.bazi-adv-wrap { padding: 12px 0; }
+.bazi-adv-section { margin-bottom: 20px; }
+.bazi-adv-section h4 { font-size: 14px; color: #ddd; margin-bottom: 10px; }
+.bazi-shishen-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.bazi-shishen-table th, .bazi-shishen-table td { padding: 7px 8px; text-align: center; border-bottom: 1px solid rgba(255,255,255,.06); }
+.bazi-shishen-table th { color: #aaa; font-weight: 500; }
+.bazi-shishen-table .ss-label { color: #888; width: 50px; text-align: right; }
+.bazi-shishen-table .ss-day { color: #8bc34a; font-weight: 600; }
+.bazi-shishen-table .ss-val { color: #cde; font-size: 12px; }
+.bazi-shishen-table .ss-cang { color: #777; font-size: 11px; }
+.yongshen-card { background: rgba(255,255,255,.04); border-radius: 10px; padding: 14px; }
+.yongshen-item { display: flex; gap: 12px; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,.04); }
+.yongshen-item:last-child { border: none; }
+.ys-label { color: #888; font-weight: 600; min-width: 56px; flex-shrink: 0; }
+.ys-val { color: #ccc; }
+.ys-val.ys-good { color: #8bc34a; }
+.ys-val.ys-bad { color: #e06050; }
+.ys-val.ys-desc { color: #999; font-size: 12px; }
+
+/* === 五行强弱条 === */
+.wuxing-bars { display: flex; flex-direction: column; gap: 6px; }
+.wx-bar-row { display: flex; align-items: center; gap: 10px; }
+.wx-name { color: #bbb; font-size: 13px; width: 24px; text-align: center; }
+.wx-bar-track { flex: 1; height: 14px; background: rgba(255,255,255,.06); border-radius: 7px; overflow: hidden; }
+.wx-bar-fill { height: 100%; border-radius: 7px; transition: width .3s; }
+.wx-bar-fill.wx-木 { background: #4caf50; }
+.wx-bar-fill.wx-火 { background: #f44336; }
+.wx-bar-fill.wx-土 { background: #ff9800; }
+.wx-bar-fill.wx-金 { background: #ffc107; }
+.wx-bar-fill.wx-水 { background: #2196f3; }
+.wx-score { color: #ddd; font-size: 12px; width: 28px; text-align: right; }
+.wx-summary { margin-top: 10px; font-size: 13px; color: #aaa; }
+
+/* 三方四正高亮 */
+.palace-cell { transition: outline .2s, box-shadow .2s; cursor: pointer; }
+.palace-cell.triad-highlight { outline: 2px solid #ffcc00; outline-offset: 2px; box-shadow: 0 0 12px rgba(255,200,0,.3); }
+.palace-cell.triad-opposite { outline: 2px solid #ff6600; outline-offset: 2px; box-shadow: 0 0 8px rgba(255,100,0,.25); }
+.palace-cell.triad-anhe { outline: 2px solid #cc88ff; outline-offset: 2px; box-shadow: 0 0 8px rgba(200,136,255,.25); }
+
+.triad-info-bar {
+  padding: 10px 14px; margin-top: 10px; border-radius: 8px;
+  background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08);
+  font-size: 13px; color: #bbb; gap: 8px; align-items: center; flex-wrap: wrap;
+}
+.triad-label { color: #888; }
+.triad-name { font-weight: 600; color: #ddd; }
+.triad-name.triad-opp { color: #ff6600; }
+.triad-name.triad-anh { color: #cc88ff; }
+.triad-divider { color: rgba(255,255,255,.1); }
+.triad-click { color: #666; font-style: italic; font-size: 11px; }
+
+/* 八字高级面板 */
+.bazi-adv-wrap { display: flex; flex-direction: column; gap: 16px; }
+.bazi-adv-section h4 { font-size: 15px; margin-bottom: 10px; color: #ddd; }
+.bazi-shishen-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.bazi-shishen-table th, .bazi-shishen-table td {
+  padding: 8px 10px; border: 1px solid rgba(255,255,255,.06); text-align: center;
+}
+.bazi-shishen-table th { color: #888; font-weight: 500; }
+.bazi-shishen-table .ss-label { color: #8bc34a; font-weight: 600; text-align: left; }
+.bazi-shishen-table .ss-day { background: rgba(139,195,74,.08); }
+.bazi-shishen-table .ss-val { font-weight: 600; color: #ddd; }
+.bazi-shishen-table .ss-cang { font-size: 11px; color: #999; }
+
+.yongshen-card { padding: 14px; background: rgba(255,255,255,.03); border-radius: 10px; border: 1px solid rgba(255,255,255,.06); }
+.yongshen-item { display: flex; align-items: baseline; gap: 10px; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,.03); }
+.yongshen-item:last-child { border-bottom: none; }
+.ys-label { color: #888; font-size: 13px; min-width: 55px; }
+.ys-val { color: #ddd; font-size: 14px; font-weight: 500; }
+.ys-good { color: #8bc34a; }
+.ys-bad { color: #e06050; }
+.ys-desc { font-size: 13px; color: #aaa; font-weight: 400; }
+
+.wuxing-bars { display: flex; flex-direction: column; gap: 8px; }
+.wx-bar-row { display: flex; align-items: center; gap: 10px; }
+.wx-name { width: 24px; font-size: 13px; color: #ccc; text-align: center; }
+.wx-bar-track { flex: 1; height: 10px; background: rgba(255,255,255,.06); border-radius: 5px; overflow: hidden; }
+.wx-bar-fill { height: 100%; border-radius: 5px; transition: width .4s ease; }
+.wx-木 { background: linear-gradient(90deg, #4caf50, #8bc34a); }
+.wx-火 { background: linear-gradient(90deg, #f44336, #ff5722); }
+.wx-土 { background: linear-gradient(90deg, #ff9800, #ffc107); }
+.wx-金 { background: linear-gradient(90deg, #ffeb3b, #fdd835); }
+.wx-水 { background: linear-gradient(90deg, #2196f3, #03a9f4); }
+.wx-score { width: 28px; font-size: 12px; color: #aaa; text-align: right; }
+.wx-summary { margin-top: 10px; font-size: 13px; color: #aaa; }
+
+/* 四化飞星图 */
+.sihua-chart-inner { position: relative; background: #1a1a2e; border-radius: 16px; padding: 24px; max-width: 560px; max-height: 90vh; overflow-y: auto; }
+.sihua-legend { display: flex; gap: 10px; justify-content: center; margin-bottom: 12px; }
+.sihua-leg { padding: 2px 10px; border-radius: 10px; font-size: 12px; font-weight: 600; }
+.sihua-lu { background: rgba(76,175,80,.2); color: #4caf50; }
+.sihua-quan { background: rgba(255,152,0,.2); color: #ff9800; }
+.sihua-ke { background: rgba(33,150,243,.2); color: #2196f3; }
+.sihua-ji { background: rgba(244,67,54,.2); color: #f44336; }
+.sihua-svg { width: 100%; height: auto; margin-top: 8px; }
+.sihua-gong-text { fill: rgba(255,255,255,.5); font-size: 12px; }
+.sihua-label { font-weight: 700; }

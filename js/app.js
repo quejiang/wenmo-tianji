@@ -4288,3 +4288,11 @@ var IDB = (function() {
 
   return { get: get, set: set };
 })();
+
+// ==================== 初始化高级功能 ====================
+if (typeof initAdvancedFeatures === 'function') {
+  document.addEventListener('DOMContentLoaded', function() {
+    // 延迟一点确保所有模块已加载
+    setTimeout(function() { initAdvancedFeatures(); }, 200);
+  });
+}
