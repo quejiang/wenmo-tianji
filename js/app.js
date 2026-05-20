@@ -3863,12 +3863,44 @@ function renderLuoPan() {
   resultDiv.innerHTML = html;
 }
 
+// ==================== AI 命盘解读（规则引擎） ====================
+function toggleAiAnalysis() {
+  var container = document.getElementById('aiAnalysisContainer');
+  if (!container) return;
+  if (container.style.display === 'block') {
+    container.style.display = 'none';
+    return;
+  }
+  if (!currentChart || !currentBazi) {
+    alert('请先排盘再使用 AI 解读功能');
+    return;
+  }
+  var sections = AIAnalysis.analyze(currentChart, currentBazi);
+  var html = sections.map(function(s) {
+    return '<div class="ai-section"><h4>' + s.icon + ' ' + s.title + '</h4><p>' +
+      s.content.replace(/\n/g, '<br>') + '</p></div>';
+  }).join('');
+  var aiContent = document.getElementById('aiContent');
+  if (aiContent) aiContent.innerHTML = html;
+  container.style.display = 'block';
+  container.scrollIntoView({ behavior: 'smooth' });
+}
+
 // ==================== AI LLM 对话 ====================
 function openAIChat() {
   if (!currentChart || !currentBazi) {
     alert('请先排盘再使用 AI 对话功能');
     return;
   }
+
+  // 检查是否已配置 API Key
+  var config = AILLM.getConfig();
+  if (!config || !config.apiKey) {
+    // 未配置 Key，弹出设置向导
+    AIGuide.open();
+    return;
+  }
+
   var existing = document.getElementById('aiChatPanel');
   if (existing) existing.remove();
   AILLM.openChat(currentChart, currentBazi);

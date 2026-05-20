@@ -350,6 +350,7 @@ var AILLM = (function() {
     html += '</div>';
 
     html += '<div class="ai-config-hint">';
+    html += '<p>💡 <b>不知道如何获取 API Key？</b> <a href="javascript:AIGuide.open()" style="color:#8bc34a;cursor:pointer;">📖 点击查看手把手教程</a></p>';
     html += '<p>💡 <b>免费获取 DeepSeek API Key:</b> 访问 <a href="https://platform.deepseek.com" target="_blank">platform.deepseek.com</a> 注册即送免费额度。</p>';
     html += '<p>💡 <b>OpenAI:</b> 访问 <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com</a></p>';
     html += '</div>';
@@ -442,6 +443,7 @@ var AILLM = (function() {
     var html = '<div class="ai-chat-header">';
     html += '<h3>🤖 AI 命盘解读 <span class="ai-provider-badge">' + providerLabel + '</span></h3>';
     html += '<div class="ai-chat-header-actions">';
+    html += '<button class="btn btn-sm ai-chat-guide-btn" onclick="AIGuide.open()">📖 API 教程</button>';
     html += '<button class="btn btn-sm" onclick="AILLM.copyChartText()">📋 复制命盘文本</button>';
     html += '<button class="btn btn-sm" onclick="AILLM.showConfig()">⚙️ API 设置</button>';
     html += '<button class="btn btn-sm" onclick="AILLM.clearChat()">🔄 清空对话</button>';
