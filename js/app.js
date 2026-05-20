@@ -4323,14 +4323,22 @@ var _aiLazy = (function() {
     _loading = true;
     _setBadge('加载中', 'ai-loading');
 
-    var s = document.createElement('script');
-    s.src = 'js/local-ai.js?v=28';
-    s.onload = _initApp;
-    s.onerror = function() {
-      _setBadge('脚本错误', 'ai-error');
-      _loading = false;
-    };
-    document.body.appendChild(s);
+    fetch('/js/local-ai.js?v=28', { cache: 'reload' })
+      .then(function(resp) {
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+        return resp.text();
+      })
+      .then(function(code) {
+        var s = document.createElement('script');
+        s.textContent = code;
+        document.body.appendChild(s);
+        _initApp();
+      })
+      .catch(function(err) {
+        console.error('AI 模块加载失败:', err);
+        _setBadge('脚本错误', 'ai-error');
+        _loading = false;
+      });
   }
 
   function _ensure(cb) {
