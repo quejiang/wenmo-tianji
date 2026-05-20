@@ -1,4 +1,4 @@
-const CACHE = 'shan-yi-ming-xiang-bu-v9';
+const CACHE = 'shan-yi-ming-xiang-bu-v10';
 const FILES = [
   './',
   './index.html',

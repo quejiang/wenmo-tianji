@@ -23,15 +23,17 @@ var LocalAI = (function() {
 
   // ==================== 配置 ====================
 
-  var DEFAULT_MODEL = 'Llama-3.2-1B-Instruct-q4f16_1-MLC';
+  var DEFAULT_MODEL = 'Qwen2.5-0.5B-Instruct-q4f16_1-MLC';
 
   var MODEL_OPTIONS = [
-    { id: 'Llama-3.2-1B-Instruct-q4f16_1-MLC',      label: 'Llama 3.2 1B (最快/约1GB)',   size: '~1GB' },
-    { id: 'Llama-3.2-3B-Instruct-q4f16_1-MLC',      label: 'Llama 3.2 3B (均衡/约2GB)',   size: '~2GB' },
-    { id: 'SmolLM2-1.7B-Instruct-q4f16_1-MLC',      label: 'SmolLM2 1.7B (轻量)',         size: '~1GB' },
-    { id: 'Gemma-2-2B-it-q4f16_1-MLC',               label: 'Gemma 2 2B (Google)',         size: '~1.5GB' },
-    { id: 'Phi-3.5-mini-instruct-q4f16_1-MLC',       label: 'Phi 3.5 Mini (Microsoft)',   size: '~2GB' },
-    { id: 'Qwen2-1.5B-Instruct-q4f16_1-MLC',         label: 'Qwen2 1.5B (通义千问)',       size: '~1GB' }
+    { id: 'SmolLM2-360M-Instruct-q4f16_1-MLC',   label: 'SmolLM2 360M (极小/约200MB)',   size: '~200MB' },
+    { id: 'TinyLlama-1.1B-Chat-v1.0-q4f16_1-MLC',label: 'TinyLlama 1.1B (轻量/约500MB)',  size: '~500MB' },
+    { id: 'Qwen2.5-0.5B-Instruct-q4f16_1-MLC',    label: 'Qwen2.5 0.5B (推荐·中文/约600MB)', size: '~600MB' },
+    { id: 'Llama-3.2-1B-Instruct-q4f16_1-MLC',    label: 'Llama 3.2 1B (均衡/约880MB)',  size: '~880MB' },
+    { id: 'Qwen2.5-1.5B-Instruct-q4f16_1-MLC',    label: 'Qwen2.5 1.5B (强中文/约1.2GB)', size: '~1.2GB' },
+    { id: 'SmolLM2-1.7B-Instruct-q4f16_1-MLC',    label: 'SmolLM2 1.7B (轻量/约1.3GB)', size: '~1.3GB' },
+    { id: 'Gemma-2-2B-it-q4f16_1-MLC',            label: 'Gemma 2 2B (Google/约1.5GB)',  size: '~1.5GB' },
+    { id: 'Phi-3.5-mini-instruct-q4f16_1-MLC',    label: 'Phi 3.5 Mini (Microsoft/约2.5GB)', size: '~2.5GB' }
   ];
 
   // ==================== 状态 ====================
