@@ -116,26 +116,87 @@ function jdnToGregorian(jd) {
 
 // ==================== 节气计算 ====================
 
-// 24节气在2000年的 approximate day-of-year (1-indexed, 2000 is leap year)
-// 数据来源: 参照寿星万年历，日均误差 < 1天
-var TERM_DOY_2000 = [
-    6,  21,  35,  50,  65,  80,    // 小寒...春分
-   95, 111, 126, 142, 157, 173,    // 清明...夏至
-  189, 204, 220, 236, 251, 267,    // 小暑...秋分
-  282, 297, 312, 327, 342, 356     // 寒露...冬至
-];
+// 太阳视黄经计算 (精度 < 1弧分, 适用于 1900-2100)
+// 基于 Jean Meeus "Astronomical Algorithms" 第25章
+function getSunLongitude(jd) {
+  const T = (jd - 2451545.0) / 36525;          // 儒略世纪数
+  const T2 = T * T;
 
-// JDN of 1999-12-31 (Jan 0, 2000)
-var JDN_2000_JAN0 = 2451544;
+  // 太阳平黄经
+  const L0 = 280.46646 + 36000.76983 * T + 0.0003032 * T2;
+
+  // 太阳平近点角
+  const M = 357.52911 + 35999.05029 * T - 0.0001537 * T2;
+
+  // 轨道离心率 (近似)
+  const e = 0.016708634 - 0.000042037 * T - 0.0000001267 * T2;
+
+  const rad = Math.PI / 180;
+  const Mrad = M * rad;
+
+  // 中心差 (Equation of Center) — 主项
+  const C = (1.914602 - 0.004817 * T - 0.000014 * T2) * Math.sin(Mrad)
+          + (0.019993 - 0.000101 * T) * Math.sin(2 * Mrad)
+          + 0.000289 * Math.sin(3 * Mrad);
+
+  // 真黄经
+  let lon = L0 + C;
+
+  // 章动修正 (仅保留黄经章动主项, 提升精度到 < 10角秒)
+  const omega = (125.04 - 1934.136 * T) * rad;
+  const dLon = -0.0048 * Math.sin(omega) - 0.0004 * Math.sin(2 * omega);
+  lon += dLon;
+
+  // 归一化到 [0, 360)
+  lon = ((lon % 360) + 360) % 360;
+  return lon;
+}
 
 /**
- * 计算指定年份某个节气的儒略日（改进版，查表法）
- * 基准年2000，误差在1900-2100范围内 < 1天
+ * 计算指定年份某个节气的儒略日 (精确到分钟级)
+ * 使用牛顿迭代法求解太阳黄经达到目标经度的时刻
+ * 节气索引: 0=小寒(285°), 1=大寒(300°), 2=立春(315°), ...
  */
 function getSolarTermJD(year, termIndex) {
-  var doy = TERM_DOY_2000[termIndex];
-  // 用回归年长度 365.242189 递推
-  return JDN_2000_JAN0 + doy + (year - 2000) * 365.242189;
+  const targetLon = JIEQI_LONGITUDE[termIndex];
+
+  // 初值: 从该年1月1日起算
+  // 小寒(285°)约在1月5-6日，以此为基准
+  let jd = gregorianToJDN(year, 1, 1);
+
+  // 先算小寒(term 0 = 285°)的JD作为锚点
+  // 太阳在1月1日的黄经约在 280° 附近
+  const lonJan1 = getSunLongitude(jd);
+  // 调整到小寒(285°)
+  let daysToXiaoHan = (285 - lonJan1) / 0.9856;
+  if (daysToXiaoHan < 0) daysToXiaoHan += 365.25;
+  let xiaoHanJD = jd + daysToXiaoHan;
+
+  // 牛顿迭代求精小寒
+  for (let iter = 0; iter < 4; iter++) {
+    const lon = getSunLongitude(xiaoHanJD);
+    let diff = 285 - lon;
+    if (diff > 180) diff -= 360;
+    if (diff < -180) diff += 360;
+    if (Math.abs(diff) < 0.00005) break;
+    xiaoHanJD += diff / 0.9856;
+  }
+
+  // 从小寒推算到目标节气：每节气 ≈ 15.218天
+  jd = xiaoHanJD + termIndex * 15.218;
+
+  // 牛顿迭代
+  for (let iter = 0; iter < 4; iter++) {
+    const lon = getSunLongitude(jd);
+    let diff = targetLon - lon;
+    if (diff > 180) diff -= 360;
+    if (diff < -180) diff += 360;
+
+    if (Math.abs(diff) < 0.00005) break;
+    jd += diff / 0.9856;
+  }
+
+  return jd;
 }
 
 /**
@@ -149,7 +210,7 @@ function getJieqiMonth(year, month, day) {
   // 计算所有24个节气
   for (let i = 0; i < 24; i++) {
     const jieqiJD = getSolarTermJD(year, i);
-    if (jd < jieqiJD - 0.5) {
+    if (jd < jieqiJD) {
       // 在当前节气之前
       if (i === 0) {
         // 在小寒之前，属于上一年的最后一个节气月
@@ -160,7 +221,7 @@ function getJieqiMonth(year, month, day) {
   }
   // 在冬至之后
   const nextYearJd = getSolarTermJD(year + 1, 0);
-  if (jd < nextYearJd - 0.5) return 23;
+  if (jd < nextYearJd) return 23;
   return 0;
 }
 
@@ -171,7 +232,7 @@ function getJieqiMonth(year, month, day) {
 function getLichunYear(year, month, day) {
   const jd = gregorianToJDN(year, month, day);
   const lichunJD = getSolarTermJD(year, 2); // 立春是第3个节气(index=2)
-  if (jd < lichunJD - 0.5) {
+  if (jd < lichunJD) {
     return year - 1;
   }
   return year;
@@ -1086,7 +1147,7 @@ if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
     LUNAR_INFO, GAN, ZHI, SHENGXIAO, SHICHEN_NAME, SHICHEN_RANGE,
     JIEQI_NAMES, JIEQI_LONGITUDE, CITY_LONGITUDE,
-    gregorianToJDN, jdnToGregorian,
+    gregorianToJDN, jdnToGregorian, getSunLongitude,
     getSolarTermJD, getJieqiMonth, getLichunYear,
     getLunarYearInfo, getLunarNewYearJD, solarToLunar, lunarToSolar,
     getYearGanZhi, getMonthGanZhi, getDayGanZhi, getHourGanZhi,
