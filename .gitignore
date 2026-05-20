@@ -2,7 +2,5 @@
 node_modules/
 test-results/
 playwright-report/
-js/local-ai.js
 books/
-js/kb-preload.json
 videos/
