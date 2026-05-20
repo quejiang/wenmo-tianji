@@ -1,7 +1,9 @@
-const CACHE = 'wenmo-v18';
+const CACHE = 'shan-yi-ming-xiang-bu-v1';
 const FILES = [
   './',
   './index.html',
+  './manifest.json',
+  './sw.js',
   './css/style.css',
   './js/lunar.js',
   './js/ziwei.js',
@@ -28,6 +30,14 @@ const FILES = [
   './js/zeri.js',
   './js/luopan.js',
   './js/user-mode.js',
+  './js/liuyao.js',
+  './js/meihua.js',
+  './js/bazi-advanced.js',
+  './js/export-pdf.js',
+  './js/chart-analysis.js',
+  './js/ai-llm.js',
+  './js/ai-tutorial.js',
+  './js/ziwei-course.js',
 ];
 
 // 安装时预缓存核心文件，完成后立即激活

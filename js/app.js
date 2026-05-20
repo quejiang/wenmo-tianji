@@ -3,6 +3,53 @@
  * 山 · 医 · 命 · 相 · 卜
  */
 
+// ==================== 全局错误边界 ====================
+;(function() {
+  var errorCount = 0;
+  var errorToast = null;
+
+  function showErrorToast(msg) {
+    if (errorToast) return; // 只显示第一个
+    errorToast = document.createElement('div');
+    errorToast.id = 'js-error-toast';
+    errorToast.style.cssText =
+      'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);' +
+      'z-index:99999;max-width:420px;padding:20px 24px;' +
+      'background:#fff;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.18);' +
+      'font:14px/1.6 system-ui,sans-serif;color:#333;text-align:center;' +
+      'animation:errorToastIn .3s ease;';
+    errorToast.innerHTML =
+      '<div style="font-size:32px;margin-bottom:8px;">⚠️</div>' +
+      '<div style="font-weight:600;margin-bottom:6px;">出了点问题</div>' +
+      '<div style="color:#888;font-size:12px;word-break:break-all;">' +
+        msg.replace(/</g,'&lt;').replace(/>/g,'&gt;') +
+      '</div>' +
+      '<button style="margin-top:12px;padding:6px 20px;border:none;' +
+        'border-radius:6px;background:#4f46e5;color:#fff;cursor:pointer;font-size:13px;"' +
+        'onclick="location.reload()">刷新页面</button>';
+    document.body.appendChild(errorToast);
+  }
+
+  window.onerror = function(msg, src, line, col, err) {
+    errorCount++;
+    if (errorCount > 3) return; // 防止连环报错
+    var text = (err && err.message) || String(msg);
+    if (src) text += ' (' + (src.split('/').pop() || src) + ':' + line + ')';
+    console.error('[山医命相卜]', text);
+    showErrorToast(text);
+    return true;
+  };
+
+  window.addEventListener('unhandledrejection', function(e) {
+    errorCount++;
+    if (errorCount > 3) return;
+    var text = (e.reason && e.reason.message) || String(e.reason);
+    console.error('[山医命相卜 Promise]', text);
+    showErrorToast(text);
+    e.preventDefault();
+  });
+})();
+
 // 全局存储
 let currentChart = null;
 let currentBazi = null;
