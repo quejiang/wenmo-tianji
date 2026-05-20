@@ -7,14 +7,14 @@ test.beforeEach(async ({ page }) => {
   });
 });
 
-test.describe('文墨天机 - 全量回归测试', () => {
+test.describe('山医命相卜 - 全量回归测试', () => {
 
   test('页面加载：标题、五术标签栏、排盘表单均可见', async ({ page }) => {
     await page.goto('/');
     // 默认显示"山"面板，需切换到"命"才能看到排盘表单
     await page.click('.wushu-tab[data-wushu="ming"]');
     await page.waitForTimeout(200);
-    await expect(page.locator('h1')).toContainText('文墨天机');
+    await expect(page.locator('h1')).toContainText('山医命相卜');
     await expect(page.locator('#wushuTabBar')).toBeVisible();
     await expect(page.locator('.wushu-tab')).toHaveCount(5);
     await expect(page.locator('#birthDate')).toBeVisible();

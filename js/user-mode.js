@@ -195,7 +195,7 @@ var UserMode = (function() {
   function getWelcomeHTML() {
     var html = '';
     html += '<div class="mode-welcome-box" id="modeWelcomeBox">';
-    html += '<h2 class="mode-welcome-title">✨ 欢迎使用文墨天机</h2>';
+    html += '<h2 class="mode-welcome-title">✨ 欢迎使用山医命相卜</h2>';
     html += '<p class="mode-welcome-sub">请选择适合您的使用模式</p>';
 
     // 步骤1：选择专业/非专业

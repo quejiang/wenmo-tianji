@@ -1,5 +1,5 @@
 /**
- * 文墨天机 · AI 大模型设置向导
+ * 山医命相卜 · AI 大模型设置向导
  * 手把手教用户获取 API Key 并配置 AI 解读
  */
 
@@ -60,7 +60,7 @@ var AIGuide = (function() {
         '<p>登录后，左侧菜单找到 <b>"API Keys"</b>（或直接访问 <a href="https://platform.deepseek.com/api_keys" target="_blank" class="aguide-link">platform.deepseek.com/api_keys</a>）</p>',
         '',
         '<div class="aguide-step-num">第 3 步</div>',
-        '<p>点击 <b>"创建 API Key"</b>，随便输入一个名称（比如"文墨天机"），点确定。</p>',
+        '<p>点击 <b>"创建 API Key"</b>，随便输入一个名称（比如"山医命相卜"），点确定。</p>',
         '<p>系统会生成一串类似 <code style="word-break:break-all">sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</code> 的密钥。</p>',
         '<p><mark>⚠️ 重要：立即点"复制"保存！</mark> 这个密钥只显示一次，关闭后就看不到了。</p>',
         '',

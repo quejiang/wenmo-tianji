@@ -1,7 +1,7 @@
 {
-  "name": "wenmo-tianji",
+  "name": "shan-yi-ming-xiang-bu",
   "version": "1.0.0",
-  "description": "",
+  "description": "山医命相卜 — 五术玄学",
   "main": "sw.js",
   "scripts": {
     "test": "npx playwright test",
@@ -9,16 +9,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/quejiang/wenmo-tianji.git"
+    "url": "git+https://github.com/quejiang/shan-yi-ming-xiang-bu.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "bugs": {
-    "url": "https://github.com/quejiang/wenmo-tianji/issues"
+    "url": "https://github.com/quejiang/shan-yi-ming-xiang-bu/issues"
   },
-  "homepage": "https://github.com/quejiang/wenmo-tianji#readme",
+  "homepage": "https://github.com/quejiang/shan-yi-ming-xiang-bu#readme",
   "devDependencies": {
     "@playwright/test": "^1.60.0",
     "http-server": "^14.1.1"

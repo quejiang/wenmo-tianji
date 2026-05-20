@@ -1,11 +1,11 @@
 #!/bin/bash
-# 文墨天机 · Tauri 原生APP 打包脚本
+# 山医命相卜 · Tauri 原生APP 打包脚本
 # 使用前请安装: cargo install tauri-cli
 # 然后运行: bash setup-tauri.sh
 
 set -e
 
-echo "🔧 文墨天机 Tauri 打包设置"
+echo "🔧 山医命相卜 Tauri 打包设置"
 echo "=========================="
 
 # 检查 Rust
@@ -35,7 +35,7 @@ cat > src-tauri/Cargo.toml << 'EOF'
 name = "wenmo-tianji"
 version = "1.0.0"
 edition = "2021"
-description = "文墨天机 · 山医命相卜五术玄学"
+description = "山医命相卜 · 五术玄学"
 authors = ["wenmo-tianji"]
 
 [lib]
