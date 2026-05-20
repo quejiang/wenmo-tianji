@@ -2220,15 +2220,51 @@ var ziweiMode = 'sanhe'; // 'sanhe' | 'feixing' | 'sihua'
 
 function switchZiweiMode(mode) {
   ziweiMode = mode;
-  // 更新按钮状态
   document.querySelectorAll('.zm-btn').forEach(function(b) {
     b.classList.toggle('active', b.getAttribute('data-mode') === mode);
   });
-  // 更新所有 palace-cell 的类
   document.querySelectorAll('.palace-cell').forEach(function(cell) {
     cell.classList.remove('feixing-mode', 'sihua-mode');
     if (mode === 'feixing') cell.classList.add('feixing-mode');
     if (mode === 'sihua') cell.classList.add('sihua-mode');
+  });
+
+  // 飞星模式: 高亮显示宫干四化
+  if (mode === 'feixing') {
+    highlightFlyingStars();
+  } else {
+    clearFlyingHighlights();
+  }
+
+  // 四化模式: 突出显示生年四化
+  if (mode === 'sihua') {
+    highlightSiHuaOnly();
+  }
+}
+
+function highlightFlyingStars() {
+  document.querySelectorAll('.star-item').forEach(function(item) {
+    item.style.transition = 'all 0.3s';
+  });
+  // 飞星模式下离心/向心四化用动画脉冲
+  document.querySelectorAll('.sihua-badge.centrifugal').forEach(function(b) {
+    b.style.animation = 'pulseDown 1.5s ease-in-out infinite';
+  });
+  document.querySelectorAll('.sihua-badge.centripetal').forEach(function(b) {
+    b.style.animation = 'pulseUp 1.5s ease-in-out infinite';
+  });
+}
+
+function clearFlyingHighlights() {
+  document.querySelectorAll('.sihua-badge.centrifugal, .sihua-badge.centripetal').forEach(function(b) {
+    b.style.animation = '';
+  });
+}
+
+function highlightSiHuaOnly() {
+  // 四化模式下所有四化标记发光
+  document.querySelectorAll('.sihua-badge').forEach(function(b) {
+    b.style.boxShadow = '0 0 8px currentColor';
   });
 }
 
@@ -3800,4 +3836,45 @@ function renderLuoPan() {
   html += '</div></div>';
 
   resultDiv.innerHTML = html;
+}
+
+// ==================== AI LLM 对话 ====================
+function openAIChat() {
+  if (!currentChart || !currentBazi) {
+    alert('请先排盘再使用 AI 对话功能');
+    return;
+  }
+  var existing = document.getElementById('aiChatPanel');
+  if (existing) existing.remove();
+  AILLM.openChat(currentChart, currentBazi);
+}
+
+function toggleChartAnalysis() {
+  var panel = document.getElementById('chartAnalysisPanel');
+  if (panel.style.display === 'none' || !panel.style.display) {
+    if (!currentChart || !currentBazi) {
+      alert('请先排盘再查看数据图表');
+      return;
+    }
+    panel.innerHTML = '';
+    panel.appendChild(ChartAnalysis.renderAll(currentChart, currentBazi));
+    panel.style.display = 'block';
+    panel.scrollIntoView({ behavior: 'smooth' });
+  } else {
+    panel.style.display = 'none';
+  }
+}
+
+// ==================== 导出命盘到剪贴板 ====================
+function copyChartToClipboard() {
+  if (!currentChart || !currentBazi) {
+    alert('请先排盘');
+    return;
+  }
+  var text = AILLM.exportStructuredChart(currentChart, currentBazi);
+  navigator.clipboard.writeText(text).then(function() {
+    alert('命盘文本已复制到剪贴板，可粘贴到任何 AI 聊天工具中');
+  }).catch(function() {
+    alert('复制失败，请手动选择复制');
+  });
 }

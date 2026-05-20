@@ -4497,3 +4497,252 @@ body.mode-nonpro .sp-category { background: rgba(240,215,140,0.1); }
   margin: 6px 0;
   overflow-x: auto;
 }
+
+/* ==================== AI 对话面板 ==================== */
+.ai-chat-panel {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-height: 85vh;
+  background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+  border-top: 2px solid rgba(240,215,140,0.3);
+  box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: slideUp 0.3s ease;
+}
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+.ai-chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  background: rgba(240,215,140,0.06);
+  border-bottom: 1px solid rgba(240,215,140,0.1);
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.ai-chat-header h3 { color: #f0d78c; margin: 0; font-size: 1.1em; }
+.ai-provider-badge {
+  font-size: 0.65em;
+  background: rgba(240,215,140,0.15);
+  padding: 2px 8px;
+  border-radius: 10px;
+  color: #c9a84c;
+  margin-left: 8px;
+}
+.ai-chat-header-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+
+.ai-quick-questions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 10px 16px;
+  background: rgba(255,255,255,0.02);
+  border-bottom: 1px solid rgba(240,215,140,0.06);
+}
+.ai-quick-btn {
+  padding: 5px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(240,215,140,0.2);
+  background: rgba(240,215,140,0.06);
+  color: #d4a84c;
+  font-size: 0.8em;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.ai-quick-btn:hover {
+  background: rgba(240,215,140,0.15);
+  border-color: rgba(240,215,140,0.4);
+}
+
+.ai-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  max-height: 50vh;
+}
+.ai-msg { margin-bottom: 14px; padding: 10px 14px; border-radius: 10px; line-height: 1.7; font-size: 0.9em; }
+.ai-msg-user { background: rgba(91,155,213,0.12); border-left: 3px solid #5b9bd5; color: #c8dcff; }
+.ai-msg-assistant { background: rgba(240,215,140,0.06); border-left: 3px solid #c9a84c; color: #e0d5c1; }
+.ai-msg-system { background: rgba(255,255,255,0.03); color: #888; font-size: 0.85em; text-align: center; }
+.ai-msg h3 { color: #d4a84c; margin: 8px 0 4px; font-size: 1em; }
+.ai-msg h4 { color: #c9a84c; margin: 6px 0 2px; font-size: 0.9em; }
+
+.ai-input-row {
+  display: flex;
+  gap: 8px;
+  padding: 12px 20px;
+  border-top: 1px solid rgba(240,215,140,0.1);
+  background: rgba(0,0,0,0.2);
+}
+.ai-input-row textarea {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(240,215,140,0.2);
+  background: rgba(0,0,0,0.3);
+  color: #f0d78c;
+  font-size: 0.9em;
+  font-family: inherit;
+  resize: none;
+  outline: none;
+}
+.ai-input-row textarea:focus { border-color: rgba(240,215,140,0.4); }
+.ai-input-row .btn { align-self: flex-end; }
+
+.ai-status-bar {
+  padding: 6px 20px;
+  font-size: 0.8em;
+  color: #9a8c6c;
+  text-align: center;
+  background: rgba(0,0,0,0.1);
+}
+
+/* AI 配置面板 */
+.ai-config-wrap {
+  padding: 16px 20px;
+  border-top: 1px solid rgba(240,215,140,0.1);
+  max-height: 300px;
+  overflow-y: auto;
+}
+.ai-config-panel { }
+.ai-config-panel h3 { color: #f0d78c; margin-bottom: 12px; }
+.ai-config-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.ai-config-row label { color: #9a8c6c; font-size: 0.85em; min-width: 80px; }
+.ai-config-row input, .ai-config-row select {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(240,215,140,0.2);
+  background: rgba(0,0,0,0.3);
+  color: #f0d78c;
+  font-family: inherit;
+  font-size: 0.85em;
+}
+.ai-config-row select option { background: #1a1a2e; color: #e0d5c1; }
+.ai-config-actions { display: flex; gap: 8px; margin: 12px 0; }
+.ai-config-hint { font-size: 0.75em; color: #7a7c60; line-height: 1.6; }
+.ai-config-hint a { color: #c9a84c; }
+
+.btn-ai-chat {
+  background: linear-gradient(135deg, rgba(139,195,74,0.15), rgba(139,195,74,0.05));
+  border-color: rgba(139,195,74,0.3);
+  color: #8bc34a;
+}
+
+/* ==================== 数据图表面板 ==================== */
+.chart-analysis-panel {
+  background: rgba(255,255,255,0.03);
+  border-radius: 12px;
+  border: 1px solid rgba(240,215,140,0.15);
+  padding: 20px;
+}
+.chart-analysis-section {
+  margin-bottom: 24px;
+  text-align: center;
+}
+.chart-analysis-title {
+  color: #f0d78c;
+  font-size: 1em;
+  margin-bottom: 12px;
+  letter-spacing: 1px;
+}
+.chart-analysis-section canvas {
+  border-radius: 8px;
+}
+.btn-chart-analysis {
+  background: linear-gradient(135deg, rgba(167,139,250,0.15), rgba(167,139,250,0.05));
+  border-color: rgba(167,139,250,0.3);
+  color: #a78bfa;
+}
+
+/* ==================== 叠盘可视化 ==================== */
+.overlay-legend {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 8px 0;
+  font-size: 0.8em;
+  color: #9a8c6c;
+}
+.overlay-legend-item { display: flex; align-items: center; gap: 4px; }
+.overlay-legend-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.overlay-legend-dot.benming { background: #f0d78c; }
+.overlay-legend-dot.daxian { background: #5b9bd5; }
+.overlay-legend-dot.liunian { background: #8bc34a; }
+.overlay-legend-dot.liuyue { background: #ff9800; }
+
+/* ==================== 飞星/三合/四化模式 ==================== */
+.palace-cell.feixing-mode {
+  border-color: rgba(139,195,74,0.15);
+}
+.palace-cell.feixing-mode .sihua-badge.centrifugal {
+  border-color: #ff9800 !important;
+}
+.palace-cell.feixing-mode .sihua-badge.centripetal {
+  border-color: #5b9bd5 !important;
+}
+
+.palace-cell.sihua-mode {
+  border-color: rgba(167,139,250,0.2);
+}
+.palace-cell.sihua-mode .star-item:not(:has(.sihua-badge)) {
+  opacity: 0.45;
+}
+.palace-cell.sihua-mode .sihua-badge {
+  box-shadow: 0 0 6px currentColor;
+}
+
+@keyframes pulseDown {
+  0%, 100% { transform: translateY(0); opacity: 1; }
+  50% { transform: translateY(2px); opacity: 0.7; }
+}
+@keyframes pulseUp {
+  0%, 100% { transform: translateY(0); opacity: 1; }
+  50% { transform: translateY(-2px); opacity: 0.7; }
+}
+
+/* ==================== 星曜亮度颜色增强 ==================== */
+.star-brightness.miao { background: #d4a84c; color: #1a1a2e; font-weight: 700; }
+.star-brightness.wang { background: #c9a84c; color: #1a1a2e; }
+.star-brightness.de { background: rgba(201,168,76,0.25); color: #d4a84c; }
+.star-brightness.li { background: rgba(201,168,76,0.15); color: #b89840; }
+.star-brightness.ping { background: rgba(180,180,180,0.12); color: #999; }
+.star-brightness.bu { background: rgba(224,96,80,0.12); color: #e08070; }
+.star-brightness.xian { background: rgba(224,96,80,0.18); color: #e06050; font-weight: 600; }
+
+/* 煞星高亮 */
+.star-item.aux-star:has(.star-item-name) .star-item-name {
+  color: #c0b080;
+}
+
+/* ==================== 宫位评分颜色 ==================== */
+.palace-score-bar { height: 4px; border-radius: 2px; margin-top: 2px; transition: width 0.5s; }
+.palace-score-bar.high { background: linear-gradient(90deg, #8bc34a, #6ba832); }
+.palace-score-bar.mid { background: linear-gradient(90deg, #ff9800, #e08800); }
+.palace-score-bar.low { background: linear-gradient(90deg, #e06050, #c04030); }
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 768px) {
+  .ai-chat-header { flex-direction: column; }
+  .ai-chat-header-actions { justify-content: center; }
+  .ai-quick-questions { justify-content: center; }
+  .chart-analysis-section canvas { max-width: 100% !important; }
+}
+
+/* ==================== 暗色滚动条 ==================== */
+.ai-messages::-webkit-scrollbar { width: 6px; }
+.ai-messages::-webkit-scrollbar-track { background: transparent; }
+.ai-messages::-webkit-scrollbar-thumb { background: rgba(240,215,140,0.2); border-radius: 3px; }

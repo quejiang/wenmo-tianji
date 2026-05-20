@@ -1,0 +1,36 @@
+{
+  "build": {
+    "devUrl": "http://localhost:8080",
+    "frontendDist": ".",
+    "beforeBuildCommand": "",
+    "beforeDevCommand": "npx http-server . -p 8080 -c-1"
+  },
+  "app": {
+    "title": "文墨天机 · 山医命相卜",
+    "windows": [
+      {
+        "title": "文墨天机 · 山医命相卜",
+        "width": 1200,
+        "height": 900,
+        "resizable": true,
+        "fullscreen": false
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icon-192.png",
+      "icon-512.png"
+    ],
+    "resources": [],
+    "copyright": "",
+    "category": "Lifestyle",
+    "shortDescription": "紫微斗数 · 八字 · 山医命相卜五术玄学",
+    "longDescription": "文墨天机是一款集山、医、命、相、卜五术于一体的传统文化应用。包含紫微斗数排盘、八字解读、流年流月运势、合婚分析、小六壬占卜、梅花易数、塔罗牌、手相面相、中医体质辨识、风水罗盘、择日等功能。"
+  }
+}

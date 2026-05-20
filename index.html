@@ -217,6 +217,8 @@
             <button class="btn btn-sm" onclick="exportChartImage()" style="margin-left:8px">📥 导出</button>
             <button class="btn btn-sm" onclick="showSynastryPanel()" style="margin-left:8px">🔗 合盘</button>
             <button class="btn btn-sm" onclick="toggleThreePanel()" style="margin-left:8px">📐 三盘同参</button>
+            <button class="btn btn-sm btn-chart-analysis" onclick="toggleChartAnalysis()" style="margin-left:8px">📊 数据图表</button>
+            <button class="btn btn-sm btn-ai-chat" onclick="openAIChat()" style="margin-left:8px">💬 AI 对话</button>
           </div>
           <!-- 格局检测 -->
           <div class="patterns-container" id="patternsContainer" style="display:none;margin-top:12px"></div>
@@ -240,6 +242,8 @@
             <h3 style="color:#88bbff;margin-bottom:8px">📐 三盘同参（本命 · 大限 · 流年）</h3>
             <div id="threePanelContent" style="max-height:400px;overflow-y:auto"></div>
           </div>
+          <!-- 数据图表 -->
+          <div class="chart-analysis-panel" id="chartAnalysisPanel" style="display:none;margin-top:12px"></div>
         </div>
       </div>
 
@@ -828,6 +832,8 @@
   <script src="js/meihua.js?v=24"></script>
   <script src="js/bazi-advanced.js?v=24"></script>
   <script src="js/export-pdf.js?v=24"></script>
+  <script src="js/ai-llm.js?v=24"></script>
+  <script src="js/chart-analysis.js?v=24"></script>
   <script src="js/tutorial.js?v=24"></script>
   <script src="js/ziwei-course.js?v=24"></script>
   <script src="js/lang.js?v=24"></script>
