@@ -9,6 +9,17 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="山医命相卜">
   <meta name="theme-color" content="#1a1a2e">
+  <meta name="description" content="山医命相卜 — 集成紫微斗数、八字、奇门遁甲、六爻起卦、梅花易数、姓名学等五术玄学的免费在线排盘工具。支持真太阳时、多流派安星、命例管理。">
+  <meta name="keywords" content="紫微斗数,八字,奇门遁甲,六爻,梅花易数,姓名学,算命,排盘,玄学,五术,山医命相卜">
+  <meta property="og:title" content="山医命相卜 · 五术玄学">
+  <meta property="og:description" content="免费在线五术排盘工具 — 紫微斗数、八字、奇门、六爻、梅花易数、姓名学">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="山医命相卜">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="山医命相卜 · 五术玄学">
+  <meta name="twitter:description" content="免费在线五术排盘工具">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://quejiang.github.io/shan-yi-ming-xiang-bu/">
   <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="stylesheet" href="css/style.css?v=25">
 </head>
@@ -20,6 +31,7 @@
       <h1>山医命相卜</h1>
       <div class="subtitle">山 · 医 · 命 · 相 · 卜 — 五术玄学</div>
       <button class="btn-features" onclick="openFeatureOverview()" title="功能全览">📋 功能全览</button>
+      <button class="btn-help" onclick="openHelpGuide()" title="使用帮助">❓</button>
       <button class="btn-tutorial" onclick="Tutorial.open()" title="新手教程">🎓 新手教程</button>
       <button class="btn-course" onclick="ZiweiCourse.open()" title="0基础到精通速成">📖 速成课</button>
       <button class="btn-lang" id="btnLangToggle" onclick="Lang.toggle()" title="切换简繁中文">繁</button>
@@ -795,12 +807,11 @@
 
     <button class="btn-float-cases" id="btnFloatCases" onclick="toggleCasesPanel()" title="命例库">📋</button>
 
-    <!-- 功能全览面板 -->
+    <!-- 功能全览 / 使用指南面板 -->
     <div class="feature-overlay" id="featureOverlay" style="display:none;" onclick="if(event.target===this)closeFeatureOverview()">
       <div class="feature-panel">
         <div class="feature-header">
-          <h3>📋 功能全览</h3>
-          <span class="feature-subtitle">山医命相卜 · 五术玄学 — 完整功能目录</span>
+          <h3 id="featureOverlayTitle">📋 功能全览 & 使用指南</h3>
           <button class="feature-close" onclick="closeFeatureOverview()">✕</button>
         </div>
         <div class="feature-body" id="featureBody"></div>
@@ -839,6 +850,7 @@
   <script src="js/ai-llm.js?v=25"></script>
   <script src="js/ai-tutorial.js?v=25"></script>
   <script src="js/name-reading.js?v=25"></script>
+  <script src="js/feature-guide.js?v=25"></script>
   <script src="js/app.js?v=25"></script>
 
   <!-- 非核心模块：按需延迟加载 -->
