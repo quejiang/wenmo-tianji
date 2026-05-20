@@ -179,7 +179,7 @@ var HELP_SECTIONS = [
           + '• Phi 3.5 Mini（Microsoft）<br>'
           + '• Qwen2 1.5B（通义千问）' },
       { subtitle: '如何让 AI 学习书籍？',
-        text: '1. 准备 .txt 或 .pdf 格式的命理书籍<br>'
+        text: '1. 准备 .txt / .pdf / .epub 格式的命理书籍<br>'
           + '2. 在 AI 面板点击「📤 上传文档」<br>'
           + '3. 系统自动分块索引，完成后即可提问书中内容' },
       { subtitle: '完全离线 · 无需 API',
