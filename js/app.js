@@ -798,6 +798,138 @@ function closeAstroPopup() {
   document.getElementById('astroInfoPopup').style.display = 'none';
 }
 
+// 紫微斗数流派说明弹窗
+function showSchoolInfoPopup(event) {
+  var popup = document.getElementById('schoolInfoPopup');
+  if (!popup) return;
+
+  // 点击外部关闭
+  if (!window._schoolPopupClickBound) {
+    window._schoolPopupClickBound = true;
+    document.addEventListener('click', function(e) {
+      var popup = document.getElementById('schoolInfoPopup');
+      if (!popup || popup.style.display === 'none') return;
+      if (!popup.contains(e.target) && !e.target.closest('.school-info-icon')) {
+        closeSchoolInfoPopup();
+      }
+    });
+    // ESC 关闭
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeSchoolInfoPopup();
+    });
+  }
+
+  popup.style.display = 'block';
+  // 定位弹窗
+  var x = event.clientX;
+  var y = event.clientY;
+  requestAnimationFrame(function() {
+    var pw = popup.offsetWidth || 400;
+    var ph = popup.offsetHeight || 360;
+    var ww = window.innerWidth;
+    var wh = window.innerHeight;
+
+    if (x + pw + 16 > ww) x = ww - pw - 16;
+    if (y + ph + 16 > wh) y = wh - ph - 16;
+    if (x < 10) x = 10;
+    if (y < 10) y = 10;
+
+    popup.style.left = x + 'px';
+    popup.style.top = y + 'px';
+  });
+}
+
+function closeSchoolInfoPopup() {
+  var popup = document.getElementById('schoolInfoPopup');
+  if (popup) popup.style.display = 'none';
+}
+
+// 盘面模式说明弹窗
+function showChartModePopup(event) {
+  var popup = document.getElementById('chartModePopup');
+  if (!popup) return;
+
+  if (!window._chartModePopupBound) {
+    window._chartModePopupBound = true;
+    document.addEventListener('click', function(e) {
+      var popup = document.getElementById('chartModePopup');
+      if (!popup || popup.style.display === 'none') return;
+      if (!popup.contains(e.target) && !e.target.closest('.school-info-icon')) {
+        closeChartModePopup();
+      }
+    });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeChartModePopup();
+    });
+  }
+
+  popup.style.display = 'block';
+  var x = event.clientX;
+  var y = event.clientY;
+  requestAnimationFrame(function() {
+    var pw = popup.offsetWidth || 460;
+    var ph = popup.offsetHeight || 400;
+    var ww = window.innerWidth;
+    var wh = window.innerHeight;
+
+    if (x + pw + 16 > ww) x = ww - pw - 16;
+    if (y + ph + 16 > wh) y = wh - ph - 16;
+    if (x < 10) x = 10;
+    if (y < 10) y = 10;
+
+    popup.style.left = x + 'px';
+    popup.style.top = y + 'px';
+  });
+}
+
+function closeChartModePopup() {
+  var popup = document.getElementById('chartModePopup');
+  if (popup) popup.style.display = 'none';
+}
+
+// 三种命理方式说明弹窗
+function showMingMethodPopup(event) {
+  var popup = document.getElementById('mingMethodPopup');
+  if (!popup) return;
+
+  if (!window._mingMethodPopupBound) {
+    window._mingMethodPopupBound = true;
+    document.addEventListener('click', function(e) {
+      var popup = document.getElementById('mingMethodPopup');
+      if (!popup || popup.style.display === 'none') return;
+      if (!popup.contains(e.target) && !e.target.closest('.school-info-icon')) {
+        closeMingMethodPopup();
+      }
+    });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeMingMethodPopup();
+    });
+  }
+
+  popup.style.display = 'block';
+  var x = event.clientX;
+  var y = event.clientY;
+  requestAnimationFrame(function() {
+    var pw = popup.offsetWidth || 460;
+    var ph = popup.offsetHeight || 400;
+    var ww = window.innerWidth;
+    var wh = window.innerHeight;
+
+    if (x + pw + 16 > ww) x = ww - pw - 16;
+    if (y + ph + 16 > wh) y = wh - ph - 16;
+    if (x < 10) x = 10;
+    if (y < 10) y = 10;
+
+    popup.style.left = x + 'px';
+    popup.style.top = y + 'px';
+  });
+}
+
+function closeMingMethodPopup() {
+  var popup = document.getElementById('mingMethodPopup');
+  if (popup) popup.style.display = 'none';
+}
+
 // 宫位百科弹窗
 function showPalacePopup(palaceName, event) {
   // 教程打开时禁止弹出百科，避免拦截教程按钮点击
@@ -4368,5 +4500,90 @@ var _aiLazy = (function() {
     handleDocumentSelected:   _proxy('handleDocumentSelected'),
     handleChatKeydown:        _proxy('handleChatKeydown'),
     clearKnowledgeBase:       _proxy('clearKnowledgeBase')
+  };
+})();
+
+// ==================== 大字版 / 老年模式 ====================
+var LargeText = (function() {
+  var STORAGE_KEY = 'shan-yi-large-text';
+  var CLASS_NAME = 'large-text-mode';
+
+  // 检测系统字体是否已经放大（Android 系统设置 → 字体大小）
+  function detectSystemLargeFont() {
+    // 创建一个测量元素，看根字号是否 > 16px
+    var testEl = document.createElement('div');
+    testEl.style.cssText = 'position:absolute;visibility:hidden;font-size:1rem;width:0;height:0';
+    document.body.appendChild(testEl);
+    var remSize = parseFloat(getComputedStyle(testEl).fontSize);
+    document.body.removeChild(testEl);
+    // 如果根字号 > 18px（系统设为大号），自动开启大字模式
+    return remSize > 18;
+  }
+
+  function isEnabled() {
+    return document.documentElement.classList.contains(CLASS_NAME);
+  }
+
+  function enable() {
+    document.documentElement.classList.add(CLASS_NAME);
+    updateButton();
+    try { localStorage.setItem(STORAGE_KEY, '1'); } catch(e) {}
+  }
+
+  function disable() {
+    document.documentElement.classList.remove(CLASS_NAME);
+    updateButton();
+    try { localStorage.setItem(STORAGE_KEY, '0'); } catch(e) {}
+  }
+
+  function toggle() {
+    if (isEnabled()) {
+      disable();
+    } else {
+      enable();
+    }
+  }
+
+  function updateButton() {
+    var btn = document.getElementById('btnLargeText');
+    if (!btn) return;
+    if (isEnabled()) {
+      btn.classList.add('active');
+      btn.title = '大字版已开启，点击关闭';
+    } else {
+      btn.classList.remove('active');
+      btn.title = '老年人大字版';
+    }
+  }
+
+  function init() {
+    // 1. 优先读 localStorage 中的用户选择
+    var stored = null;
+    try { stored = localStorage.getItem(STORAGE_KEY); } catch(e) {}
+    if (stored === '1') {
+      enable();
+    } else if (stored === '0') {
+      disable();
+    } else {
+      // 2. 首次使用：检测系统字体大小
+      if (detectSystemLargeFont()) {
+        enable();
+      }
+    }
+    updateButton();
+  }
+
+  // DOM 加载完成后初始化
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+  return {
+    toggle: toggle,
+    enable: enable,
+    disable: disable,
+    isEnabled: isEnabled
   };
 })();

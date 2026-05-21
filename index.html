@@ -36,6 +36,7 @@
       <button class="btn-course" onclick="ZiweiCourse.open()" title="0基础到精通速成">📖 速成课</button>
       <button class="btn-lang" id="btnLangToggle" onclick="Lang.toggle()" title="切换简繁中文">繁</button>
       <button class="btn-mode" id="btnModeToggle" onclick="UserMode.toggleMode()" title="切换专业/大众模式">🔬</button>
+      <button class="btn-large-text" id="btnLargeText" onclick="LargeText.toggle()" title="老年人大字版">🔤</button>
       <button class="btn-ai" id="btnAiToggle" onclick="_aiLazy.togglePanel()" title="本地AI助手（点击加载）"><span class="ai-status-badge ai-idle" id="aiStatusBadge">未加载</span>🤖 AI</button>
     </div>
 
@@ -112,6 +113,7 @@
         <button class="ws-tab active" data-subtab="ming-ziwei" onclick="switchMingTab('ziwei')">🏮 紫微斗数</button>
         <button class="ws-tab" data-subtab="ming-bazi" onclick="switchMingTab('bazi')">📜 八字解读</button>
         <button class="ws-tab" data-subtab="ming-astro" onclick="switchMingTab('astro')">🌟 西洋星盘</button>
+        <span class="school-info-icon" onclick="event.stopPropagation();showMingMethodPopup(event)" title="三种命理方式有什么区别？" style="margin-left:4px;flex-shrink:0">ⓘ</span>
       </div>
 
       <!-- 紫微斗数 -->
@@ -159,7 +161,7 @@
               </select>
             </div>
             <div class="form-group">
-              <label for="ziweiSchool">流派</label>
+              <label for="ziweiSchool">流派 <span class="school-info-icon" onclick="event.stopPropagation();showSchoolInfoPopup(event)" title="点击了解各流派区别">ⓘ</span></label>
               <select id="ziweiSchool" onchange="onSchoolChange()">
                 <option value="zhongzhou">中州派</option>
                 <option value="qintian">钦天派</option>
@@ -188,6 +190,7 @@
           <button class="zm-btn active" data-mode="sanhe" onclick="switchZiweiMode('sanhe')" data-tooltip="最传统的紫微斗数盘面，以三方四正的关系看各宫位互动，信息最全面，适合初学者">🔺 三合盘</button>
           <button class="zm-btn" data-mode="feixing" onclick="switchZiweiMode('feixing')" data-tooltip="展示宫位之间的飞化关系（如命宫化禄入夫妻宫），告诉你能量往哪里流动，适合进阶分析">🔄 飞星盘</button>
           <button class="zm-btn" data-mode="sihua" onclick="switchZiweiMode('sihua')" data-tooltip="聚焦禄权科忌四化的分布，快速定位人生中好运和需要注意的领域">✨ 四化盘</button>
+          <span class="school-info-icon" onclick="event.stopPropagation();showChartModePopup(event)" title="了解三种盘面模式的区别" style="margin-left:6px;flex-shrink:0">ⓘ</span>
         </div>
         <!-- 流年/流月/流日/流时 -->
         <div class="liu-time-bar" id="liuTimeBar" style="display:none;">
@@ -836,6 +839,177 @@
     <div class="astro-info-popup" id="astroInfoPopup" style="display:none;" onclick="event.stopPropagation()">
       <div class="aip-header"><span class="aip-icon" id="aipIcon"></span><span class="aip-title" id="aipTitle"></span><button class="aip-close" onclick="closeAstroPopup()">✕</button></div>
       <div class="aip-body" id="aipBody"></div><div class="aip-footer" id="aipFooter"></div>
+    </div>
+
+    <!-- 紫微斗数流派说明弹窗 -->
+    <div class="school-info-popup" id="schoolInfoPopup" style="display:none;" onclick="event.stopPropagation()">
+      <div class="school-popup-header">
+        <h3>🎓 紫微斗数三大流派</h3>
+        <button class="school-popup-close" onclick="closeSchoolInfoPopup()">✕</button>
+      </div>
+      <div class="school-popup-body">
+        <div class="school-card">
+          <div class="school-card-header">
+            <span class="school-badge zhongzhou">中州派</span>
+            <span class="school-source">王亭之先生所传</span>
+          </div>
+          <div class="school-card-body">
+            <p>以<strong>命宫</strong>为核心，安星法精严，四化以<strong>年干</strong>为主。最传统、最广泛使用的紫微斗数流派，适合初学者入门。</p>
+            <ul>
+              <li><b>安星特点：</b>以命宫干支纳音定五行局，依局数和生日定紫微星位置</li>
+              <li><b>四化规则：</b>以生年天干为纲，禄权科忌四化覆盖十四主星</li>
+              <li><b>适合人群：</b>紫微斗数初学者、注重命盘整体格局者</li>
+              <li><b>特色：</b>三方四正、星曜庙旺利陷、格局论断最为完整</li>
+            </ul>
+          </div>
+        </div>
+        <div class="school-card">
+          <div class="school-card-header">
+            <span class="school-badge qintian">钦天派</span>
+            <span class="school-source">钦天监秘传</span>
+          </div>
+          <div class="school-card-body">
+            <p>强调<strong>飞宫四化</strong>，宫干自化与对宫向心化同等重要，注重<strong>能量流动</strong>和因果链条。进阶用户和职业命理师常用。</p>
+            <ul>
+              <li><b>安星特点：</b>与中州派基本一致，但更注重宫干飞化</li>
+              <li><b>四化规则：</b>不仅看生年四化，更重视每个宫位的宫干飞出的四化（向心/离心）</li>
+              <li><b>适合人群：</b>有一定基础的中高级用户、职业命理师</li>
+              <li><b>特色：</b>飞宫自化、向心离心、能量流向分析，能精确指出问题的来龙去脉</li>
+            </ul>
+          </div>
+        </div>
+        <div class="school-card">
+          <div class="school-card-header">
+            <span class="school-badge feixing">飞星派</span>
+            <span class="school-source">梁若瑜先生所传</span>
+          </div>
+          <div class="school-card-body">
+            <p>以<strong>宫干化曜飞入十二宫</strong>为核心，重"<strong>宫·星·四化</strong>"三位一体。重视星曜组合而非单星论断，适合追求精细论断的用户。</p>
+            <ul>
+              <li><b>安星特点：</b>以宫位天干为出发点，看每个宫的星曜组合</li>
+              <li><b>四化规则：</b>每个宫位的天干都参与四化，形成复杂的飞化网络</li>
+              <li><b>适合人群：</b>追求精细论断的深度用户</li>
+              <li><b>特色：</b>宫星四化三位一体、飞化路径清晰、论断精准度高</li>
+            </ul>
+          </div>
+        </div>
+        <div class="school-tip">
+          💡 <b>提示：</b>切换流派后，点击「开始排盘」即可用新流派的规则重新生成命盘。初学者建议从中州派开始，熟悉后可尝试钦天派和飞星派。
+        </div>
+      </div>
+    </div>
+
+    <!-- 盘面模式说明弹窗 -->
+    <div class="chart-mode-popup" id="chartModePopup" style="display:none;" onclick="event.stopPropagation()">
+      <div class="school-popup-header">
+        <h3>📊 三种盘面模式怎么选？</h3>
+        <button class="school-popup-close" onclick="closeChartModePopup()">✕</button>
+      </div>
+      <div class="school-popup-body">
+        <div class="school-card">
+          <div class="school-card-header">
+            <span class="school-badge" style="background:rgba(200,160,100,0.2);color:#e0b870;border:1px solid rgba(200,160,100,0.3)">🔺 三合盘（默认）</span>
+          </div>
+          <div class="school-card-body">
+            <p>最<strong>传统</strong>的紫微斗数盘面，也是<strong>千年传承的标准盘</strong>。以三方四正的关系看各宫位互动，信息<strong>最全面</strong>，适合初学者入门。</p>
+            <ul>
+              <li><b>展示内容：</b>十二宫 + 主星/辅星/小星 + 庙旺利陷亮度 + 生年四化</li>
+              <li><b>核心逻辑：</b>以命宫为太极，看三方（三合宫）和四正（对宫）的星曜互动</li>
+              <li><b>适合场景：</b>全面了解命盘格局、性格分析、一生运势概览</li>
+              <li><b>推荐人群：</b>所有用户，尤其是初次接触紫微斗数的人</li>
+            </ul>
+          </div>
+        </div>
+        <div class="school-card">
+          <div class="school-card-header">
+            <span class="school-badge" style="background:rgba(100,160,220,0.2);color:#88bbff;border:1px solid rgba(100,160,220,0.3)">🔄 飞星盘</span>
+          </div>
+          <div class="school-card-body">
+            <p>展示宫位之间的<strong>飞化关系</strong>（如命宫化禄入夫妻宫），告诉你<strong>能量往哪里流动</strong>，适合进阶分析。</p>
+            <ul>
+              <li><b>展示内容：</b>每个宫位天干飞出的四化箭头，指向目标宫位</li>
+              <li><b>核心逻辑：</b>宫干化曜 → 飞入对宫/三合宫，形成能量流动网络</li>
+              <li><b>适合场景：</b>追查事件因果链条、分析人际关系互动、断事吉凶</li>
+              <li><b>推荐人群：</b>有一定基础的用户、职业命理师</li>
+            </ul>
+          </div>
+        </div>
+        <div class="school-card">
+          <div class="school-card-header">
+            <span class="school-badge" style="background:rgba(160,120,200,0.2);color:#c0a0e0;border:1px solid rgba(160,120,200,0.3)">✨ 四化盘</span>
+          </div>
+          <div class="school-card-body">
+            <p>聚焦<strong>禄权科忌</strong>四化的分布，快速定位人生中<strong>好运</strong>和<strong>需要注意</strong>的领域。</p>
+            <ul>
+              <li><b>展示内容：</b>仅突出显示四化星曜和所在宫位，弱化其他信息</li>
+              <li><b>核心逻辑：</b>禄=机遇/财富，权=掌控/权力，科=文采/贵人，忌=障碍/压力</li>
+              <li><b>适合场景：</b>快速扫读运势重点、年度规划、决策参考</li>
+              <li><b>推荐人群：</b>追求高效快速解读的用户</li>
+            </ul>
+          </div>
+        </div>
+        <div class="school-tip" style="background:rgba(100,180,255,0.06);border-color:rgba(100,180,255,0.15);color:#7ab8e0">
+          💡 <b>提示：</b>三种模式可随时切换，命盘数据不变，只是<strong>展示视角</strong>不同。建议先用三合盘了解全貌，再用飞星盘追踪细节，最后用四化盘快速定位关键点。
+        </div>
+      </div>
+    </div>
+
+    <!-- 三种命理方式说明弹窗 -->
+    <div class="school-info-popup" id="mingMethodPopup" style="display:none;" onclick="event.stopPropagation()">
+      <div class="school-popup-header">
+        <h3>⭐ 三种命理方式有什么区别？</h3>
+        <button class="school-popup-close" onclick="closeMingMethodPopup()">✕</button>
+      </div>
+      <div class="school-popup-body">
+        <div class="school-card">
+          <div class="school-card-header">
+            <span class="school-badge zhongzhou">🏮 紫微斗数</span>
+            <span class="school-source">中国传统 · 12宫命盘</span>
+          </div>
+          <div class="school-card-body">
+            <p>以<strong>出生年月日时</strong>排出12宫命盘，通过<strong>星曜分布</strong>看一生格局。像一张人生的"全息地图"，每个宫位代表一个领域（命宫=自我、夫妻宫=婚姻、财帛宫=财运…）。</p>
+            <ul>
+              <li><b>排盘要素：</b>农历年月日时 + 性别 → 12宫 + 主星/辅星 + 四化</li>
+              <li><b>擅长看：</b>性格天赋、人生格局、各领域运势、流年大限</li>
+              <li><b>特色：</b>12个宫位覆盖人生全貌，星曜组合细腻，格局论断丰富</li>
+              <li><b>一句话：</b>给你一张人生的"全景地图"</li>
+            </ul>
+          </div>
+        </div>
+        <div class="school-card">
+          <div class="school-card-header">
+            <span class="school-badge qintian">📜 八字解读</span>
+            <span class="school-source">中国传统 · 四柱推命</span>
+          </div>
+          <div class="school-card-body">
+            <p>以<strong>出生年月日时</strong>的天干地支组成四柱八字，通过<strong>五行生克</strong>看命运走势。像人生的"化学方程式"，五行平衡则顺，失衡则波折。</p>
+            <ul>
+              <li><b>排盘要素：</b>年月日时 → 四柱天干地支 + 十神 + 用神 + 大运</li>
+              <li><b>擅长看：</b>五行强弱、用神喜忌、大运走势、流年吉凶</li>
+              <li><b>特色：</b>五行生克制化逻辑清晰，十神关系直接，大运推算直观</li>
+              <li><b>一句话：</b>给你人生的"五行配方"</li>
+            </ul>
+          </div>
+        </div>
+        <div class="school-card">
+          <div class="school-card-header">
+            <span class="school-badge feixing">🌟 西洋星盘</span>
+            <span class="school-source">西方占星 · 黄道12宫</span>
+          </div>
+          <div class="school-card-body">
+            <p>以<strong>出生时间和地点</strong>计算行星在黄道上的位置，通过<strong>星座、宫位、相位</strong>看性格与运势。像人生的"宇宙快照"，记录你出生那一刻天空的样子。</p>
+            <ul>
+              <li><b>排盘要素：</b>年月日时分 + 出生地经纬度 → 行星落座 + 12宫 + 相位</li>
+              <li><b>擅长看：</b>性格心理、人际关系、职业倾向、流年行运</li>
+              <li><b>特色：</b>行星相位直观（合/冲/刑/拱），心理学色彩浓厚</li>
+              <li><b>一句话：</b>给你人生的"宇宙快照"</li>
+            </ul>
+          </div>
+        </div>
+        <div class="school-tip">
+          💡 <b>怎么选？</b>三者可以<strong>使用相同的出生信息</strong>，互相印证。建议新手从紫微斗数入手（信息最全），再用八字看五行补救，西洋星盘提供另一个视角。三者结合，论断更准。
+        </div>
+      </div>
     </div>
 
     <!-- ===== 本地 AI 大模型面板 ===== -->
