@@ -798,45 +798,47 @@ function closeAstroPopup() {
   document.getElementById('astroInfoPopup').style.display = 'none';
 }
 
+// ==================== 通用弹窗管理 ====================
+// 所有 ⓘ info popup 的统一关闭处理
+(function() {
+  var POPUP_IDS = ['schoolInfoPopup', 'chartModePopup', 'mingMethodPopup'];
+
+  function closeAll() {
+    POPUP_IDS.forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) el.style.display = 'none';
+    });
+  }
+
+  // 点击任意位置关闭（排除 ⓘ 图标和弹窗内部）
+  document.addEventListener('click', function(e) {
+    var anyOpen = POPUP_IDS.some(function(id) {
+      var el = document.getElementById(id);
+      return el && el.style.display !== 'none';
+    });
+    if (!anyOpen) return;
+
+    var clickedIcon = e.target.closest('.school-info-icon');
+    if (!clickedIcon) {
+      closeAll();
+    }
+  });
+
+  // ESC 关闭
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeAll();
+  });
+
+  window._closeAllInfoPopups = closeAll;
+})();
+
 // 紫微斗数流派说明弹窗
 function showSchoolInfoPopup(event) {
   var popup = document.getElementById('schoolInfoPopup');
   if (!popup) return;
-
-  // 点击外部关闭
-  if (!window._schoolPopupClickBound) {
-    window._schoolPopupClickBound = true;
-    document.addEventListener('click', function(e) {
-      var popup = document.getElementById('schoolInfoPopup');
-      if (!popup || popup.style.display === 'none') return;
-      if (!popup.contains(e.target) && !e.target.closest('.school-info-icon')) {
-        closeSchoolInfoPopup();
-      }
-    });
-    // ESC 关闭
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') closeSchoolInfoPopup();
-    });
-  }
-
+  window._closeAllInfoPopups();
   popup.style.display = 'block';
-  // 定位弹窗
-  var x = event.clientX;
-  var y = event.clientY;
-  requestAnimationFrame(function() {
-    var pw = popup.offsetWidth || 400;
-    var ph = popup.offsetHeight || 360;
-    var ww = window.innerWidth;
-    var wh = window.innerHeight;
-
-    if (x + pw + 16 > ww) x = ww - pw - 16;
-    if (y + ph + 16 > wh) y = wh - ph - 16;
-    if (x < 10) x = 10;
-    if (y < 10) y = 10;
-
-    popup.style.left = x + 'px';
-    popup.style.top = y + 'px';
-  });
+  positionPopup(popup, event);
 }
 
 function closeSchoolInfoPopup() {
@@ -848,38 +850,9 @@ function closeSchoolInfoPopup() {
 function showChartModePopup(event) {
   var popup = document.getElementById('chartModePopup');
   if (!popup) return;
-
-  if (!window._chartModePopupBound) {
-    window._chartModePopupBound = true;
-    document.addEventListener('click', function(e) {
-      var popup = document.getElementById('chartModePopup');
-      if (!popup || popup.style.display === 'none') return;
-      if (!popup.contains(e.target) && !e.target.closest('.school-info-icon')) {
-        closeChartModePopup();
-      }
-    });
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') closeChartModePopup();
-    });
-  }
-
+  window._closeAllInfoPopups();
   popup.style.display = 'block';
-  var x = event.clientX;
-  var y = event.clientY;
-  requestAnimationFrame(function() {
-    var pw = popup.offsetWidth || 460;
-    var ph = popup.offsetHeight || 400;
-    var ww = window.innerWidth;
-    var wh = window.innerHeight;
-
-    if (x + pw + 16 > ww) x = ww - pw - 16;
-    if (y + ph + 16 > wh) y = wh - ph - 16;
-    if (x < 10) x = 10;
-    if (y < 10) y = 10;
-
-    popup.style.left = x + 'px';
-    popup.style.top = y + 'px';
-  });
+  positionPopup(popup, event);
 }
 
 function closeChartModePopup() {
@@ -891,22 +864,18 @@ function closeChartModePopup() {
 function showMingMethodPopup(event) {
   var popup = document.getElementById('mingMethodPopup');
   if (!popup) return;
-
-  if (!window._mingMethodPopupBound) {
-    window._mingMethodPopupBound = true;
-    document.addEventListener('click', function(e) {
-      var popup = document.getElementById('mingMethodPopup');
-      if (!popup || popup.style.display === 'none') return;
-      if (!popup.contains(e.target) && !e.target.closest('.school-info-icon')) {
-        closeMingMethodPopup();
-      }
-    });
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') closeMingMethodPopup();
-    });
-  }
-
+  window._closeAllInfoPopups();
   popup.style.display = 'block';
+  positionPopup(popup, event);
+}
+
+function closeMingMethodPopup() {
+  var popup = document.getElementById('mingMethodPopup');
+  if (popup) popup.style.display = 'none';
+}
+
+// 弹窗定位工具函数
+function positionPopup(popup, event) {
   var x = event.clientX;
   var y = event.clientY;
   requestAnimationFrame(function() {
@@ -923,11 +892,6 @@ function showMingMethodPopup(event) {
     popup.style.left = x + 'px';
     popup.style.top = y + 'px';
   });
-}
-
-function closeMingMethodPopup() {
-  var popup = document.getElementById('mingMethodPopup');
-  if (popup) popup.style.display = 'none';
 }
 
 // 宫位百科弹窗
