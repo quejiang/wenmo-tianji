@@ -14,7 +14,7 @@
   --green: #8bc34a;
   --orange: #ff9800;
 }
-.hidden { display: none !important; }
+.hidden { display: none; }
 * {
   margin: 0;
   padding: 0;
