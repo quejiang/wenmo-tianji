@@ -132,14 +132,14 @@
               <!-- 公历输入 -->
               <div id="solarDateInput"><input type="date" id="birthDate" value="1990-06-15"></div>
               <!-- 农历输入（默认隐藏） -->
-              <div id="lunarDateInput" style="display:none">
+              <div id="lunarDateInput" class="hidden">
                 <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
                   <input type="number" id="lunarYear" value="1990" min="1900" max="2100" placeholder="年" style="width:70px;padding:8px 6px;background:#1a1a2e;color:#ccc;border:1px solid #333;border-radius:6px;text-align:center" onchange="updateLunarMonthOptions()">
                   <select id="lunarMonth" style="width:60px;padding:8px 4px;background:#1a1a2e;color:#ccc;border:1px solid #333;border-radius:6px" onchange="updateLunarDayOptions()"></select>
                   <span style="color:#888;font-size:0.8em">月</span>
                   <select id="lunarDay" style="width:60px;padding:8px 4px;background:#1a1a2e;color:#ccc;border:1px solid #333;border-radius:6px"></select>
                   <span style="color:#888;font-size:0.8em">日</span>
-                  <label id="leapLabel" style="display:none;font-size:0.8em;color:#e0a050;cursor:pointer"><input type="checkbox" id="isLeapMonth" onchange="onLunarInputChange()"> 闰月</label>
+                  <label id="leapLabel" class="hidden"><input type="checkbox" id="isLeapMonth" onchange="onLunarInputChange()"> 闰月</label>
                 </div>
                 <div id="lunarSolarPreview" style="font-size:0.75em;color:#888;margin-top:4px"></div>
               </div>
@@ -172,13 +172,13 @@
               <label><input type="checkbox" id="useTrueSolar" onchange="onTrueSolarToggle()">使用真太阳时</label>
             </div>
             <button class="btn btn-primary" onclick="generateChart()">开始排盘</button>
-            <div id="dstWarning" style="display:none;margin-top:8px;padding:8px;background:rgba(255,180,80,0.15);border-left:3px solid #e0a050;border-radius:4px;font-size:0.85em;color:#e0a050">
+            <div id="dstWarning" class="hidden">
               ⚠️ 您输入的日期处于中国夏令时期间（1986-1991年），如出生时间未减1小时，请勾选「真太阳时」或手动调整时间。
             </div>
             <button class="btn" onclick="useCurrentTime()">当前时间</button>
             <button class="btn btn-save" id="saveCaseBtn" onclick="saveCurrentCase()">保存命例</button>
           </div>
-          <div class="form-row form-row-second" id="trueSolarRow" style="display:none;">
+          <div class="form-row form-row-second hidden" id="trueSolarRow">
             <div class="form-group"><label for="provinceSelect">省份</label><select id="provinceSelect" onchange="onProvinceChange()"><option value="">-- 选择省份 --</option></select></div>
             <div class="form-group"><label for="citySelect">城市</label><select id="citySelect" onchange="onCityChange()"><option value="">-- 先选省份 --</option></select></div>
             <div class="form-group"><label for="districtSelect">区县</label><select id="districtSelect" onchange="onDistrictChange()"><option value="">-- 先选城市 --</option></select></div>
@@ -186,14 +186,14 @@
           </div>
         </div>
         <!-- 盘面模式 -->
-        <div class="ziwei-mode-bar" id="ziweiModeBar" style="display:none;">
+        <div class="ziwei-mode-bar hidden" id="ziweiModeBar">
           <button class="zm-btn active" data-mode="sanhe" onclick="switchZiweiMode('sanhe')" data-tooltip="最传统的紫微斗数盘面，以三方四正的关系看各宫位互动，信息最全面，适合初学者">🔺 三合盘</button>
           <button class="zm-btn" data-mode="feixing" onclick="switchZiweiMode('feixing')" data-tooltip="展示宫位之间的飞化关系（如命宫化禄入夫妻宫），告诉你能量往哪里流动，适合进阶分析">🔄 飞星盘</button>
           <button class="zm-btn" data-mode="sihua" onclick="switchZiweiMode('sihua')" data-tooltip="聚焦禄权科忌四化的分布，快速定位人生中好运和需要注意的领域">✨ 四化盘</button>
           <span class="school-info-icon" onclick="event.stopPropagation();showChartModePopup(event)" title="了解三种盘面模式的区别" style="margin-left:6px;flex-shrink:0">ⓘ</span>
         </div>
         <!-- 流年/流月/流日/流时 -->
-        <div class="liu-time-bar" id="liuTimeBar" style="display:none;">
+        <div class="liu-time-bar hidden" id="liuTimeBar">
           <span class="liu-label">⏳ 时间层级</span>
           <button class="liu-btn active" data-liu="benming" onclick="switchLiuTime('benming')" data-tooltip="你出生那一刻的原始命盘，一生的'出厂设置'，所有分析的基础">本命盘</button>
           <button class="liu-btn" data-liu="daxian" onclick="switchLiuTime('daxian')" data-tooltip="每十年为一个周期，告诉你这十年的人生重心在哪个领域，自动跟随当前年龄定位">大限</button>
@@ -215,25 +215,25 @@
           <div class="liu-xiao-xian" id="liuXiaoXianDisplay"></div>
         </div>
         <!-- 八字条 -->
-        <div class="bazi-bar" id="baziBar" style="display:none;">
+        <div class="bazi-bar hidden" id="baziBar">
           <div class="bazi-item"><div class="label">年柱</div><div class="value" id="baziYear"></div></div>
           <div class="bazi-item"><div class="label">月柱</div><div class="value" id="baziMonth"></div></div>
           <div class="bazi-item"><div class="label">日柱</div><div class="value" id="baziDay"></div></div>
           <div class="bazi-item"><div class="label">时柱</div><div class="value" id="baziHour"></div></div>
           <div class="bazi-item"><div class="label">农历</div><div class="value" id="baziLunar"></div></div>
           <div class="bazi-item"><div class="label">生肖</div><div class="value" id="baziAnimal"></div></div>
-          <div class="bazi-item" id="baziTrueSolarItem" style="display:none"><div class="label">真太阳时</div><div class="value" id="baziTrueSolar"></div></div>
+          <div class="bazi-item hidden" id="baziTrueSolarItem"><div class="label">真太阳时</div><div class="value" id="baziTrueSolar"></div></div>
         </div>
         <!-- 命盘 -->
         <div class="chart-container"><div class="chart-grid" id="chartGrid"></div></div>
-        <div class="triad-info-bar" id="triadInfoBar" style="display:none;"></div>
+        <div class="triad-info-bar hidden" id="triadInfoBar"></div>
         <div style="display:flex;gap:8px;margin-top:8px;">
           <button class="btn btn-sm" onclick="toggleSihuaChart()">🔗 四化飞星图</button>
           <button class="btn btn-sm" onclick="exportChartPNG()">📸 截图导出</button>
         </div>
-        <div class="timeline-panel" id="timelinePanel" style="display:none;margin-top:16px;padding:16px;background:rgba(255,255,255,.03);border-radius:12px;border:1px solid rgba(255,255,255,.08)"></div>
-        <div class="bazi-adv-panel" id="baziAdvancedPanel" style="display:none;margin-top:16px;"></div>
-        <div class="sihua-overlay" id="sihuaOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:1000;background:rgba(0,0,0,.85);align-items:center;justify-content:center;" onclick="if(event.target===this)toggleSihuaChart()"></div>
+        <div class="timeline-panel hidden" id="timelinePanel" style="margin-top:16px;padding:16px;background:rgba(255,255,255,.03);border-radius:12px;border:1px solid rgba(255,255,255,.08)"></div>
+        <div class="bazi-adv-panel hidden" id="baziAdvancedPanel" style="margin-top:16px;"></div>
+        <div class="sihua-overlay hidden" id="sihuaOverlay" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:1000;background:rgba(0,0,0,.85);align-items:center;justify-content:center;" onclick="if(event.target===this)toggleSihuaChart()"></div>
         <div class="legend">
           <span class="legend-item"><span class="legend-dot main"></span> 主星</span>
           <span class="legend-item"><span class="legend-dot aux"></span> 辅星</span>
@@ -241,7 +241,7 @@
           <span class="legend-item"><span class="legend-dot shen"></span> 身宫</span>
           <span class="legend-item" style="color:#aaa;">🟢禄 🟠权 🔵科 🟣忌 = 四化</span>
         </div>
-        <div class="detail-panel" id="detailPanel" style="display:none;">
+        <div class="detail-panel hidden" id="detailPanel">
           <h3>命盘概要</h3>
           <div class="detail-grid" id="detailGrid"></div>
           <div class="detail-actions">
@@ -253,15 +253,15 @@
             <button class="btn btn-sm btn-ai-chat" onclick="openAIChat()" style="margin-left:8px">💬 AI 对话</button>
           </div>
           <!-- 格局检测 -->
-          <div class="patterns-container" id="patternsContainer" style="display:none;margin-top:12px"></div>
+          <div class="patterns-container hidden" id="patternsContainer" style="margin-top:12px"></div>
           <!-- 宫位评分 -->
-          <div class="scores-container" id="scoresContainer" style="display:none;margin-top:12px"></div>
-          <div class="ai-analysis-container" id="aiAnalysisContainer" style="display:none;">
+          <div class="scores-container hidden" id="scoresContainer" style="margin-top:12px"></div>
+          <div class="ai-analysis-container hidden" id="aiAnalysisContainer">
             <div class="ai-header"><h3>个人命盘 AI 解读</h3><span class="ai-badge">基于规则引擎</span></div>
             <div class="ai-content" id="aiContent"></div>
           </div>
           <!-- 紫微合盘 -->
-          <div class="synastry-panel" id="synastryPanel" style="display:none;margin-top:12px;padding:12px;background:rgba(255,255,255,0.03);border-radius:8px">
+          <div class="synastry-panel hidden" id="synastryPanel" style="margin-top:12px;padding:12px;background:rgba(255,255,255,0.03);border-radius:8px">
             <h3 style="color:#d4a84c;margin-bottom:8px">🔗 紫微合盘</h3>
             <div style="display:flex;gap:8px;align-items:center">
               <select id="synastrySelect" style="flex:1;padding:8px;background:#1a1a2e;color:#ccc;border:1px solid #333;border-radius:6px"><option value="">-- 选择命例对比 --</option></select>
@@ -270,12 +270,12 @@
             <div id="synastryResult"></div>
           </div>
           <!-- 三盘同参 -->
-          <div class="three-panel" id="threePanel" style="display:none;margin-top:12px;padding:12px;background:rgba(255,255,255,0.03);border-radius:8px">
+          <div class="three-panel hidden" id="threePanel" style="margin-top:12px;padding:12px;background:rgba(255,255,255,0.03);border-radius:8px">
             <h3 style="color:#88bbff;margin-bottom:8px">📐 三盘同参（本命 · 大限 · 流年）</h3>
             <div id="threePanelContent" style="max-height:400px;overflow-y:auto"></div>
           </div>
           <!-- 数据图表 -->
-          <div class="chart-analysis-panel" id="chartAnalysisPanel" style="display:none;margin-top:12px"></div>
+          <div class="chart-analysis-panel hidden" id="chartAnalysisPanel" style="margin-top:12px"></div>
         </div>
       </div>
 
@@ -284,7 +284,7 @@
         <div class="bazi-reading-container" id="baziReadingContainer">
           <div class="br-placeholder">请先在"紫微斗数"面板中输入出生信息并点击"开始排盘"，再查看八字详细解读</div>
         </div>
-        <div class="hehun-panel" id="hehunPanel" style="display:none;">
+        <div class="hehun-panel hidden" id="hehunPanel">
           <div class="hehun-header"><h3>💕 八字合婚</h3><span class="hehun-desc">选择命例库中的另一命例进行合婚分析</span></div>
           <div class="hehun-body"><div class="hehun-select"><label>选择对方命例</label><select id="hehunSelect" onchange="onHeHunSelect()"><option value="">-- 从命例库选择 --</option></select></div><div class="hehun-result" id="hehunResult"></div></div>
         </div>
@@ -799,27 +799,27 @@
     </div>
 
     <!-- 命例库面板 -->
-    <div class="cases-panel" id="casesPanel" style="display:none;">
+    <div class="cases-panel hidden" id="casesPanel">
       <div class="cases-header"><h3>命例库</h3><span class="cases-count" id="casesCount"></span>
         <button class="btn btn-sm" onclick="exportCasesJSON()" title="导出 JSON">📤</button>
         <button class="btn btn-sm" onclick="document.getElementById('importFileInput').click()" title="导入 JSON">📥</button>
-        <input type="file" id="importFileInput" accept=".json" style="display:none" onchange="importCasesJSON(event)">
+        <input type="file" id="importFileInput" accept=".json" class="hidden" onchange="importCasesJSON(event)">
         <button class="btn btn-sm" onclick="toggleCasesPanel()">✕</button>
       </div>
       <div class="cases-search"><input type="text" id="casesSearchInput" placeholder="🔍 搜索命例..." oninput="renderCaseList()"></div>
       <div class="cases-list" id="casesList"></div>
-      <div class="cases-tags-bar" id="casesTagsBar" style="display:none;"></div>
+      <div class="cases-tags-bar hidden" id="casesTagsBar"></div>
     </div>
 
     <!-- 保存命例对话框 -->
-    <div class="modal-overlay" id="saveDialog" style="display:none;" onclick="if(event.target===this)closeSaveDialog()">
+    <div class="modal-overlay hidden" id="saveDialog" onclick="if(event.target===this)closeSaveDialog()">
       <div class="modal-box"><h3>保存命例</h3><div class="modal-field"><label for="caseNameInput">名称（可选）</label><input type="text" id="caseNameInput" placeholder="如：本人、张三"></div><div class="modal-field"><label>分类标签</label><div class="tag-presets" id="tagPresets"></div><input type="text" id="caseTagsInput" placeholder="如：家人, 朋友"></div><div class="modal-actions"><button class="btn btn-primary" onclick="doSaveCase()">保存</button><button class="btn" onclick="closeSaveDialog()">取消</button></div></div>
     </div>
 
     <button class="btn-float-cases" id="btnFloatCases" onclick="toggleCasesPanel()" title="命例库">📋</button>
 
     <!-- 功能全览 / 使用指南面板 -->
-    <div class="feature-overlay" id="featureOverlay" style="display:none;" onclick="if(event.target===this)closeFeatureOverview()">
+    <div class="feature-overlay hidden" id="featureOverlay" onclick="if(event.target===this)closeFeatureOverview()">
       <div class="feature-panel">
         <div class="feature-header">
           <h3 id="featureOverlayTitle">📋 功能全览 & 使用指南</h3>
@@ -830,19 +830,19 @@
     </div>
 
     <!-- 星曜百科弹窗 -->
-    <div class="star-popup" id="starPopup" style="display:none;">
+    <div class="star-popup hidden" id="starPopup">
       <div class="star-popup-header"><span class="star-popup-name" id="popupStarName"></span><button class="star-popup-close" onclick="closeStarPopup()">✕</button></div>
       <div class="star-popup-body" id="popupStarBody"></div>
     </div>
 
     <!-- 星盘点击弹窗 -->
-    <div class="astro-info-popup" id="astroInfoPopup" style="display:none;" onclick="event.stopPropagation()">
+    <div class="astro-info-popup hidden" id="astroInfoPopup" onclick="event.stopPropagation()">
       <div class="aip-header"><span class="aip-icon" id="aipIcon"></span><span class="aip-title" id="aipTitle"></span><button class="aip-close" onclick="closeAstroPopup()">✕</button></div>
       <div class="aip-body" id="aipBody"></div><div class="aip-footer" id="aipFooter"></div>
     </div>
 
     <!-- 紫微斗数流派说明弹窗 -->
-    <div class="school-info-popup" id="schoolInfoPopup" style="display:none;" onclick="event.stopPropagation()">
+    <div class="school-info-popup hidden" id="schoolInfoPopup" onclick="event.stopPropagation()">
       <div class="school-popup-header">
         <h3>🎓 紫微斗数三大流派</h3>
         <button class="school-popup-close" onclick="closeSchoolInfoPopup()">✕</button>
@@ -900,7 +900,7 @@
     </div>
 
     <!-- 盘面模式说明弹窗 -->
-    <div class="chart-mode-popup" id="chartModePopup" style="display:none;" onclick="event.stopPropagation()">
+    <div class="chart-mode-popup hidden" id="chartModePopup" onclick="event.stopPropagation()">
       <div class="school-popup-header">
         <h3>📊 三种盘面模式怎么选？</h3>
         <button class="school-popup-close" onclick="closeChartModePopup()">✕</button>
@@ -955,7 +955,7 @@
     </div>
 
     <!-- 三种命理方式说明弹窗 -->
-    <div class="school-info-popup" id="mingMethodPopup" style="display:none;" onclick="event.stopPropagation()">
+    <div class="school-info-popup hidden" id="mingMethodPopup" onclick="event.stopPropagation()">
       <div class="school-popup-header">
         <h3>⭐ 三种命理方式有什么区别？</h3>
         <button class="school-popup-close" onclick="closeMingMethodPopup()">✕</button>
@@ -1013,7 +1013,7 @@
     </div>
 
     <!-- ===== 本地 AI 大模型面板 ===== -->
-    <div class="ai-local-panel" id="aiLocalPanel" style="display:none;">
+    <div class="ai-local-panel hidden" id="aiLocalPanel">
       <div class="ai-local-header">
         <h3>🤖 本地 AI 助手</h3>
         <span class="ai-local-subtitle">基于 WebLLM · 完全离线 · 无需 API</span>
@@ -1028,15 +1028,15 @@
       </div>
 
       <!-- 进度条 -->
-      <div class="ai-progress-bar" id="aiProgressBar" style="display:none;">
+      <div class="ai-progress-bar hidden" id="aiProgressBar">
         <div class="ai-progress-fill"></div>
       </div>
-      <div class="ai-progress-text" id="aiProgressText" style="display:none;"></div>
+      <div class="ai-progress-text hidden" id="aiProgressText"></div>
 
       <!-- 知识库管理 -->
       <div class="ai-kb-bar">
         <span class="ai-kb-label">📚 知识库</span>
-        <input type="file" id="aiDocInput" accept=".txt,.pdf,.md,.epub" style="display:none" onchange="_aiLazy.handleDocumentSelected(event)">
+        <input type="file" id="aiDocInput" accept=".txt,.pdf,.md,.epub" class="hidden" onchange="_aiLazy.handleDocumentSelected(event)">
         <button class="btn btn-sm" onclick="_aiLazy.uploadDocument()">📤 上传文档</button>
         <button class="btn btn-sm" onclick="_aiLazy.clearKnowledgeBase()" style="margin-left:4px;color:#e06050">清空</button>
       </div>
@@ -1055,27 +1055,27 @@
 
   </div>
 
-  <script src="js/lunar.js?v=25"></script>
-  <script src="js/ziwei-schools.js?v=25"></script>
-  <script src="js/ziwei.js?v=25"></script>
-  <script src="js/ziwei-flow.js?v=25"></script>
-  <script src="js/ziwei-patterns.js?v=25"></script>
-  <script src="js/encyclopedia.js?v=25"></script>
-  <script src="js/ai-analysis.js?v=25"></script>
-  <script src="js/bazi-reading.js?v=25"></script>
-  <script src="js/cases.js?v=25"></script>
-  <script src="js/user-mode.js?v=25"></script>
-  <script src="js/tutorial.js?v=25"></script>
-  <script src="js/ziwei-course.js?v=25"></script>
-  <script src="js/lang.js?v=25"></script>
-  <script src="js/export-pdf.js?v=25"></script>
-  <script src="js/chart-analysis.js?v=25"></script>
-  <script src="js/ai-llm.js?v=25"></script>
-  <script src="js/ai-tutorial.js?v=25"></script>
-  <script src="js/name-reading.js?v=25"></script>
-  <script src="js/feature-guide.js?v=25"></script>
-  <script src="js/advanced-features.js?v=25"></script>
-  <script src="js/app.js?v=27"></script>
+  <script src="js/lunar.js?v=25" defer></script>
+  <script src="js/ziwei-schools.js?v=25" defer></script>
+  <script src="js/ziwei.js?v=25" defer></script>
+  <script src="js/ziwei-flow.js?v=25" defer></script>
+  <script src="js/ziwei-patterns.js?v=25" defer></script>
+  <script src="js/encyclopedia.js?v=25" defer></script>
+  <script src="js/ai-analysis.js?v=25" defer></script>
+  <script src="js/bazi-reading.js?v=25" defer></script>
+  <script src="js/cases.js?v=25" defer></script>
+  <script src="js/user-mode.js?v=25" defer></script>
+  <script src="js/tutorial.js?v=25" defer></script>
+  <script src="js/ziwei-course.js?v=25" defer></script>
+  <script src="js/lang.js?v=25" defer></script>
+  <script src="js/export-pdf.js?v=25" defer></script>
+  <script src="js/chart-analysis.js?v=25" defer></script>
+  <script src="js/ai-llm.js?v=25" defer></script>
+  <script src="js/ai-tutorial.js?v=25" defer></script>
+  <script src="js/name-reading.js?v=25" defer></script>
+  <script src="js/feature-guide.js?v=25" defer></script>
+  <script src="js/advanced-features.js?v=25" defer></script>
+  <script src="js/app.js?v=27" defer></script>
 
   <!-- 非核心模块：按需延迟加载 -->
   <script src="js/astrology.js?v=25" defer></script>
@@ -1103,7 +1103,7 @@
   <script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js');}</script>
 
   <!-- ==================== 本地 AI 面板（按需懒加载） ==================== -->
-  <div class="ai-local-panel" id="aiLocalPanel" style="display:none">
+  <div class="ai-local-panel hidden" id="aiLocalPanel">
     <div class="ai-local-header">
       <h3>🤖 本地 AI</h3>
       <span class="ai-local-subtitle">完全离线 · WebGPU</span>
@@ -1116,7 +1116,7 @@
       <button style="padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:#888;cursor:pointer;font-size:12px;white-space:nowrap" onclick="_aiLazy.unloadModel()">卸载</button>
     </div>
     <!-- 进度条 -->
-    <div class="ai-progress-bar" id="aiProgressBar" style="display:none">
+    <div class="ai-progress-bar hidden" id="aiProgressBar">
       <div class="ai-progress-fill"></div>
     </div>
     <div class="ai-progress-text" id="aiProgressText"></div>
@@ -1125,7 +1125,7 @@
       <span class="ai-kb-label">📚 知识库</span>
       <button style="padding:3px 10px;border-radius:6px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:#aaa;cursor:pointer;font-size:11px;margin-left:auto" onclick="_aiLazy.uploadDocument()">📤 上传</button>
       <button style="padding:3px 10px;border-radius:6px;border:1px solid rgba(255,255,255,.08);background:none;color:#888;cursor:pointer;font-size:11px" onclick="_aiLazy.clearKnowledgeBase()">清空</button>
-      <input type="file" id="aiDocInput" accept=".txt,.pdf,.md,.epub" style="display:none" onchange="_aiLazy.handleDocumentSelected(event)">
+      <input type="file" id="aiDocInput" accept=".txt,.pdf,.md,.epub" class="hidden" onchange="_aiLazy.handleDocumentSelected(event)">
     </div>
     <div class="ai-kb-list" id="aiKnowledgeList"></div>
     <!-- 聊天区 -->

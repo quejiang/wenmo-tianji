@@ -806,7 +806,7 @@ function closeAstroPopup() {
   function closeAll() {
     POPUP_IDS.forEach(function(id) {
       var el = document.getElementById(id);
-      if (el) el.style.display = 'none';
+      if (el) { el.style.display = 'none'; el.classList.add('hidden'); }
     });
   }
 
@@ -814,7 +814,7 @@ function closeAstroPopup() {
   document.addEventListener('click', function(e) {
     var anyOpen = POPUP_IDS.some(function(id) {
       var el = document.getElementById(id);
-      return el && el.style.display !== 'none';
+      return el && getComputedStyle(el).display !== 'none';
     });
     if (!anyOpen) return;
 
@@ -837,13 +837,14 @@ function showSchoolInfoPopup(event) {
   var popup = document.getElementById('schoolInfoPopup');
   if (!popup) return;
   window._closeAllInfoPopups();
+  popup.classList.remove('hidden');
   popup.style.display = 'block';
   positionPopup(popup, event);
 }
 
 function closeSchoolInfoPopup() {
   var popup = document.getElementById('schoolInfoPopup');
-  if (popup) popup.style.display = 'none';
+  if (popup) { popup.style.display = 'none'; popup.classList.add('hidden'); }
 }
 
 // 盘面模式说明弹窗
@@ -851,13 +852,14 @@ function showChartModePopup(event) {
   var popup = document.getElementById('chartModePopup');
   if (!popup) return;
   window._closeAllInfoPopups();
+  popup.classList.remove('hidden');
   popup.style.display = 'block';
   positionPopup(popup, event);
 }
 
 function closeChartModePopup() {
   var popup = document.getElementById('chartModePopup');
-  if (popup) popup.style.display = 'none';
+  if (popup) { popup.style.display = 'none'; popup.classList.add('hidden'); }
 }
 
 // 三种命理方式说明弹窗
@@ -865,13 +867,14 @@ function showMingMethodPopup(event) {
   var popup = document.getElementById('mingMethodPopup');
   if (!popup) return;
   window._closeAllInfoPopups();
+  popup.classList.remove('hidden');
   popup.style.display = 'block';
   positionPopup(popup, event);
 }
 
 function closeMingMethodPopup() {
   var popup = document.getElementById('mingMethodPopup');
-  if (popup) popup.style.display = 'none';
+  if (popup) { popup.style.display = 'none'; popup.classList.add('hidden'); }
 }
 
 // 弹窗定位工具函数
