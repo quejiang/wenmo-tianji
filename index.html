@@ -161,7 +161,7 @@
               </select>
             </div>
             <div class="form-group">
-              <label for="ziweiSchool">流派 <span class="school-info-icon" onclick="event.stopPropagation();showSchoolInfoPopup(event)" title="点击了解各流派区别">ⓘ</span></label>
+              <label for="ziweiSchool">流派</label> <span class="school-info-icon" onclick="event.preventDefault();event.stopPropagation();showSchoolInfoPopup(event)" title="点击了解各流派区别">ⓘ</span>
               <select id="ziweiSchool" onchange="onSchoolChange()">
                 <option value="zhongzhou">中州派</option>
                 <option value="qintian">钦天派</option>
