@@ -557,7 +557,7 @@ function renderChart(chart, bazi) {
 
   // 显示紫微盘面模式切换
   var modeBar = document.getElementById('ziweiModeBar');
-  if (modeBar) modeBar.style.display = 'flex';
+  if (modeBar) { modeBar.classList.remove('hidden'); modeBar.style.display = 'flex'; }
   // 重置到默认三合盘模式
   switchZiweiMode('sanhe');
 }
@@ -1366,9 +1366,9 @@ function generateChart() {
   renderChart(chart, bazi);
   renderDetailPanel(chart, bazi);
   var liuBar = document.getElementById('liuTimeBar');
-  if (liuBar) liuBar.style.display = 'flex';
+  if (liuBar) { liuBar.classList.remove('hidden'); liuBar.style.display = 'flex'; }
   var modeBar = document.getElementById('ziweiModeBar');
-  if (modeBar) modeBar.style.display = 'flex';
+  if (modeBar) { modeBar.classList.remove('hidden'); modeBar.style.display = 'flex'; }
   _liuTimeMode = 'benming';
   document.querySelectorAll('#mingZiwei .liu-btn').forEach(function(b) {
     b.classList.toggle('active', b.getAttribute('data-liu') === 'benming');
@@ -2799,7 +2799,7 @@ function renderOverlayMode(baseChart, bazi, label, liuNianChart, liuYueChart) {
 
   // 显示紫微盘面模式切换
   var modeBar = document.getElementById('ziweiModeBar');
-  if (modeBar) modeBar.style.display = 'flex';
+  if (modeBar) { modeBar.classList.remove('hidden'); modeBar.style.display = 'flex'; }
   switchZiweiMode(ziweiMode);
 }
 
