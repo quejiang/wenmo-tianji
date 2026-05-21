@@ -14,7 +14,6 @@
   --green: #8bc34a;
   --orange: #ff9800;
 }
-.hidden { display: none; }
 * {
   margin: 0;
   padding: 0;
@@ -5611,3 +5610,6 @@ html.large-text-mode .star-popup {
     font-size: 2.2em;
   }
 }
+
+/* 必须放在最后：确保 .hidden 覆盖所有 display:flex/grid/block */
+.hidden { display: none; }

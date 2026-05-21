@@ -1038,7 +1038,9 @@ function renderAiAnalysis(chart, bazi) {
 // ==================== 渲染八字栏 ====================
 
 function renderBaziBar(bazi) {
-  document.getElementById('baziBar').style.display = 'flex';
+  var bar = document.getElementById('baziBar');
+  bar.classList.remove('hidden');
+  bar.style.display = 'flex';
   document.getElementById('baziYear').textContent = bazi.year.full;
   document.getElementById('baziMonth').textContent = bazi.month.full;
   document.getElementById('baziDay').textContent = bazi.day.full;
@@ -1801,6 +1803,7 @@ function saveCurrentCase() {
 
 function showSaveDialog() {
   var dlg = document.getElementById('saveDialog');
+  dlg.classList.remove('hidden');
   dlg.style.display = 'flex';
   document.getElementById('caseNameInput').value = '';
   document.getElementById('caseTagsInput').value = '';
@@ -1818,7 +1821,9 @@ function showSaveDialog() {
 }
 
 function closeSaveDialog() {
-  document.getElementById('saveDialog').style.display = 'none';
+  var dlg = document.getElementById('saveDialog');
+  dlg.style.display = 'none';
+  dlg.classList.add('hidden');
   resetSaveDialog();
 }
 
