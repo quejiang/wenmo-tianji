@@ -11,6 +11,8 @@
   --bg-dark: #1a1a2e;
   --bg-mid: #16213e;
   --bg-accent: #0f3460;
+  --green: #8bc34a;
+  --orange: #ff9800;
 }
 .hidden { display: none !important; }
 * {
@@ -21,9 +23,9 @@
 
 body {
   font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-mid) 50%, var(--bg-accent) 100%);
   min-height: 100vh;
-  color: #e0d5c1;
+  color: var(--text-body);
   padding: 20px;
 }
 
@@ -48,7 +50,7 @@ body {
 
 .header .subtitle {
   font-size: 1em;
-  color: #9a8c6c;
+  color: var(--text-dim);
   letter-spacing: 2px;
 }
 
@@ -92,7 +94,7 @@ body {
 
 .form-group label {
   font-size: 0.85em;
-  color: #9a8c6c;
+  color: var(--text-dim);
   letter-spacing: 1px;
 }
 
@@ -185,7 +187,7 @@ body {
 
 .xiang-guide-body {
   padding: 14px 18px;
-  color: #b0a080;
+  color: var(--text-desc);
   font-size: 0.82em;
   line-height: 1.8;
 }
@@ -230,7 +232,7 @@ body {
   background: rgba(240,215,140,0.025);
 }
 .xiang-demo-box h5 {
-  color: #8bc34a;
+  color: var(--green);
   font-size: 0.82em;
   margin: 0 0 4px;
   letter-spacing: 1px;
@@ -399,7 +401,7 @@ body {
 .xfs-demo-table td, .xfs-demo-table th {
   border: 1px solid rgba(240,215,140,0.2);
   padding: 6px 8px;
-  color: #b0a080;
+  color: var(--text-desc);
 }
 .xfs-demo-table th { background: rgba(240,215,140,0.08); color: var(--gold-med); font-weight: 600; }
 
@@ -452,8 +454,8 @@ body {
 }
 
 .form-group select option {
-  background: #1a1a2e;
-  color: #e0d5c1;
+  background: var(--bg-dark);
+  color: var(--text-body);
 }
 
 .btn {
@@ -479,7 +481,7 @@ body {
 .btn-primary {
   background: linear-gradient(135deg, var(--gold), #a0842c);
   border-color: var(--gold);
-  color: #1a1a2e;
+  color: var(--bg-dark);
   font-weight: bold;
 }
 
@@ -508,7 +510,7 @@ body {
 
 .bazi-item .label {
   font-size: 0.75em;
-  color: #9a8c6c;
+  color: var(--text-dim);
   margin-bottom: 4px;
 }
 
@@ -521,7 +523,7 @@ body {
 
 .bazi-item .ganzhi {
   font-size: 1.1em;
-  color: #e0d5c1;
+  color: var(--text-body);
 }
 
 /* ==================== 命盘核心 ==================== */
@@ -562,7 +564,7 @@ body {
 
 .center-info .center-label {
   font-size: 0.7em;
-  color: #9a8c6c;
+  color: var(--text-dim);
   letter-spacing: 1px;
 }
 
@@ -592,7 +594,7 @@ body {
 
 .center-info .center-info-item {
   font-size: 0.75em;
-  color: #9a8c6c;
+  color: var(--text-dim);
   margin-top: 4px;
 }
 .center-info-item:hover {
@@ -656,7 +658,7 @@ body {
 
 .palace-ganzhi {
   font-size: 0.7em;
-  color: #9a8c6c;
+  color: var(--text-dim);
 }
 
 .palace-badge {
@@ -781,7 +783,7 @@ body {
 }
 
 .detail-item .d-label {
-  color: #9a8c6c;
+  color: var(--text-dim);
 }
 
 .detail-item .d-value {
@@ -917,7 +919,7 @@ body {
   border-radius: 22px;
   border: 1px solid transparent;
   background: transparent;
-  color: #9a8c6c;
+  color: var(--text-dim);
   font-size: 1em;
   font-family: inherit;
   letter-spacing: 2px;
@@ -962,7 +964,7 @@ body {
   transition: all 0.2s;
   letter-spacing: 1px;
 }
-.ws-tab:hover { border-color: rgba(240,215,140,0.4); color: #b0a080; }
+.ws-tab:hover { border-color: rgba(240,215,140,0.4); color: var(--text-desc); }
 .ws-tab.active { background: rgba(240,215,140,0.12); color: var(--gold-light); border-color: rgba(240,215,140,0.4); }
 .ws-content { display: none; }
 .ws-content.active { display: block; }
@@ -1003,7 +1005,7 @@ body {
   justify-content: center;
   flex-wrap: wrap;
   font-size: 0.72em;
-  color: #9a8c6c;
+  color: var(--text-dim);
   margin-top: 10px;
   padding: 0 10px;
 }
@@ -1082,7 +1084,7 @@ body {
   border-radius: 0 6px 6px 0;
 }
 .asp-symbol { font-size: 1.1em; width: 18px; text-align: center; flex-shrink: 0; }
-.asp-planets { color: #e0d5c1; flex: 1; }
+.asp-planets { color: var(--text-body); flex: 1; }
 .asp-orb { color: #6a6c5c; font-size: 0.65em; }
 .aspect-interp {
   font-size: 0.68em;
@@ -1111,7 +1113,7 @@ body {
 .house-row.has-planet { border-left: 2px solid rgba(240,215,140,0.3); }
 .hr-num { color: #6a6c5a; font-size: 0.85em; font-weight: bold; width: 20px; text-align: center; flex-shrink: 0; }
 .hr-name { color: var(--gold); font-weight: bold; min-width: 70px; }
-.hr-label { color: #e0d5c1; flex: 1; }
+.hr-label { color: var(--text-body); flex: 1; }
 .hr-planets { font-size: 1.1em; letter-spacing: 2px; flex-shrink: 0; }
 
 /* ==================== 流年/流月导航 ==================== */
@@ -1138,7 +1140,7 @@ body {
   border-radius: 12px;
   border: 1px solid rgba(240,215,140,0.2);
   background: rgba(0,0,0,0.2);
-  color: #9a8c6c;
+  color: var(--text-dim);
   font-size: 0.72em;
   font-family: inherit;
   cursor: pointer;
@@ -1199,7 +1201,7 @@ body {
   white-space: nowrap;
 }
 .brt-label { font-weight: bold; color: var(--gold-light) !important; letter-spacing: 1px; }
-.brt-gan { font-weight: bold; color: #e0d5c1 !important; font-size: 1.1em; }
+.brt-gan { font-weight: bold; color: var(--text-body) !important; font-size: 1.1em; }
 .brt-ss { color: var(--gold) !important; font-weight: bold; }
 .brt-najia { color: #b0a0d0 !important; font-size: 0.85em; }
 .brt-canggan { color: #9a9c88 !important; font-size: 0.75em; max-width: 120px; }
@@ -1336,7 +1338,7 @@ body {
 .dy-label {
   flex: 1;
   font-size: 0.78em;
-  color: #e0d5c1;
+  color: var(--text-body);
   letter-spacing: 1px;
 }
 .dy-ss {
@@ -1456,7 +1458,7 @@ body {
   color: #bcbcbc;
   line-height: 1.7;
 }
-.aip-body b { color: #e0d5c1; }
+.aip-body b { color: var(--text-body); }
 .aip-footer {
   padding: 8px 16px 12px;
   display: flex;
@@ -1515,7 +1517,7 @@ body {
   flex-wrap: wrap;
   padding: 10px;
   font-size: 0.8em;
-  color: #9a8c6c;
+  color: var(--text-dim);
 }
 
 .legend-item {
@@ -1636,7 +1638,7 @@ body {
   top: -6px;
   right: -6px;
   background: var(--gold);
-  color: #1a1a2e;
+  color: var(--bg-dark);
   font-size: 0.55em;
   font-weight: bold;
   min-width: 20px;
@@ -1768,13 +1770,13 @@ body {
 }
 
 .case-bazi {
-  color: #e0d5c1;
+  color: var(--text-body);
   font-weight: bold;
   letter-spacing: 1px;
 }
 
 .case-chart {
-  color: #9a8c6c;
+  color: var(--text-dim);
 }
 
 .case-bot {
@@ -1850,7 +1852,7 @@ body {
   border-radius: 50%;
   border: none;
   background: rgba(200, 180, 100, 0.12);
-  color: #9a8c6c;
+  color: var(--text-dim);
   font-size: 0.8em;
   cursor: pointer;
   transition: all 0.2s;
@@ -1878,7 +1880,7 @@ body {
 .filter-tag {
   padding: 4px 12px;
   font-size: 0.72em;
-  color: #9a8c6c;
+  color: var(--text-dim);
   border: 1px solid rgba(154, 140, 108, 0.25);
   border-radius: 12px;
   cursor: pointer;
@@ -1892,7 +1894,7 @@ body {
 }
 
 .filter-tag.active {
-  color: #1a1a2e;
+  color: var(--bg-dark);
   background: var(--gold);
   border-color: var(--gold);
   font-weight: bold;
@@ -1936,7 +1938,7 @@ body {
 
 .modal-field label {
   display: block;
-  color: #9a8c6c;
+  color: var(--text-dim);
   font-size: 0.8em;
   margin-bottom: 8px;
   letter-spacing: 1px;
@@ -1969,7 +1971,7 @@ body {
 .tag-chip-preset {
   padding: 4px 12px;
   font-size: 0.75em;
-  color: #e0d5c1;
+  color: var(--text-body);
   border: 1px solid rgba(224, 213, 193, 0.25);
   border-radius: 12px;
   cursor: pointer;
@@ -2158,7 +2160,7 @@ body {
 .feature-panel {
   width: min(800px, 92vw);
   max-height: 88vh;
-  background: linear-gradient(160deg, #1a1a2e 0%, #16213e 100%);
+  background: linear-gradient(160deg, var(--bg-dark) 0%, var(--bg-mid) 100%);
   border: 1px solid rgba(var(--gold-rgb), 0.25);
   border-radius: 16px;
   display: flex;
@@ -2192,7 +2194,7 @@ body {
   border-radius: 50%;
   border: 1px solid rgba(var(--gold-rgb), 0.3);
   background: rgba(255, 255, 255, 0.04);
-  color: #9a8c6c;
+  color: var(--text-dim);
   font-size: 1em;
   cursor: pointer;
   transition: all 0.2s;
@@ -2245,7 +2247,7 @@ body {
   font-size: 0.75em;
 }
 .feature-section-arrow {
-  color: #9a8c6c;
+  color: var(--text-dim);
   font-size: 0.7em;
   transition: transform 0.2s;
 }
@@ -2272,7 +2274,7 @@ body {
   color: #c0c0c0;
 }
 .feature-item-name {
-  color: #e0d5c1;
+  color: var(--text-body);
   font-weight: bold;
   white-space: nowrap;
   letter-spacing: 0.5px;
@@ -2336,7 +2338,7 @@ body {
 }
 .hehun-select label {
   display: block;
-  color: #9a8c6c;
+  color: var(--text-dim);
   font-size: 0.8em;
   margin-bottom: 6px;
 }
@@ -2352,8 +2354,8 @@ body {
   outline: none;
 }
 .hehun-select select option {
-  background: #1a1a2e;
-  color: #e0d5c1;
+  background: var(--bg-dark);
+  color: var(--text-body);
 }
 .hehun-result {
   padding: 16px;
@@ -2361,7 +2363,7 @@ body {
   background: rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(var(--gold-rgb), 0.1);
   min-height: 60px;
-  color: #9a8c6c;
+  color: var(--text-dim);
   font-size: 0.85em;
 }
 .hehun-score {
@@ -2408,7 +2410,7 @@ body {
   border-radius: 14px;
   border: 1px solid rgba(var(--gold-rgb), 0.2);
   background: rgba(0, 0, 0, 0.2);
-  color: #9a8c6c;
+  color: var(--text-dim);
   font-size: 0.8em;
   font-family: inherit;
   cursor: pointer;
@@ -2477,7 +2479,7 @@ body {
   border-radius: 8px;
   border: 1px solid rgba(var(--gold-rgb), 0.2);
   background: rgba(0, 0, 0, 0.3);
-  color: #e0d5c1;
+  color: var(--text-body);
   font-size: 0.8em;
   font-family: inherit;
   resize: vertical;
@@ -2524,13 +2526,13 @@ body {
   flex-wrap: wrap;
   font-size: 0.78em;
 }
-.liu-label { color: #9a8c6c; margin-right: 4px; white-space: nowrap; }
+.liu-label { color: var(--text-dim); margin-right: 4px; white-space: nowrap; }
 .liu-btn {
   padding: 4px 10px;
   border-radius: 6px;
   border: 1px solid rgba(240,215,140,0.2);
   background: transparent;
-  color: #9a8c6c;
+  color: var(--text-dim);
   cursor: pointer;
   font-family: inherit;
   font-size: 0.9em;
@@ -2604,7 +2606,7 @@ body {
   border-radius: 6px;
   border: 1px solid rgba(240,215,140,0.2);
   background: transparent;
-  color: #9a8c6c;
+  color: var(--text-dim);
   cursor: pointer;
   font-family: inherit;
   font-size: 0.8em;
@@ -2631,14 +2633,14 @@ body {
 .tarot-card-item.reversed { border-color: rgba(200,130,200,0.4); }
 .tarot-card-pos {
   font-size: 0.7em;
-  color: #9a8c6c;
+  color: var(--text-dim);
   margin-bottom: 4px;
   text-transform: uppercase;
   letter-spacing: 2px;
 }
 .tarot-card-name { font-size: 1.05em; color: var(--gold-light); margin-bottom: 3px; font-weight: bold; }
 .tarot-card-id { font-size: 0.7em; color: #6a6c50; margin-bottom: 6px; }
-.tarot-card-desc { font-size: 0.78em; color: #b0a080; line-height: 1.4; margin-bottom: 6px; }
+.tarot-card-desc { font-size: 0.78em; color: var(--text-desc); line-height: 1.4; margin-bottom: 6px; }
 .tarot-card-kw { display: flex; gap: 4px; flex-wrap: wrap; justify-content: center; }
 .tarot-kw-tag {
   font-size: 0.7em;
@@ -2651,7 +2653,7 @@ body {
 /* 塔罗牌阵解读 */
 .tarot-spread-header { text-align: center; margin-bottom: 14px; }
 .tarot-spread-header h4 { color: var(--gold-light); font-size: 1em; margin-bottom: 4px; }
-.tarot-spread-desc { font-size: 0.8em; color: #9a8c6c; margin: 0; }
+.tarot-spread-desc { font-size: 0.8em; color: var(--text-dim); margin: 0; }
 .tarot-card-pos-guide {
   font-size: 0.7em;
   color: #7a7c60;
@@ -2667,7 +2669,7 @@ body {
   border-radius: 10px;
 }
 .tarot-overall-reading h5 { color: var(--gold); font-size: 0.9em; margin-bottom: 8px; }
-.tarot-overall-reading p { font-size: 0.82em; color: #b0a080; line-height: 1.6; margin-bottom: 8px; }
+.tarot-overall-reading p { font-size: 0.82em; color: var(--text-desc); line-height: 1.6; margin-bottom: 8px; }
 .tarot-stats {
   display: flex; gap: 16px; font-size: 0.72em; color: #7a7c60;
   margin-bottom: 6px;
@@ -2693,10 +2695,10 @@ body {
 .dice-display { display: flex; gap: 14px; justify-content: center; align-items: center; margin-bottom: 10px; }
 .dice-item { text-align: center; }
 .dice-glyph { font-size: 2em; display: block; }
-.dice-label { font-size: 0.75em; color: #9a8c6c; display: block; margin-top: 2px; }
-.dice-interp { font-size: 0.8em; color: #b0a080; line-height: 1.5; text-align: center; padding: 8px; background: rgba(0,0,0,0.15); border-radius: 6px; }
+.dice-label { font-size: 0.75em; color: var(--text-dim); display: block; margin-top: 2px; }
+.dice-interp { font-size: 0.8em; color: var(--text-desc); line-height: 1.5; text-align: center; padding: 8px; background: rgba(0,0,0,0.15); border-radius: 6px; }
 .dice-multi-item { margin-bottom: 8px; padding: 8px; background: rgba(0,0,0,0.15); border-radius: 6px; }
-.dice-multi-idx { font-size: 0.7em; color: #9a8c6c; margin-right: 6px; }
+.dice-multi-idx { font-size: 0.7em; color: var(--text-dim); margin-right: 6px; }
 
 /* ==================== 星座运势 ==================== */
 .horo-container { padding: 10px 0; }
@@ -2708,7 +2710,7 @@ body {
   border-radius: 20px;
   border: 1px solid rgba(240,215,140,0.2);
   background: transparent;
-  color: #9a8c6c;
+  color: var(--text-dim);
   cursor: pointer;
   font-size: 0.85em;
   font-family: inherit;
@@ -2732,7 +2734,7 @@ body {
 .horo-meta { font-size: 0.78em; color: #7a7c60; }
 .horo-profile-body { display: flex; flex-direction: column; gap: 10px; }
 .hp-section h4 { color: var(--gold); font-size: 0.9em; margin-bottom: 3px; }
-.hp-section p { font-size: 0.82em; color: #b0a080; line-height: 1.5; }
+.hp-section p { font-size: 0.82em; color: var(--text-desc); line-height: 1.5; }
 .hp-kw { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 4px; }
 .hp-kw-tag { font-size: 0.72em; padding: 3px 10px; border-radius: 12px; background: rgba(240,215,140,0.1); color: var(--gold); }
 
@@ -2747,9 +2749,9 @@ body {
 .horo-daily h4 { color: var(--gold-light); font-size: 0.95em; margin-bottom: 10px; }
 .horo-ratings { display: flex; flex-direction: column; gap: 6px; }
 .horo-rating-item { display: flex; gap: 10px; align-items: center; font-size: 0.82em; }
-.horo-cat { width: 40px; color: #9a8c6c; }
+.horo-cat { width: 40px; color: var(--text-dim); }
 .horo-stars { color: var(--gold-light); font-size: 0.9em; letter-spacing: 2px; }
-.horo-advice { color: #b0a080; flex: 1; }
+.horo-advice { color: var(--text-desc); flex: 1; }
 .horo-lucky { font-size: 0.8em; color: #7a7c60; margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(240,215,140,0.1); }
 .horo-yearly {
   background: rgba(255,255,255,0.04);
@@ -2759,7 +2761,7 @@ body {
   margin-bottom: 14px;
 }
 .horo-yearly h4 { color: var(--gold-light); font-size: 0.95em; margin-bottom: 8px; }
-.horo-yearly p { font-size: 0.82em; color: #b0a080; line-height: 1.5; }
+.horo-yearly p { font-size: 0.82em; color: var(--text-desc); line-height: 1.5; }
 
 /* 万年历 */
 .horo-calendar {
@@ -2774,7 +2776,7 @@ body {
 .cal-header {
   text-align: center;
   font-size: 0.78em;
-  color: #9a8c6c;
+  color: var(--text-dim);
   padding: 6px;
   font-weight: bold;
 }
@@ -2803,7 +2805,7 @@ body {
 .xlr-desc { text-align: center; font-size: 0.78em; color: #7a7c60; margin-bottom: 12px; }
 .xlr-inputs { display: flex; gap: 8px; align-items: flex-end; justify-content: center; flex-wrap: wrap; margin-bottom: 10px; }
 .xlr-input-group { display: flex; flex-direction: column; gap: 3px; align-items: center; }
-.xlr-input-group label { font-size: 0.7em; color: #9a8c6c; }
+.xlr-input-group label { font-size: 0.7em; color: var(--text-dim); }
 .xlr-num {
   width: 55px;
   padding: 5px 4px;
@@ -2850,7 +2852,7 @@ body {
 .xlr-big-glyph { font-size: 2.5em; }
 .xlr-card-title { display: flex; flex-direction: column; gap: 2px; }
 .xlr-name { font-size: 1.4em; font-weight: bold; }
-.xlr-trait { font-size: 0.82em; color: #9a8c6c; }
+.xlr-trait { font-size: 0.82em; color: var(--text-dim); }
 .xlr-props { font-size: 0.76em; color: #7a7c60; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid rgba(240,215,140,0.08); }
 .xlr-formula {
   font-size: 0.7em;
@@ -2861,7 +2863,7 @@ body {
   margin-bottom: 8px;
   font-family: 'SF Mono', monospace;
 }
-.xlr-input-display { font-size: 0.78em; color: #9a8c6c; margin-bottom: 12px; }
+.xlr-input-display { font-size: 0.78em; color: var(--text-dim); margin-bottom: 12px; }
 .xlr-sections { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
 .xlr-sec {
   background: rgba(255,255,255,0.02);
@@ -2869,7 +2871,7 @@ body {
   padding: 8px 10px;
 }
 .xlr-sec h5 { color: var(--gold); font-size: 0.78em; margin-bottom: 3px; }
-.xlr-sec p { font-size: 0.74em; color: #b0a080; line-height: 1.45; }
+.xlr-sec p { font-size: 0.74em; color: var(--text-desc); line-height: 1.45; }
 .xlr-keywords { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 8px; }
 .xlr-kw-tag {
   font-size: 0.7em;
@@ -2879,7 +2881,7 @@ body {
   color: var(--gold);
 }
 .xlr-all-positions { margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(240,215,140,0.1); }
-.xlr-all-positions h5 { color: #9a8c6c; font-size: 0.78em; margin-bottom: 8px; text-align: center; }
+.xlr-all-positions h5 { color: var(--text-dim); font-size: 0.78em; margin-bottom: 8px; text-align: center; }
 .xlr-positions-row { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
 .xlr-pos-chip {
   display: flex;
@@ -2895,7 +2897,7 @@ body {
 .xlr-pos-chip:hover { background: rgba(255,255,255,0.06); }
 .xlr-pos-chip.active { background: rgba(240,215,140,0.1); }
 .xlr-pos-glyph { font-size: 1.3em; margin-bottom: 2px; }
-.xlr-pos-name { font-size: 0.7em; color: #9a8c6c; }
+.xlr-pos-name { font-size: 0.7em; color: var(--text-dim); }
 
 /* ==================== 流年盘增强图例 ==================== */
 .liu-legend-row {
@@ -2917,10 +2919,10 @@ body {
   margin-bottom: 20px;
   text-align: center;
 }
-.shan-now-time { font-size: 0.85em; color: #9a8c6c; display: block; margin-bottom: 4px; }
+.shan-now-time { font-size: 0.85em; color: var(--text-dim); display: block; margin-bottom: 4px; }
 .shan-now-meridian { font-size: 1.3em; font-weight: bold; display: block; }
 .shan-now-element { font-size: 0.82em; color: #7a7c60; display: block; margin-top: 4px; }
-.shan-now-tip { font-size: 0.85em; color: #b0a080; margin-top: 8px; line-height: 1.5; }
+.shan-now-tip { font-size: 0.85em; color: var(--text-desc); margin-top: 8px; line-height: 1.5; }
 
 .shan-meridian-table { margin-top: 16px; }
 .shan-meridian-table h4 { color: var(--gold); font-size: 0.95em; margin-bottom: 10px; }
@@ -2938,8 +2940,8 @@ body {
 }
 .shan-mer-item.active { background: rgba(240,215,140,0.08); }
 .sm-name { color: var(--gold-light); font-weight: bold; min-width: 55px; }
-.sm-organ { color: #e0d5c1; min-width: 35px; }
-.sm-time { color: #9a8c6c; min-width: 120px; }
+.sm-organ { color: var(--text-body); min-width: 35px; }
+.sm-time { color: var(--text-dim); min-width: 120px; }
 .sm-element { color: #7a7c60; min-width: 40px; }
 .sm-tip { color: #8a8c7a; font-size: 0.9em; flex: 1; }
 
@@ -2962,8 +2964,8 @@ body {
 .sw-detail { background: rgba(255,255,255,0.03); border-radius: 10px; padding: 20px; }
 .sw-detail h3 { font-size: 1.2em; margin-bottom: 10px; }
 .sw-props { font-size: 0.8em; color: #8a8c7a; margin-bottom: 12px; }
-.sw-props b { color: #b0a080; }
-.sw-desc { font-size: 0.85em; color: #b0a080; line-height: 1.6; margin-bottom: 10px; }
+.sw-props b { color: var(--text-desc); }
+.sw-desc { font-size: 0.85em; color: var(--text-desc); line-height: 1.6; margin-bottom: 10px; }
 .sw-avoid { font-size: 0.82em; color: #cc8866; background: rgba(200,100,60,0.08); padding: 8px 12px; border-radius: 6px; margin-bottom: 12px; }
 .sw-foods h5 { color: var(--gold); font-size: 0.85em; margin-bottom: 6px; }
 .sw-food-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
@@ -2989,7 +2991,7 @@ body {
 .med-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
 .med-header h4 { color: var(--gold-light); font-size: 1em; }
 .med-meta { font-size: 0.75em; color: #7a7c60; }
-.med-steps { padding-left: 20px; font-size: 0.82em; color: #b0a080; line-height: 1.8; }
+.med-steps { padding-left: 20px; font-size: 0.82em; color: var(--text-desc); line-height: 1.8; }
 .med-tip { font-size: 0.8em; color: #8aac8a; background: rgba(100,160,100,0.06); padding: 8px 12px; border-radius: 6px; margin-top: 10px; }
 
 /* ==================== 山 — 五脏排毒 ==================== */
@@ -3003,10 +3005,10 @@ body {
   padding: 12px;
   font-size: 0.78em;
 }
-.detox-grid b { color: #9a8c6c; padding: 4px 6px; font-size: 0.85em; }
+.detox-grid b { color: var(--text-dim); padding: 4px 6px; font-size: 0.85em; }
 .detox-grid span {
   padding: 6px 8px;
-  color: #b0a080;
+  color: var(--text-desc);
   border-bottom: 1px solid rgba(255,255,255,0.03);
 }
 .detox-time { font-weight: bold; color: var(--gold-light); }
@@ -3040,8 +3042,8 @@ body {
 }
 .yi-const-detail h3 { font-size: 1.1em; margin-bottom: 8px; }
 .yid-trait { font-size: 0.9em; color: var(--gold-light); margin-bottom: 8px; }
-.yid-desc { font-size: 0.82em; color: #b0a080; margin-bottom: 10px; line-height: 1.5; }
-.yid-row { font-size: 0.8em; color: #9a8c6c; margin-bottom: 4px; }
+.yid-desc { font-size: 0.82em; color: var(--text-desc); margin-bottom: 10px; line-height: 1.5; }
+.yid-row { font-size: 0.8em; color: var(--text-dim); margin-bottom: 4px; }
 .yid-care h5, .yid-avoid h5 { color: var(--gold); font-size: 0.82em; margin-bottom: 4px; margin-top: 10px; }
 .yid-care ul, .yid-avoid ul { padding-left: 18px; font-size: 0.78em; color: #9a9c88; line-height: 1.7; }
 .yid-avoid h5 { color: #cc8866; }
@@ -3056,7 +3058,7 @@ body {
   border-top: 3px solid;
 }
 .yzf-card h4 { font-size: 1.05em; margin-bottom: 6px; }
-.yzf-desc { font-size: 0.8em; color: #b0a080; line-height: 1.5; margin-bottom: 4px; }
+.yzf-desc { font-size: 0.8em; color: var(--text-desc); line-height: 1.5; margin-bottom: 4px; }
 .yzf-imb { font-size: 0.78em; color: #cc8866; margin-bottom: 6px; }
 .yzf-meta { font-size: 0.72em; color: #7a7c60; margin-bottom: 8px; }
 .yzf-foods { display: flex; gap: 5px; flex-wrap: wrap; }
@@ -3078,7 +3080,7 @@ body {
 }
 .yj-now-name { font-size: 1.1em; color: var(--gold-light); display: block; margin-bottom: 4px; }
 .yj-now-meta { font-size: 0.78em; color: #7a7c60; display: block; margin-bottom: 6px; }
-.yj-now-advice { font-size: 0.84em; color: #b0a080; line-height: 1.5; }
+.yj-now-advice { font-size: 0.84em; color: var(--text-desc); line-height: 1.5; }
 .yj-all-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(280px,1fr)); gap: 6px; }
 .yj-term-chip {
   padding: 8px 12px;
@@ -3112,9 +3114,9 @@ body {
   border-radius: 8px;
   padding: 10px 14px;
 }
-.xp-hill-card h5 { color: #e0d5c1; font-size: 0.85em; }
+.xp-hill-card h5 { color: var(--text-body); font-size: 0.85em; }
 .xph-pos { display: block; font-size: 0.72em; color: #7a7c60; }
-.xph-meaning { display: block; font-size: 0.76em; color: #b0a080; margin-top: 2px; }
+.xph-meaning { display: block; font-size: 0.76em; color: var(--text-desc); margin-top: 2px; }
 .xph-trait { display: block; font-size: 0.72em; color: #8a8c7a; }
 
 /* ==================== 相 — 面相十二宫 ==================== */
@@ -3133,7 +3135,7 @@ body {
 
 /* ==================== 相 — 风水九宫飞星 ==================== */
 .xiang-fs-control { display: flex; gap: 10px; align-items: center; margin-bottom: 14px; justify-content: center; }
-.xiang-fs-control label { color: #9a8c6c; }
+.xiang-fs-control label { color: var(--text-dim); }
 .xiang-fs-control input {
   width: 80px; padding: 6px 8px; border-radius: 6px;
   border: 1px solid rgba(240,215,140,0.25);
@@ -3154,8 +3156,8 @@ body {
   text-align: center;
 }
 .xfs-star { display: block; font-size: 1.1em; color: var(--gold-light); font-weight: bold; }
-.xfs-name { display: block; font-size: 0.72em; color: #b0a080; }
-.xfs-pos { display: block; font-size: 0.7em; color: #9a8c6c; }
+.xfs-name { display: block; font-size: 0.72em; color: var(--text-desc); }
+.xfs-pos { display: block; font-size: 0.7em; color: var(--text-dim); }
 .xfs-nature { display: block; font-size: 0.78em; font-weight: bold; margin-top: 2px; }
 .xfs-desc { display: block; font-size: 0.7em; color: #7a7c60; margin-top: 3px; line-height: 1.4; }
 
@@ -3172,7 +3174,7 @@ body {
 .mh-desc { text-align: center; font-size: 0.78em; color: #7a7c60; margin-bottom: 14px; }
 .mh-inputs { display: flex; gap: 8px; align-items: flex-end; justify-content: center; flex-wrap: wrap; margin-bottom: 10px; }
 .mh-input-group { display: flex; flex-direction: column; gap: 3px; align-items: center; }
-.mh-input-group label { font-size: 0.7em; color: #9a8c6c; }
+.mh-input-group label { font-size: 0.7em; color: var(--text-dim); }
 .mh-num {
   width: 60px; padding: 5px;
   border-radius: 6px; border: 1px solid rgba(240,215,140,0.25);
@@ -3200,7 +3202,7 @@ body {
   padding: 12px; background: rgba(255,255,255,0.04); border-radius: 8px;
   margin-bottom: 8px; flex-wrap: wrap; justify-content: center;
 }
-.mh-gua-label { font-size: 0.7em; color: #9a8c6c; margin-right: 4px; }
+.mh-gua-label { font-size: 0.7em; color: var(--text-dim); margin-right: 4px; }
 .mh-gua-sym { font-size: 1.8em; }
 .mh-gua-name { font-size: 1em; color: var(--gold-light); font-weight: bold; }
 .mh-bian { opacity: 0.75; }
@@ -3210,7 +3212,7 @@ body {
   border-left: 4px solid; margin-bottom: 8px;
 }
 .mh-relation { font-size: 1em; font-weight: bold; display: block; }
-.mh-ty-desc { font-size: 0.82em; color: #b0a080; margin-top: 4px; display: block; }
+.mh-ty-desc { font-size: 0.82em; color: var(--text-desc); margin-top: 4px; display: block; }
 .mh-formula { font-size: 0.7em; color: #6a8c60; background: rgba(100,140,100,0.08); padding: 4px 8px; border-radius: 4px; font-family: monospace; }
 
 /* ==================== 六爻起卦 ==================== */
@@ -3231,7 +3233,7 @@ body {
   padding: 10px; background: rgba(255,255,255,0.04); border-radius: 8px;
   margin-bottom: 8px;
 }
-.ly-gua-label { font-size: 0.7em; color: #9a8c6c; }
+.ly-gua-label { font-size: 0.7em; color: var(--text-dim); }
 .ly-gua-sym { font-size: 2em; }
 .ly-gua-name { font-size: 1.1em; color: var(--gold-light); font-weight: bold; }
 .ly-bian { opacity: 0.7; }
@@ -3241,9 +3243,9 @@ body {
   background: rgba(255,255,255,0.02); border-radius: 6px;
   font-size: 0.82em;
 }
-.ly-yao-pos { color: #9a8c6c; min-width: 40px; }
+.ly-yao-pos { color: var(--text-dim); min-width: 40px; }
 .ly-yao-sym { font-size: 1.2em; }
-.ly-yao-type { color: #e0d5c1; min-width: 48px; }
+.ly-yao-type { color: var(--text-body); min-width: 48px; }
 .ly-yao-bian { color: var(--gold); font-weight: bold; }
 .ly-tip { font-size: 0.72em; color: #6a6c50; text-align: center; margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(240,215,140,0.08); }
 
@@ -3256,7 +3258,7 @@ body {
   color: var(--gold); font-size: 0.8em; margin-bottom: 4px;
 }
 .mh-gua-interp p, .ly-gua-interp p {
-  font-size: 0.78em; color: #b0a080; line-height: 1.5; margin: 0;
+  font-size: 0.78em; color: var(--text-desc); line-height: 1.5; margin: 0;
 }
 .mh-hu { opacity: 0.75; }
 .mh-sections, .ly-sections {
@@ -3271,7 +3273,7 @@ body {
   color: var(--gold); font-size: 0.72em; margin-bottom: 2px;
 }
 .mh-sec p, .ly-sec p {
-  font-size: 0.72em; color: #9a8c6c; line-height: 1.4; margin: 0;
+  font-size: 0.72em; color: var(--text-dim); line-height: 1.4; margin: 0;
 }
 .mh-disclaimer, .ly-disclaimer {
   font-size: 0.65em; color: #5a5c40; text-align: center;
@@ -3293,7 +3295,7 @@ body {
   color: var(--gold); font-size: 0.8em; margin-bottom: 6px;
 }
 .dice-enhanced-interp p {
-  font-size: 0.76em; color: #b0a080; line-height: 1.5; margin-bottom: 4px;
+  font-size: 0.76em; color: var(--text-desc); line-height: 1.5; margin-bottom: 4px;
 }
 .dice-enhanced-interp .dice-tag {
   display: inline-block; font-size: 0.7em; padding: 2px 8px;
@@ -3860,7 +3862,7 @@ body {
 .pattern-name {
   font-weight: 600;
   font-size: 0.9em;
-  color: #e0d5c1;
+  color: var(--text-body);
 }
 .pattern-cat {
   font-size: 0.75em;
@@ -3940,7 +3942,7 @@ body {
   border-radius: 6px;
   margin-bottom: 12px;
   font-size: 0.85em;
-  color: #b0a080;
+  color: var(--text-desc);
   display: flex;
   gap: 8px;
 }
@@ -3994,7 +3996,7 @@ body {
 .qm-legend {
   margin-top: 12px;
   font-size: 0.78em;
-  color: #9a8c6c;
+  color: var(--text-dim);
 }
 .qm-legend-item {
   padding: 4px 0;
@@ -4056,7 +4058,7 @@ body {
 .zr-day-taboo { border-left: 3px solid #ff0000 !important; }
 .zr-day-num { font-size: 1em; font-weight: 700; color: #ccc; }
 .zr-day-lunar { font-size: 0.65em; color: #888; }
-.zr-day-jc { font-size: 0.68em; color: #9a8c6c; font-weight: 600; }
+.zr-day-jc { font-size: 0.68em; color: var(--text-dim); font-weight: 600; }
 .zr-day-gz { font-size: 0.62em; color: #666; }
 
 /* ==================== 风水罗盘面板 ==================== */
@@ -4150,7 +4152,7 @@ body {
   font-size: 1.1em;
 }
 .mode-card p {
-  color: #9a8c6c;
+  color: var(--text-dim);
   font-size: 0.82em;
   line-height: 1.5;
 }
@@ -4194,7 +4196,7 @@ body {
   font-size: 0.95em;
 }
 .mode-style-info p {
-  color: #9a8c6c;
+  color: var(--text-dim);
   font-size: 0.8em;
   line-height: 1.4;
   margin: 0;
@@ -4260,7 +4262,7 @@ body.mode-nonpro .sp-category { background: rgba(240,215,140,0.1); }
   transition: opacity 0.3s;
 }
 .mode-welcome-box {
-  background: linear-gradient(160deg, #1e1e3a 0%, #16213e 50%, #1a1a2e 100%);
+  background: linear-gradient(160deg, #1e1e3a 0%, var(--bg-mid) 50%, var(--bg-dark) 100%);
   border: 1px solid rgba(240,215,140,0.25);
   border-radius: 16px;
   padding: 32px 28px;
@@ -4306,7 +4308,7 @@ body.mode-nonpro .sp-category { background: rgba(240,215,140,0.1); }
 .mode-card-nonpro:hover { background: rgba(240,215,140,0.08); border-color: rgba(240,215,140,0.6); transform: translateY(-2px); }
 .mode-card-icon { font-size: 2.2em; margin-bottom: 8px; }
 .mode-card h3 { color: var(--gold-light); font-size: 1.1em; margin-bottom: 8px; }
-.mode-card p { color: #9a8c6c; font-size: 0.82em; line-height: 1.6; }
+.mode-card p { color: var(--text-dim); font-size: 0.82em; line-height: 1.6; }
 .mode-style-title { text-align: center; color: var(--gold-light); font-size: 1.1em; margin-bottom: 4px; width: 100%; }
 .mode-style-sub { text-align: center; color: #888; font-size: 0.82em; margin-bottom: 16px; width: 100%; }
 .mode-style-card {
@@ -4352,7 +4354,7 @@ body.mode-nonpro .sp-category { background: rgba(240,215,140,0.1); }
   backdrop-filter: blur(4px);
 }
 .tutorial-dialog {
-  background: linear-gradient(145deg, #1e1e3a 0%, #1a1a2e 100%);
+  background: linear-gradient(145deg, #1e1e3a 0%, var(--bg-dark) 100%);
   border: 1px solid rgba(240,215,140,0.25);
   border-radius: 16px;
   width: min(620px, 92vw);
@@ -4372,7 +4374,7 @@ body.mode-nonpro .sp-category { background: rgba(240,215,140,0.1); }
   gap: 10px;
   position: sticky;
   top: 0;
-  background: linear-gradient(145deg, #1e1e3a 0%, #1a1a2e 100%);
+  background: linear-gradient(145deg, #1e1e3a 0%, var(--bg-dark) 100%);
   z-index: 1;
   border-bottom: 1px solid rgba(240,215,140,0.08);
 }
@@ -4519,7 +4521,7 @@ body.mode-nonpro .sp-category { background: rgba(240,215,140,0.1); }
   left: 0;
   right: 0;
   max-height: 85vh;
-  background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+  background: linear-gradient(180deg, var(--bg-dark) 0%, var(--bg-mid) 100%);
   border-top: 2px solid rgba(240,215,140,0.3);
   box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
   z-index: 9999;
@@ -4583,7 +4585,7 @@ body.mode-nonpro .sp-category { background: rgba(240,215,140,0.1); }
 }
 .ai-msg { margin-bottom: 14px; padding: 10px 14px; border-radius: 10px; line-height: 1.7; font-size: 0.9em; }
 .ai-msg-user { background: rgba(91,155,213,0.12); border-left: 3px solid #5b9bd5; color: #c8dcff; }
-.ai-msg-assistant { background: rgba(240,215,140,0.06); border-left: 3px solid var(--gold); color: #e0d5c1; }
+.ai-msg-assistant { background: rgba(240,215,140,0.06); border-left: 3px solid var(--gold); color: var(--text-body); }
 .ai-msg-system { background: rgba(255,255,255,0.03); color: #888; font-size: 0.85em; text-align: center; }
 .ai-msg h3 { color: var(--gold-med); margin: 8px 0 4px; font-size: 1em; }
 .ai-msg h4 { color: var(--gold); margin: 6px 0 2px; font-size: 0.9em; }
@@ -4613,7 +4615,7 @@ body.mode-nonpro .sp-category { background: rgba(240,215,140,0.1); }
 .ai-status-bar {
   padding: 6px 20px;
   font-size: 0.8em;
-  color: #9a8c6c;
+  color: var(--text-dim);
   text-align: center;
   background: rgba(0,0,0,0.1);
 }
@@ -4633,7 +4635,7 @@ body.mode-nonpro .sp-category { background: rgba(240,215,140,0.1); }
   gap: 12px;
   margin-bottom: 10px;
 }
-.ai-config-row label { color: #9a8c6c; font-size: 0.85em; min-width: 80px; }
+.ai-config-row label { color: var(--text-dim); font-size: 0.85em; min-width: 80px; }
 .ai-config-row input, .ai-config-row select {
   flex: 1;
   padding: 8px 12px;
@@ -4644,7 +4646,7 @@ body.mode-nonpro .sp-category { background: rgba(240,215,140,0.1); }
   font-family: inherit;
   font-size: 0.85em;
 }
-.ai-config-row select option { background: #1a1a2e; color: #e0d5c1; }
+.ai-config-row select option { background: var(--bg-dark); color: var(--text-body); }
 .ai-config-actions { display: flex; gap: 8px; margin: 12px 0; }
 .ai-config-hint { font-size: 0.75em; color: #7a7c60; line-height: 1.6; }
 .ai-config-hint a { color: var(--gold); }
@@ -4652,7 +4654,7 @@ body.mode-nonpro .sp-category { background: rgba(240,215,140,0.1); }
 .btn-ai-chat {
   background: linear-gradient(135deg, rgba(139,195,74,0.15), rgba(139,195,74,0.05));
   border-color: rgba(139,195,74,0.3);
-  color: #8bc34a;
+  color: var(--green);
 }
 
 /* ==================== 数据图表面板 ==================== */
@@ -4689,21 +4691,21 @@ body.mode-nonpro .sp-category { background: rgba(240,215,140,0.1); }
   justify-content: center;
   padding: 8px 0;
   font-size: 0.8em;
-  color: #9a8c6c;
+  color: var(--text-dim);
 }
 .overlay-legend-item { display: flex; align-items: center; gap: 4px; }
 .overlay-legend-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
 .overlay-legend-dot.benming { background: var(--gold-light); }
 .overlay-legend-dot.daxian { background: #5b9bd5; }
-.overlay-legend-dot.liunian { background: #8bc34a; }
-.overlay-legend-dot.liuyue { background: #ff9800; }
+.overlay-legend-dot.liunian { background: var(--green); }
+.overlay-legend-dot.liuyue { background: var(--orange); }
 
 /* ==================== 飞星/三合/四化模式 ==================== */
 .palace-cell.feixing-mode {
   border-color: rgba(139,195,74,0.15);
 }
 .palace-cell.feixing-mode .sihua-badge.centrifugal {
-  border-color: #ff9800 !important;
+  border-color: var(--orange) !important;
 }
 .palace-cell.feixing-mode .sihua-badge.centripetal {
   border-color: #5b9bd5 !important;
@@ -4729,8 +4731,8 @@ body.mode-nonpro .sp-category { background: rgba(240,215,140,0.1); }
 }
 
 /* ==================== 星曜亮度颜色增强 ==================== */
-.star-brightness.miao { background: var(--gold-med); color: #1a1a2e; font-weight: 700; }
-.star-brightness.wang { background: var(--gold); color: #1a1a2e; }
+.star-brightness.miao { background: var(--gold-med); color: var(--bg-dark); font-weight: 700; }
+.star-brightness.wang { background: var(--gold); color: var(--bg-dark); }
 .star-brightness.de { background: rgba(201,168,76,0.25); color: var(--gold-med); }
 .star-brightness.li { background: rgba(201,168,76,0.15); color: #b89840; }
 .star-brightness.ping { background: rgba(180,180,180,0.12); color: #999; }
@@ -4744,8 +4746,8 @@ body.mode-nonpro .sp-category { background: rgba(240,215,140,0.1); }
 
 /* ==================== 宫位评分颜色 ==================== */
 .palace-score-bar { height: 4px; border-radius: 2px; margin-top: 2px; transition: width 0.5s; }
-.palace-score-bar.high { background: linear-gradient(90deg, #8bc34a, #6ba832); }
-.palace-score-bar.mid { background: linear-gradient(90deg, #ff9800, #e08800); }
+.palace-score-bar.high { background: linear-gradient(90deg, var(--green), #6ba832); }
+.palace-score-bar.mid { background: linear-gradient(90deg, var(--orange), #e08800); }
 .palace-score-bar.low { background: linear-gradient(90deg, #e06050, #c04030); }
 
 /* ==================== 响应式 ==================== */
@@ -4776,7 +4778,7 @@ body.mode-nonpro .sp-category { background: rgba(240,215,140,0.1); }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
 .aguide-dialog {
-  background: linear-gradient(170deg, #1e2a3a 0%, #1a1a2e 100%);
+  background: linear-gradient(170deg, #1e2a3a 0%, var(--bg-dark) 100%);
   border: 1px solid rgba(240,215,140,0.25);
   border-radius: 20px;
   width: 92vw;
@@ -4832,7 +4834,7 @@ body.mode-nonpro .sp-category { background: rgba(240,215,140,0.1); }
 .aguide-content code { background: rgba(0,0,0,0.3); color: var(--gold-med); padding: 1px 6px; border-radius: 4px; font-size: 0.88em; }
 
 .aguide-link {
-  color: #8bc34a;
+  color: var(--green);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
@@ -4907,7 +4909,7 @@ body.mode-nonpro .sp-category { background: rgba(240,215,140,0.1); }
 .aguide-btn-finish {
   background: linear-gradient(135deg, rgba(139,195,74,0.25), rgba(100,160,30,0.15));
   border-color: rgba(139,195,74,0.35);
-  color: #8bc34a;
+  color: var(--green);
 }
 .aguide-highlight {
   outline: 3px solid rgba(212,168,76,0.6);
@@ -4946,7 +4948,7 @@ body.mode-nonpro .sp-category { background: rgba(240,215,140,0.1); }
   position: absolute;
   top: -10px;
   right: -2px;
-  background: linear-gradient(135deg, #8bc34a, #6ba832);
+  background: linear-gradient(135deg, var(--green), #6ba832);
   color: #fff;
   font-size: 0.7em;
   padding: 2px 10px;
@@ -4959,7 +4961,7 @@ body.mode-nonpro .sp-category { background: rgba(240,215,140,0.1); }
 .ai-chat-guide-btn {
   background: linear-gradient(135deg, rgba(139,195,74,0.12), rgba(139,195,74,0.04));
   border-color: rgba(139,195,74,0.25);
-  color: #8bc34a;
+  color: var(--green);
   font-size: 0.8em;
 }
 
@@ -5000,7 +5002,7 @@ body.mode-nonpro .sp-category { background: rgba(240,215,140,0.1); }
 }
 .guide-section.open .guide-section-body { display: block; }
 .guide-item { margin-top: 14px; }
-.guide-item-subtitle { font-size: 13px; font-weight: 600; color: #8bc34a; margin-bottom: 4px; }
+.guide-item-subtitle { font-size: 13px; font-weight: 600; color: var(--green); margin-bottom: 4px; }
 .guide-item-text { font-size: 13px; color: #aaa; line-height: 1.7; }
 .guide-item-text b { color: #ddd; }
 
@@ -5019,13 +5021,13 @@ body.mode-nonpro .sp-category { background: rgba(240,215,140,0.1); }
   font-size: 13px; gap: 10px; align-items: center; flex-wrap: wrap; color: #bbb;
 }
 .triad-label { color: #888; font-weight: 600; }
-.triad-name { color: #8bc34a; font-weight: 600; }
-.triad-name.triad-opp { color: #ff9800; }
+.triad-name { color: var(--green); font-weight: 600; }
+.triad-name.triad-opp { color: var(--orange); }
 .triad-name.triad-anh { color: #9c27b0; }
 .triad-divider { color: rgba(255,255,255,.12); }
 .triad-click { color: #666; font-size: 12px; font-weight: 400; }
-.palace-cell.triad-highlight { box-shadow: inset 0 0 0 2px #8bc34a; background: rgba(139,195,74,.08); }
-.palace-cell.triad-opposite { box-shadow: inset 0 0 0 2px #ff9800; background: rgba(255,152,0,.06); }
+.palace-cell.triad-highlight { box-shadow: inset 0 0 0 2px var(--green); background: rgba(139,195,74,.08); }
+.palace-cell.triad-opposite { box-shadow: inset 0 0 0 2px var(--orange); background: rgba(255,152,0,.06); }
 .palace-cell.triad-anhe { box-shadow: inset 0 0 0 2px #9c27b0; background: rgba(156,39,176,.06); }
 
 /* === 八字高级面板 === */
@@ -5036,7 +5038,7 @@ body.mode-nonpro .sp-category { background: rgba(240,215,140,0.1); }
 .bazi-shishen-table th, .bazi-shishen-table td { padding: 7px 8px; text-align: center; border-bottom: 1px solid rgba(255,255,255,.06); }
 .bazi-shishen-table th { color: #aaa; font-weight: 500; }
 .bazi-shishen-table .ss-label { color: #888; width: 50px; text-align: right; }
-.bazi-shishen-table .ss-day { color: #8bc34a; font-weight: 600; }
+.bazi-shishen-table .ss-day { color: var(--green); font-weight: 600; }
 .bazi-shishen-table .ss-val { color: #cde; font-size: 12px; }
 .bazi-shishen-table .ss-cang { color: #777; font-size: 11px; }
 .yongshen-card { background: rgba(255,255,255,.04); border-radius: 10px; padding: 14px; }
@@ -5044,7 +5046,7 @@ body.mode-nonpro .sp-category { background: rgba(240,215,140,0.1); }
 .yongshen-item:last-child { border: none; }
 .ys-label { color: #888; font-weight: 600; min-width: 56px; flex-shrink: 0; }
 .ys-val { color: #ccc; }
-.ys-val.ys-good { color: #8bc34a; }
+.ys-val.ys-good { color: var(--green); }
 .ys-val.ys-bad { color: #e06050; }
 .ys-val.ys-desc { color: #999; font-size: 12px; }
 
@@ -5056,7 +5058,7 @@ body.mode-nonpro .sp-category { background: rgba(240,215,140,0.1); }
 .wx-bar-fill { height: 100%; border-radius: 7px; transition: width .3s; }
 .wx-bar-fill.wx-木 { background: #4caf50; }
 .wx-bar-fill.wx-火 { background: #f44336; }
-.wx-bar-fill.wx-土 { background: #ff9800; }
+.wx-bar-fill.wx-土 { background: var(--orange); }
 .wx-bar-fill.wx-金 { background: #ffc107; }
 .wx-bar-fill.wx-水 { background: #2196f3; }
 .wx-score { color: #ddd; font-size: 12px; width: 28px; text-align: right; }
@@ -5066,15 +5068,15 @@ body.mode-nonpro .sp-category { background: rgba(240,215,140,0.1); }
 .btn-ai {
   display: flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 20px;
   border: 1px solid rgba(139,195,74,.3); background: rgba(139,195,74,.08);
-  color: #8bc34a; font-size: 13px; font-weight: 600; cursor: pointer; transition: all .2s;
+  color: var(--green); font-size: 13px; font-weight: 600; cursor: pointer; transition: all .2s;
 }
 .btn-ai:hover { background: rgba(139,195,74,.16); }
 .ai-status-badge {
   font-size: 10px; padding: 2px 8px; border-radius: 10px; font-weight: 600; white-space: nowrap;
 }
 .ai-status-badge.ai-idle    { background: rgba(255,255,255,.06); color: #888; }
-.ai-status-badge.ai-loading { background: rgba(255,152,0,.15);  color: #ff9800; }
-.ai-status-badge.ai-ready   { background: rgba(139,195,74,.15); color: #8bc34a; }
+.ai-status-badge.ai-loading { background: rgba(255,152,0,.15);  color: var(--orange); }
+.ai-status-badge.ai-ready   { background: rgba(139,195,74,.15); color: var(--green); }
 .ai-status-badge.ai-error   { background: rgba(244,67,54,.15);  color: #f44336; }
 
 .ai-local-panel {
@@ -5091,7 +5093,7 @@ body.mode-nonpro .sp-category { background: rgba(240,215,140,0.1); }
   padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,.06);
   display: flex; align-items: center; gap: 10px; flex-shrink: 0;
 }
-.ai-local-header h3 { margin: 0; font-size: 16px; color: #8bc34a; }
+.ai-local-header h3 { margin: 0; font-size: 16px; color: var(--green); }
 .ai-local-subtitle { font-size: 11px; color: #666; margin-left: auto; }
 .ai-model-bar {
   padding: 10px 18px; display: flex; gap: 8px; align-items: center; flex-shrink: 0;
@@ -5106,7 +5108,7 @@ body.mode-nonpro .sp-category { background: rgba(240,215,140,0.1); }
   overflow: hidden; flex-shrink: 0;
 }
 .ai-progress-fill {
-  height: 100%; background: linear-gradient(90deg, #8bc34a, #ff9800); border-radius: 2px;
+  height: 100%; background: linear-gradient(90deg, var(--green), var(--orange)); border-radius: 2px;
   transition: width .3s; width: 0%;
 }
 .ai-progress-text { padding: 4px 18px; font-size: 11px; color: #888; flex-shrink: 0; }
@@ -5119,7 +5121,7 @@ body.mode-nonpro .sp-category { background: rgba(240,215,140,0.1); }
   display: flex; align-items: center; gap: 8px; padding: 5px 8px;
   background: rgba(255,255,255,.03); border-radius: 6px; margin-bottom: 4px; font-size: 12px;
 }
-.ai-kb-title { color: #8bc34a; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ai-kb-title { color: var(--green); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ai-kb-meta { color: #666; flex-shrink: 0; }
 .ai-kb-del { background: none; border: none; color: #e06050; cursor: pointer; font-size: 13px; padding: 0 4px; }
 .ai-kb-section-header {
@@ -5128,8 +5130,8 @@ body.mode-nonpro .sp-category { background: rgba(240,215,140,0.1); }
 }
 .ai-kb-section-header:first-child { border-top: none; margin-top: 0; }
 .ai-kb-builtin { opacity: .7; }
-.ai-kb-loaded { color: #8bc34a; font-size: 11px; }
-.ai-kb-loading { color: #ff9800; font-size: 11px; animation: ai-pulse 1.5s infinite; }
+.ai-kb-loaded { color: var(--green); font-size: 11px; }
+.ai-kb-loading { color: var(--orange); font-size: 11px; animation: ai-pulse 1.5s infinite; }
 .ai-kb-more { font-size: 11px; color: #555; text-align: center; padding: 2px 0; }
 @keyframes ai-pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
 
@@ -5191,7 +5193,7 @@ body.mode-nonpro .sp-category { background: rgba(240,215,140,0.1); }
   padding: 8px 10px; border: 1px solid rgba(255,255,255,.06); text-align: center;
 }
 .bazi-shishen-table th { color: #888; font-weight: 500; }
-.bazi-shishen-table .ss-label { color: #8bc34a; font-weight: 600; text-align: left; }
+.bazi-shishen-table .ss-label { color: var(--green); font-weight: 600; text-align: left; }
 .bazi-shishen-table .ss-day { background: rgba(139,195,74,.08); }
 .bazi-shishen-table .ss-val { font-weight: 600; color: #ddd; }
 .bazi-shishen-table .ss-cang { font-size: 11px; color: #999; }
@@ -5201,7 +5203,7 @@ body.mode-nonpro .sp-category { background: rgba(240,215,140,0.1); }
 .yongshen-item:last-child { border-bottom: none; }
 .ys-label { color: #888; font-size: 13px; min-width: 55px; }
 .ys-val { color: #ddd; font-size: 14px; font-weight: 500; }
-.ys-good { color: #8bc34a; }
+.ys-good { color: var(--green); }
 .ys-bad { color: #e06050; }
 .ys-desc { font-size: 13px; color: #aaa; font-weight: 400; }
 
@@ -5210,20 +5212,20 @@ body.mode-nonpro .sp-category { background: rgba(240,215,140,0.1); }
 .wx-name { width: 24px; font-size: 13px; color: #ccc; text-align: center; }
 .wx-bar-track { flex: 1; height: 10px; background: rgba(255,255,255,.06); border-radius: 5px; overflow: hidden; }
 .wx-bar-fill { height: 100%; border-radius: 5px; transition: width .4s ease; }
-.wx-木 { background: linear-gradient(90deg, #4caf50, #8bc34a); }
+.wx-木 { background: linear-gradient(90deg, #4caf50, var(--green)); }
 .wx-火 { background: linear-gradient(90deg, #f44336, #ff5722); }
-.wx-土 { background: linear-gradient(90deg, #ff9800, #ffc107); }
+.wx-土 { background: linear-gradient(90deg, var(--orange), #ffc107); }
 .wx-金 { background: linear-gradient(90deg, #ffeb3b, #fdd835); }
 .wx-水 { background: linear-gradient(90deg, #2196f3, #03a9f4); }
 .wx-score { width: 28px; font-size: 12px; color: #aaa; text-align: right; }
 .wx-summary { margin-top: 10px; font-size: 13px; color: #aaa; }
 
 /* 四化飞星图 */
-.sihua-chart-inner { position: relative; background: #1a1a2e; border-radius: 16px; padding: 24px; max-width: 560px; max-height: 90vh; overflow-y: auto; }
+.sihua-chart-inner { position: relative; background: var(--bg-dark); border-radius: 16px; padding: 24px; max-width: 560px; max-height: 90vh; overflow-y: auto; }
 .sihua-legend { display: flex; gap: 10px; justify-content: center; margin-bottom: 12px; }
 .sihua-leg { padding: 2px 10px; border-radius: 10px; font-size: 12px; font-weight: 600; }
 .sihua-lu { background: rgba(76,175,80,.2); color: #4caf50; }
-.sihua-quan { background: rgba(255,152,0,.2); color: #ff9800; }
+.sihua-quan { background: rgba(255,152,0,.2); color: var(--orange); }
 .sihua-ke { background: rgba(33,150,243,.2); color: #2196f3; }
 .sihua-ji { background: rgba(244,67,54,.2); color: #f44336; }
 .sihua-svg { width: 100%; height: auto; margin-top: 8px; }
@@ -5353,7 +5355,7 @@ body.mode-nonpro .sp-category { background: rgba(240,215,140,0.1); }
 }
 .school-card-body p {
   font-size: 0.82em;
-  color: #b0a080;
+  color: var(--text-desc);
   line-height: 1.65;
   margin: 0 0 8px;
 }
@@ -5363,7 +5365,7 @@ body.mode-nonpro .sp-category { background: rgba(240,215,140,0.1); }
 .school-card-body ul {
   padding-left: 18px;
   font-size: 0.78em;
-  color: #9a8c6c;
+  color: var(--text-dim);
   line-height: 1.7;
   margin: 0;
 }
