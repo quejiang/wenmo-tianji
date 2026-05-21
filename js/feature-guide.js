@@ -262,9 +262,11 @@ function openGuide(mode) {
   });
 
   bodyEl.innerHTML = html;
+  overlay.classList.remove('hidden');
   overlay.style.display = 'flex';
 }
 
 function closeFeatureOverview() {
-  document.getElementById('featureOverlay').style.display = 'none';
+  var overlay = document.getElementById('featureOverlay');
+  if (overlay) { overlay.style.display = 'none'; overlay.classList.add('hidden'); }
 }

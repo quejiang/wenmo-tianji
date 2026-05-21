@@ -2312,6 +2312,7 @@ function openFeatureOverview() {
   var body = document.getElementById('featureBody');
   if (!overlay || !body) return;
   body.innerHTML = _buildFeatureCatalogHTML();
+  overlay.classList.remove('hidden');
   overlay.style.display = 'flex';
   setTimeout(function() {
     var inp = document.getElementById('featureSearchInput');
@@ -2321,7 +2322,7 @@ function openFeatureOverview() {
 
 function closeFeatureOverview() {
   var overlay = document.getElementById('featureOverlay');
-  if (overlay) overlay.style.display = 'none';
+  if (overlay) { overlay.style.display = 'none'; overlay.classList.add('hidden'); }
 }
 
 // ==================== 八字合婚 ====================
